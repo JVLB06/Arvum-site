@@ -1,0 +1,264 @@
+:root {
+    --primary-color: rgb(11, 61, 46);    /* Verde Profundo */
+    --secondary-color: rgb(201, 162, 39); /* Dourado */
+    --bg-color: rgb(245, 245, 245);      /* Fundo Claro */
+    --text-color: rgb(33, 33, 33);       /* Texto Preto */
+    --neutral-gray: rgb(150, 150, 150);     /* Cinza Neutro */
+}
+
+.dark-mode {
+    --primary-color: rgb(11, 61, 46);   /* Mantém o verde profundo */
+    --secondary-color: rgb(201, 162, 39); /* Mantém o dourado */
+    --bg-color: rgb(18, 18, 18);        /* Fundo Escuro */
+    --text-color: rgb(224, 224, 224);   /* Texto Branco */
+    --neutral-gray: rgb(74, 74, 74); /* Cinza mais claro para contraste */
+}
+
+body, html {
+    margin: 0;
+    padding: 0;
+    background: linear-gradient(135deg, var(--bg-color), var(--neutral-gray));
+    background-size: contain;
+    background-repeat: repeat;
+    font-family: 'Merriweather', sans-serif; /* Fonte escolhida */
+    scroll-behavior: smooth; /* Suaviza a rolagem */
+    overflow: auto; /* Mantém a funcionalidade de rolagem */
+    scrollbar-width: none; /* Firefox: Remove a barra */
+    -ms-overflow-style: none; /* Internet Explorer: Remove a barra */
+  }
+  body::-webkit-scrollbar {
+    display: none; /* Chrome, Edge e Safari: Remove a barra */
+  }
+nav {
+    position: fixed;
+    width: 100%;
+    padding-bottom: 15px;
+    justify-content: space-between;
+    background-color: var(--primary-color);
+    border-bottom: 14px solid var(--secondary-color); /* Linha dourada */
+    display: flex;
+    align-items: center;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Sombra suave para destacar */
+}
+/* Ajusta a estrutura principal */
+.corpo {
+    display: flex;
+    flex-direction: row; /* Alinha lado a lado */
+    justify-content: space-evenly;
+    align-items: flex-start;
+    padding: 10px;
+    gap: 20px;
+}
+footer {
+    width: 100%;
+    padding: 20px 0;
+    justify-content: space-between;
+    background-color: var(--primary-color);
+    border-top: 14px solid var(--secondary-color); /* Linha dourada */
+    color: var(--secondary-color);
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 50px;
+}
+.sugest {
+    margin-left:40px;
+}
+.sla{
+    margin-right: 40px;
+}
+.head_button{
+    background: none;
+    color: rgb(224, 224, 224);
+    border: none;
+    padding: 10px 20px;
+    margin: 0 5px;
+    cursor: pointer;
+    font-size: 16px;
+  }
+.head_button:hover{
+    color: var(--secondary-color);
+  }
+/* Logo e nome da empresa */
+.logo {
+    display: flex;
+    align-items: center;
+    margin-left: 20px;
+    gap: 10px;
+}
+.logo span {
+    color: var(--secondary-color);
+    font-size: 30px;
+    font-weight: bold;
+}
+.back-button {
+    font-size: 40px; /* Aumenta o tamanho */
+    font-weight: bold;
+    background: none;
+    border: none;
+    color: var(--secondary-color);
+    cursor: pointer;
+    transition: 0.3s;
+}
+.back-button:hover {
+    color: var(--bg-color);
+    transform: scale(1.1); /* Aumenta levemente no hover */
+}
+nav .logo img {
+    max-height: 40px; /* Ajuste conforme necessário */
+    margin-right: 10px;
+}
+
+nav .logo span {
+    color: rgb(224, 224, 224);
+    font-size: 20px;
+    font-weight: bold;
+}
+.nav-links{
+    display: flex;
+    align-items: center;
+    margin-right: 20px;
+    gap: 15px;
+}
+.nav-links-button{
+    font-size: 40px; /* Aumenta o tamanho */
+    font-weight: bold;
+    background: none;
+    border: none;
+    color: var(--secondary-color);
+    cursor: pointer;
+    transition: 0.3s;
+}
+.nav-links:hover{
+    background-color: none;
+    color: var(--bg-color);
+}
+.nav-links img{
+    max-height: 30px; /* Ajuste conforme necessário */
+    margin-right: 10px;
+}
+.tema {  /*Botão para troca de tema*/
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--bg-color) 50%, var(--text-color) 50%); /* Metade branca, metade preta */
+    border: 2px solid var(--secondary-color); /* Borda dourada */
+    cursor: pointer;
+    position: relative;
+    transition: box-shadow 0.3s ease; /* Transição para o efeito de sombra */
+}
+/* Efeito de sombra no hover */
+.tema:hover {
+    background: linear-gradient(135deg, var(--text-color) 50%, var(--bg-color) 50%); /* Metade branca, metade preta */
+}
+
+
+.dados {
+    flex: 1; /* Ocupa o espaço disponível */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.grafico-container {
+    width: 100%;
+    max-width: 600px;
+    align-items: center;
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+}
+/* Ajusta o canvas do gráfico */
+canvas {
+    width: 400px !important;
+    height:
+    400px !important;
+}
+.legenda {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    background-color: none;
+    padding: 10px;
+}
+
+.legenda-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 5px;
+    color: var(--text-color);
+}
+
+.legenda-item span {
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+}
+.structure {
+    padding-top: 130px;
+    display: flex;
+    flex-direction: column; /* Empilha os elementos verticalmente */
+    justify-content: space-between; /* Centraliza os elementos na vertical */
+    gap: 30px; /* Espaço entre as divs */
+}
+.rendas {
+    width: 80%;
+    max-width: max-content/3;
+    background-color: var(--bg-color);
+    border-radius: 10px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: left;
+}
+.rendas h2 {
+    color: var(--secondary-color);
+}
+.rendas span {
+    color: var(--text-color);
+    font-weight: bold;
+}
+.opcoes {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: left;
+    gap: 15px;
+}
+.option {
+    width: 90%;
+    padding: 10px;
+    background-color: none;
+    color: rgb(245, 245, 245);
+    text-align: center;
+}
+.option a {
+    color: rgb(245, 245, 245);
+    padding-right: 3px;
+    padding-left: 3px;
+    font-size: 20px;
+    border-radius: 20px;
+    background-color: var(--secondary-color);
+    font-weight: bold;
+    text-decoration: none;
+}
+.option span {
+    background: none;
+    text-align: left;
+    justify-content: left;
+    color: rgb(245, 245, 245);
+}
+.opcoes h2 {
+    color: rgb(245, 245, 245);
+}
+.pensador {
+    background-color: var(--secondary-color);
+    color: rgb(18, 18, 18);
+    border-radius: 10px;
+    align-items: center;
+    padding: 5px;
+}
+.colum-graphic {
+    background-color: var(--bg-color);
+    margin: 20px;
+}

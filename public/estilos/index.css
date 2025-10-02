@@ -1,0 +1,204 @@
+:root {
+    --primary-color: rgb(11, 61, 46);    /* Verde Profundo */
+    --secondary-color: rgb(201, 162, 39); /* Dourado */
+    --bg-color: rgb(245, 245, 245);      /* Fundo Claro */
+    --text-color: rgb(33, 33, 33);       /* Texto Preto */
+    --neutral-gray: rgb(150, 150, 150);     /* Cinza Neutro */
+}
+
+.dark-mode {
+    --primary-color: rgb(11, 61, 46);   /* Mantém o verde profundo */
+    --secondary-color: rgb(201, 162, 39); /* Mantém o dourado */
+    --bg-color: rgb(18, 18, 18);        /* Fundo Escuro */
+    --text-color: rgb(224, 224, 224);   /* Texto Branco */
+    --neutral-gray: rgb(74, 74, 74); /* Cinza mais claro para contraste */
+}
+
+body, html {
+    margin: 0;
+    padding: 0;
+    background: linear-gradient(135deg, var(--bg-color), var(--neutral-gray));
+    background-size: contain;
+    background-repeat: repeat;
+    font-family: 'Merriweather', sans-serif; /* Fonte escolhida */
+    scroll-behavior: smooth; /* Suaviza a rolagem */
+    overflow: auto; /* Mantém a funcionalidade de rolagem */
+    scrollbar-width: none; /* Firefox: Remove a barra */
+    -ms-overflow-style: none; /* Internet Explorer: Remove a barra */
+  }
+  body::-webkit-scrollbar {
+    display: none; /* Chrome, Edge e Safari: Remove a barra */
+  }
+nav {
+    position: fixed;
+    width: 100%;
+    padding: 20px 0;
+    justify-content: space-between;
+    background-color: var(--primary-color);
+    border-bottom: 14px solid var(--secondary-color); /* Linha dourada */
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 50px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Sombra suave para destacar */
+}
+footer {
+    width: 100%;
+    padding: 20px 0;
+    justify-content: space-between;
+    background-color: var(--primary-color);
+    border-top: 14px solid var(--secondary-color); /* Linha dourada */
+    color: var(--secondary-color);
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 50px;
+}
+.sugest {
+    margin-left:40px;
+}
+.sla{
+    margin-right: 40px;
+}
+.head_button{
+    background: none;
+    color: rgb(224, 224, 224);
+    border: none;
+    padding: 10px 20px;
+    margin: 0 5px;
+    cursor: pointer;
+    font-size: 16px;
+  }
+.head_button:hover{
+    color: var(--secondary-color);
+  }
+/* Logo e nome da empresa */
+nav .logo {
+    display: flex;
+    align-items: center;
+    margin-left: 20px;
+}
+
+nav .logo img {
+    max-height: 40px; /* Ajuste conforme necessário */
+    margin-right: 10px;
+}
+
+nav .logo span {
+    color: rgb(224, 224, 224);
+    font-size: 20px;
+    font-weight: bold;
+}
+/* Botão de troca de tema como um círculo */
+.nav-right{
+    display: flex;
+    align-items: center;
+    gap: 18px; /* Ajusta o espaço entre os botões */
+    margin-right: 20px;;
+}
+.tema {  /*Botão para troca de tema*/
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--bg-color) 50%, var(--text-color) 50%); /* Metade branca, metade preta */
+    border: 2px solid var(--secondary-color); /* Borda dourada */
+    cursor: pointer;
+    position: relative;
+    transition: box-shadow 0.3s ease; /* Transição para o efeito de sombra */
+}
+/* Efeito de sombra no hover */
+.tema:hover {
+    background: linear-gradient(135deg, var(--text-color) 50%, var(--bg-color) 50%); /* Metade branca, metade preta */
+}
+
+
+.corpo {
+    margin-top: 150px;
+    background-color: none;
+    display: flex;
+    flex-direction: column;
+}
+.superior {
+    background-color: none;
+    display: flex;
+    width: 100%;
+    margin-right: 50px;
+    margin-left: 50px;
+    padding-bottom: 30px;
+    justify-content: space-between;
+}
+.texto {
+    background-color: none;
+    color: var(--text-color);
+    flex: 1;  /* Faz o texto ocupar o máximo de espaço possível à esquerda */
+    display: flex;
+    text-align: center;
+    max-width: 500px;
+    width:auto;
+    line-height: 1.6;
+    flex-direction: column;  /* Empilha os textos */
+    gap: 10px;  /* Espaço entre os parágrafos */
+}
+.imagem {
+    background-color: none;
+    flex: 1;  /* Faz a imagem ocupar metade da largura */
+    display: flex;
+    justify-content: center;  /* Centraliza a imagem horizontalmente */
+    align-items: center;  /* Centraliza a imagem verticalmente */
+}
+.imagem img {
+    max-width: 100%;  /* Garante que a imagem não ultrapasse o tamanho do contêiner */
+    height: 450px;
+}
+.inferior {
+    background-color: none;
+    padding: 20px;
+    padding-top: 30px;
+    text-align: center;
+    margin-top: 20px;  /* Garante que a parte inferior não fique colada na parte superior */
+    width: 100%;  /* Garante que a parte inferior ocupe toda a largura disponível */
+    flex-shrink: 0;  /* Impede que a parte inferior encolha */
+    position: relative;  /* Garante que a parte inferior fique na parte de baixo */
+}
+.inferior h1 {
+    color: var(--secondary-color);  /* Cor do título */
+    margin-bottom: 20px;
+}
+.sobre {
+    background-color: var(--primary-color);  /* Cor de fundo do quadrado */
+    border-radius: 15px;  /* Arredonda os cantos */
+    padding: 20px;
+    display: inline-block;  /* Faz o quadrado ocupar apenas o espaço necessário */
+    width: 100%;  /* Garante que ocupe toda a largura disponível na parte inferior */
+    max-width: 1000px;  /* Limita a largura do quadrado */
+}
+.sobre p {
+    color: var(--neutral-gray);  /* Cor do texto dentro do quadrado */
+}
+.cadastre{
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    border-radius: 10px;
+    border: none;
+    padding: 8px;
+    margin-left: 18px;
+    margin-right: 18px;
+}
+.cadastre:hover{
+    background-color: var(--secondary-color);
+}
+.cadastre2{
+    background-color: var(--primary-color);
+    color: rgb(224, 224, 224);
+    border-radius: 10px;
+    border: none;
+    padding: 8px;
+    width: auto;
+    min-width: 100px;
+    max-width: 100px;
+    display: inline-block;  /* Faz o botão se ajustar ao conteúdo e não ocupar toda a largura da div */
+    text-align: center;  /* Garante que o texto fique centralizado */
+    margin-top: 18px;
+    margin-bottom: 18px;
+}
+.cadastre2:hover{
+    background-color: var(--secondary-color);
+}
