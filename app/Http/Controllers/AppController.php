@@ -101,8 +101,8 @@ class AppController extends Controller {
             $output = ["data" => $date, "vlr" => $valor, "historico" => $historico];
             
 
-            $response = Http::withHeaders(['Authorization' => "Bearer $tkn"])->post($this->api_erp . "/user/user/dados/extrato/post", $output);
-            $especifico = [$tipo . "_id" => $id, "lcto_id" => $response['id_lcto'], "data" => $data, "vlr" => $valor, "historico" => $historico];
+            $response = Http::withHeaders(['Authorization' => "Bearer $tkn"])->post($this->api_erp . "/extrato/incluir_lancamento", $output);
+            $especifico = [$tipo . "_id" => $id, "lcto_id" => $response['id_lcto'], "data" => $data, "valor" => $valor, "historico" => $historico];
             switch($tipo) {
                 case "gasto":
                     $response = Http::withHeaders(['Authorization' => "Bearer $tkn"])->post($this->api_erp . "/user/user/dados/pgto_gasto/post", $output);
@@ -129,10 +129,10 @@ class AppController extends Controller {
     // Dashboard
     public function dashboard(Request $request) {
         $tkn = $this->get_token();
-        $renda = Http::withHeaders(['Authorization' => "Bearer $tkn"])->get($this->api_erp . "/api/user/user/dados/renda/get")->json();
-        $gasto = Http::withHeaders(['Authorization' => "Bearer $tkn"])->get($this->api_erp . "/api/user/user/dados/gastos/get")->json();
-        $investimento = Http::withHeaders(['Authorization' => "Bearer $tkn"])->get($this->api_erp . "/api/user/user/dados/investimentos/get")->json();
-        $divida = Http::withHeaders(['Authorization' => "Bearer $tkn"])->get($this->api_erp . "/api/user/user/dados/dividas/get")->json();
+        $renda = Http::withHeaders(['Authorization' => "Bearer $tkn"])->get($this->api_erp . "/user_plan/ler_renda")->json();
+        $gasto = Http::withHeaders(['Authorization' => "Bearer $tkn"])->get($this->api_erp . "/user_plan/ler_gastos")->json();
+        $investimento = Http::withHeaders(['Authorization' => "Bearer $tkn"])->get($this->api_erp . "/user_plan/ler_investimentos_ativos")->json();
+        $divida = Http::withHeaders(['Authorization' => "Bearer $tkn"])->get($this->api_erp . "/user_plan/ler_dividas")->json();
         // Somando os valores de cada categoria
         $total_renda = array_sum(array_column($renda, 'vlr'));
         $total_gasto = array_sum(array_column($gasto, 'vlr'));
@@ -155,8 +155,8 @@ class AppController extends Controller {
             $data_in = $request->input('divida_cad_data_init');
             $data_fim = $request->input('divida_cad_data_fim');
             $valor = $request->input('divida_cad_vlr');
-            $output = ["data_init" => $data_in, "vlr" => $valor, "nome" => $nome, "data_fim" => $data_fim];
-            $response = Http::withHeaders(['Authorization' => "Bearer $tkn"])->post($this->api_erp . "/api/user/user/dados/divida/post", $output);
+            $output = ["data_init" => $data_in, "vlr" => $valor, "descricao" => $nome, "data_venc" => $data_fim];
+            $response = Http::withHeaders(['Authorization' => "Bearer $tkn"])->post($this->api_erp . "/user-plan/criar_divida", $output);
         }
         return view('cadastrar_divida');
     }
@@ -174,13 +174,13 @@ class AppController extends Controller {
                 $fixvar = True;
             }
             else {$fixvar = False;}
-            $output = ["nome"=>$nome,
+            $output = ["descricao"=>$nome,
             "vlr_min"=>$vlr_min,
             "vlr_max"=>$vlr_max,
             "data"=>$data,
             "prioridade"=>$prioridade,
             "fixvar"=>$fixvar];
-            $response = Http::withHeaders(['Authorization' => "Bearer $tkn"])->post($this->api_erp . "/api/user/user/dados/gasto/post", $output);
+            $response = Http::withHeaders(['Authorization' => "Bearer $tkn"])->post($this->api_erp . "/user_plan/criar_gasto", $output);
         }
         return view("cadastrar_gasto");
     }
@@ -190,15 +190,14 @@ class AppController extends Controller {
         if ($request->isMethod('post') && $request->has('submit')){
             $nome = $request->input('investimento_cad_nome');
             $data_init = $request->input('investimento_cad_data_init');
-            $data_fim = $request->input('investimento_cad_data_fim');
+            //$data_fim = $request->input('investimento_cad_data_fim');
             $valor = $request->input('investimento_cad_vlr');
             $juro = $request->input('investimento_cad_juros');
-            $output = ["nome"=>$nome,
+            $output = ["descricao"=>$nome,
                 "data_init"=>$data_init,
-                "data_fim"=>$data_fim,
                 "vlr"=>$valor,
                 "juro"=>$juro];
-            $response = Http::withHeaders(['Authorization' => "Bearer $tkn"])->post($this->api_erp . "/api/user/user/dados/investimento/post", $output);
+            $response = Http::withHeaders(['Authorization' => "Bearer $tkn"])->post($this->api_erp . "/user_plan/criar_investimento", $output);
         }
         return view("cadastrar_investimento");
     }
@@ -209,8 +208,8 @@ class AppController extends Controller {
             $nome = $request->input('renda_cad_nome');
             $valor = $request->input('renda_cad_vlr');
             $data = $request->input('renda_cad_data');
-            $output = ["nome"=>$nome,"data"=>$data,"vlr"=>$valor];
-            $response = Http::withHeaders(['Authorization' => "Bearer $tkn"])->post($this->api_erp . "/api/user/user/dados/renda/post", $output);
+            $output = ["descricao"=>$nome,"data"=>$data,"vlr_min"=>$valor, "vlr_max"=>$valor];
+            $response = Http::withHeaders(['Authorization' => "Bearer $tkn"])->post($this->api_erp . "/user_plan/criar_renda", $output);
         }
         return view("cadastrar_renda");
     }
@@ -221,8 +220,8 @@ class AppController extends Controller {
             $nome = $request->input('meta_cad_nome');
             $valor = $request->input('meta_cad_vlr');
             $data = $request->input('meta_cad_data');
-            $output = ["nome"=>$nome,"data"=>$data,"vlr"=>$valor];
-            $response = Http::withHeaders(['Authorization' => "Bearer $tkn"])->post($this->api_erp . "/api/user/user/dados/meta/post", $output);
+            $output = ["descricao"=>$nome,"data_prev"=>$data,"vlr"=>$valor];
+            $response = Http::withHeaders(['Authorization' => "Bearer $tkn"])->post($this->api_erp . "/user_plan/criar_meta", $output);
         }
         return view("cadastrar_meta");
     }
@@ -284,11 +283,11 @@ class AppController extends Controller {
         $filtros = $request->input('filtros', []);
         // Definição das rotas para cada filtro
         $rotas = [
-            'renda' => '/api/user/user/dados/extrato/get',
-            'gastos' => '/api/user/user/dados/extrato/get',
-            'investimentos' => '/api/user/user/dados/meta_invest/get',
-            'meta' => '/api/user/user/dados/pgto_meta/get',
-            'divida' => '/api/user/user/dados/pgto_divida/get'
+            'renda' => '/extrato/obter_renda_pgto',
+            'gastos' => '/extrato/obter_gastos_pgto',
+            'investimentos' => '/extrato/obter_investimento_pgto',
+            'meta' => '/extrato/obter_meta_pgto',
+            'divida' => '/extrato/obter_divida_pgto'
         ];
         $dadosCombinados = [];
         if (count($filtros) > 0) {
@@ -324,7 +323,7 @@ class AppController extends Controller {
     }
     public function renda(Request $request) {
         $tkn = $this->get_token();
-        $respostaApi = Http::withHeaders(['Authorization' => "Bearer $tkn"])->get($this->api_erp . "/api/user/user/dados/renda/get");
+        $respostaApi = Http::withHeaders(['Authorization' => "Bearer $tkn"])->get($this->api_erp . "/user_plan/ler_renda");
         if ($respostaApi->successful()) {
             $data = $respostaApi->json();
             if ($data["listagem"] != []) {
@@ -363,7 +362,7 @@ class AppController extends Controller {
     public function gasto(Request $request) {
         $tkn = $this->get_token();
         // Obter todos os gastos
-        $respostaApi = Http::withHeaders(['Authorization' => "Bearer $tkn"])->get($this->$api_erp . "/api/user/user/dados/gastos/get");
+        $respostaApi = Http::withHeaders(['Authorization' => "Bearer $tkn"])->get($this->$api_erp . "/user_plan/ler_gastos");
         if ($respostaApi->successful()) {
             $data = $respostaApi->json();
         } else {
@@ -371,7 +370,7 @@ class AppController extends Controller {
         }
 
         // Obter gastos de cada mês
-        $response = Http::withHeaders(['Authorization' => "Bearer $tkn"])->get($this->api_erp . "/api/user/user/dados/pgto_gasto/get");
+        $response = Http::withHeaders(['Authorization' => "Bearer $tkn"])->get($this->api_erp . "/extrato/obter_gastos_pgto");
         $extratos = $response->json(); // Converter para array associativo
         // Definir a data mínima (12 meses atrás)
         $dataMinima = Carbon::now()->subMonths(12)->startOfMonth();
@@ -430,5 +429,6 @@ class AppController extends Controller {
     // Editar_investimento
 
     // Logout (sem rota)
+        // Remover o token da sessão do cache (encerrando o acesso)
 }
 ?>
