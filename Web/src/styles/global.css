@@ -1,0 +1,31 @@
+:root {
+    --primary-color: rgb(11, 61, 46);    /* Verde Profundo */
+    --secondary-color: rgb(201, 162, 39); /* Dourado */
+    --bg-color: rgb(245, 245, 245);      /* Fundo Claro */
+    --text-color: rgb(33, 33, 33);       /* Texto Preto */
+    --neutral-gray: rgb(150, 150, 150);     /* Cinza Neutro */
+}
+
+.dark-mode {
+    --primary-color: rgb(11, 61, 46);   /* Mantém o verde profundo */
+    --secondary-color: rgb(201, 162, 39); /* Mantém o dourado */
+    --bg-color: rgb(18, 18, 18);        /* Fundo Escuro */
+    --text-color: rgb(224, 224, 224);   /* Texto Branco */
+    --neutral-gray: rgb(74, 74, 74); /* Cinza mais claro para contraste */
+}
+
+body, html {
+    margin: 0;
+    padding: 0;
+    background: linear-gradient(135deg, var(--bg-color), var(--neutral-gray));
+    background-size: contain;
+    background-repeat: repeat;
+    font-family: 'Merriweather', sans-serif; /* Fonte escolhida */
+    scroll-behavior: smooth; /* Suaviza a rolagem */
+    overflow: auto; /* Mantém a funcionalidade de rolagem */
+    scrollbar-width: none; /* Firefox: Remove a barra */
+    -ms-overflow-style: none; /* Internet Explorer: Remove a barra */
+  }
+  body::-webkit-scrollbar {
+    display: none; /* Chrome, Edge e Safari: Remove a barra */
+  }

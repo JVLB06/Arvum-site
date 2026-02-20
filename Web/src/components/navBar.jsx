@@ -1,5 +1,5 @@
 import logo from "../assets/arvum_logo.png";
-import "./syles/navBar.css";
+import "../styles/navBar.css";
 
 export function Navbar({ children }) {
   return (
@@ -10,8 +10,8 @@ export function Navbar({ children }) {
             <div className="nav-links">
                 {children}
             </div>
-            <div class="nav-right">
-                <button class="tema" id="troca_tema"></button>
+            <div className="nav-right">
+                <button className="tema" id="troca_tema"></button>
             </div>
         </div>
     </nav>
