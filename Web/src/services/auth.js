@@ -1,23 +1,25 @@
 import api from './main';
 
-const userService = {
-  // GET: Buscar todos
-  getAll: async () => {
-    const response = await api.get('/users');
+const accounts = {
+  // POST: Login do usuário
+  login: async (userData) => {
+    const response = await api.post('/contas/login', userData);
     return response.data;
   },
 
-  // GET: Buscar por ID
-  getById: async (id) => {
-    const response = await api.get(`/users/${id}`);
+  // POST: Cadastrar usuário
+  cadastrate: async (userData) => {
+    const response = await api.post(`/contas/cadastrar`, userData);
     return response.data;
   },
 
-  // POST: Criar novo usuário
-  create: async (userData) => {
-    const response = await api.post('/users', userData);
+  // GET: Validar conexão
+  validate: async () => {
+    const response = await api.get('/contas/verificar-conexao');
     return response.data;
   },
+
+
 
   // PUT: Atualizar usuário
   update: async (id, userData) => {
@@ -32,4 +34,4 @@ const userService = {
   }
 };
 
-export default userService;
+export default accounts;
