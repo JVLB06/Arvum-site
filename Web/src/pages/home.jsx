@@ -25,7 +25,9 @@ export function Home() {
             <div className="texto">
                 <h1 id="home"></h1>
                 <h2>Venha trabalhar com a Arvum, cadastre-se já e conheça um pouco mais sobre a gente</h2>
-                
+                <Link to="/cadastrate">
+                    <button className="cadastre2"><strong>Cadastre-se</strong></button>
+                </Link>
             </div>
             <div className="imagem">
                 <img src={patinhas} alt="Tio patinhas"></img>
