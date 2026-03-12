@@ -7,12 +7,12 @@ export function Navbar({ children }) {
         <div className="logo">
             <img className="logo-image" src={logo} alt="Logo"/>
             <span>Arvum</span>
-            <div className="nav-links">
-                {children}
-            </div>
-            <div className="nav-right">
-                <button className="tema" id="troca_tema"></button>
-            </div>
+        </div>
+        <div className="nav-links">
+            {children}
+        </div>
+        <div className="nav-right">
+            <button className="tema" id="troca_tema"></button>
         </div>
     </nav>
   );

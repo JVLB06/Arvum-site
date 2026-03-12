@@ -1,15 +1,24 @@
-import { Navbar } from "../components/navBar";
+import { Navbar } from "../components/navBar.jsx";
 import "../styles/home.css";
 import patinhas from "../assets/patinhas_sorrindo.png";
+import { Link } from 'react-router-dom';
 
 export function Home() {
   return (
     
     <div className="main">
         <Navbar>
-            <button data-target="#home" className="head_button"><strong>Home</strong></button>
-            <button data-target="#sobre" className="head_button"><strong>Sobre</strong></button>
-            
+            <button className="head_button"
+                onClick={() =>
+                document.getElementById("home").scrollIntoView({ behavior: "smooth" })}>
+                <strong>Home</strong></button>
+            <button className="head_button"
+                onClick={() =>
+                document.getElementById("sobre").scrollIntoView({ behavior: "smooth" })}>
+            <strong>Sobre</strong></button>            
+            <Link to="/login">
+                <button className="head_button"><strong>Login</strong></button>
+            </Link>
         </Navbar>
     <div className="corpo">
         <div className="superior">
