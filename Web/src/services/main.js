@@ -16,4 +16,15 @@ api.interceptors.request.use((config) => {
   return config;
 });
 
+api.interceptors.response.use(
+  (response) => response, // Se der certo (200, 201...), não faz nada
+  (error) => {
+    if (error.response && error.response.status === 401) {
+      localStorage.removeItem('token'); // Remove o token vencido
+      window.location.href = '/login';   // Expulsa o usuário
+    }
+    return Promise.reject(error);
+  }
+);
+
 export default api;

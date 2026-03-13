@@ -4,6 +4,9 @@ const accounts = {
   // POST: Login do usuário
   login: async (userData) => {
     const response = await api.post('/contas/login', userData);
+    if (response.data.access_token) {
+      localStorage.setItem('token', response.data.token);
+    }
     return response.data;
   },
 
@@ -13,25 +16,20 @@ const accounts = {
     return response.data;
   },
 
+  logout: () => {
+    localStorage.removeItem('token');
+    window.location.href = '/login'; // Redirecionamento simples
+  },
+
   // GET: Validar conexão
   validate: async () => {
-    const response = await api.get('/contas/verificar-conexao');
-    return response.data;
+    try {
+      const response = await api.get('/contas/verificar-conexao');
+      return response.data; // Retorna true ou os dados do user
+    } catch {
+      return false; // Token inválido ou expirado
+    }
   },
-
-
-
-  // PUT: Atualizar usuário
-  update: async (id, userData) => {
-    const response = await api.put(`/users/${id}`, userData);
-    return response.data;
-  },
-
-  // DELETE: Remover usuário
-  delete: async (id) => {
-    const response = await api.delete(`/users/${id}`);
-    return response.data;
-  }
 };
 
 export default accounts;

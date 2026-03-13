@@ -3,7 +3,7 @@ import accounts from "../services/auth.js";
 import "../styles/login.css";
 
 export function Login() {
-    const [email, setEmail] = useState("");
+    const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(false);
@@ -14,7 +14,7 @@ export function Login() {
     setLoading(true);
 
     try {
-      const data = await accounts.login({email, password});
+      const data = await accounts.login({username, password});
       console.log("Login realizado com sucesso:", data);
 
       } catch (error) {
@@ -36,9 +36,9 @@ export function Login() {
           </aside>
           <section className="form">
             <label htmlFor="login_user">Email?</label>
-            <input id="email" type="email"
-                placeholder="Digite seu e-mail" value={email}
-                onChange={(event) => setEmail(event.target.value)} required></input>
+            <input id="username" type="username"
+                placeholder="Digite seu e-mail" value={username}
+                onChange={(event) => setUsername(event.target.value)} required></input>
             <label htmlFor="login_senha">Confirme sua senha:</label>
             <input id="senha" type="password"
                   placeholder="Digite sua senha" value={password}
