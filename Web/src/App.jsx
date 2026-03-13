@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { Home } from "./pages/home.jsx";
 import { Login } from "./pages/login.jsx";
 import { Cadastrate } from "./pages/cadastrate.jsx";
+import { Dashboard } from "./pages/dashboard.jsx";
 
 // O "Segurança" da rota
 const ProtectedRoute = ({ children }) => {
@@ -23,7 +24,7 @@ export default function App() {
         <Route path="login" element={<Login />} />
         <Route path="cadastrate" element={<Cadastrate />} />
         <Route path="logged" element={<ProtectedRoute>
-
+          <Dashboard />
         </ProtectedRoute>}/>
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
