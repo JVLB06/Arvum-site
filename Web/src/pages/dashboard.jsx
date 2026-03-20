@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
-import { cadastrate } from "../services/extract.js";
-import { PieChart } from "../components/pieGraph.jsx"; 
+import expenses from "../services/extract.js";
+import PieChart from "../components/pieGraph.jsx"; 
 import { Navbar } from "../components/navBar.jsx";
 import { Link } from 'react-router-dom';
 import "../styles/dashboard.css";
@@ -15,11 +15,11 @@ export function Dashboard() {
 
             // Disparamos todas as consultas simultaneamente
             const [renda, investimentos, dividas, metas, gastos] = await Promise.all([
-                cadastrate.getRenda(),
-                cadastrate.getActiveInvestments(),
-                cadastrate.getDebts(),
-                cadastrate.getGoals(),
-                cadastrate.getExpenses()
+                expenses.getRenda(),
+                expenses.getActiveInvestments(),
+                expenses.getDebts(),
+                expenses.getGoals(),
+                expenses.getExpenses()
             ]);
 
             // Montamos o array no formato esperado pelo PieChart
@@ -71,7 +71,7 @@ export function Dashboard() {
                     {loading ? (
                         <p>Carregando gráfico...</p>
                     ) : (
-                        <PieChart dataitems={dadosGrafico} />
+                        <PieChart dataItems={dadosGrafico} />
                     )}
                 </main>
                 <div className="funcoes">
