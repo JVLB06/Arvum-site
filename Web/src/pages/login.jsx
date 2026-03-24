@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import accounts from "../services/auth.js";
 import "../styles/login.css";
 
@@ -7,23 +8,35 @@ export function Login() {
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(false);
+    const navigate = useNavigate();
 
     async function handleSubmit(event) {
-    event.preventDefault();
-    setError("");
-    setLoading(true);
+      event.preventDefault();
+      setError("");
+      setLoading(true);
 
-    try {
-      const data = await accounts.login({username, password});
-      console.log("Login realizado com sucesso:", data);
+      try {
+        const data = await accounts.login({ username, password });
+        console.log("Login realizado com sucesso:", data);
 
+        if (!data.access_token) {
+          throw new Error("Token não retornado pela API.");
+        }
+
+        navigate("/logged");
       } catch (error) {
-        setError("E-mail ou senha inválidos.");
-        console.error(error);
+        console.error("Erro no login:", error);
+
+        if (error.response) {
+          setError(error.response.data?.message || "Erro ao realizar login.");
+        } else {
+          setError(error.message || "Erro ao realizar login.");
+        }
       } finally {
         setLoading(false);
-      } 
+      }
     }
+
     return (
       <div className="main">
         <div className="header">
@@ -36,10 +49,10 @@ export function Login() {
           </aside>
           <section className="form">
             <label htmlFor="login_user">Email?</label>
-            <input id="username" type="username"
+            <input id="username" type="email"
                 placeholder="Digite seu e-mail" value={username}
                 onChange={(event) => setUsername(event.target.value)} required></input>
-            <label htmlFor="login_senha">Confirme sua senha:</label>
+            <label htmlFor="login_senha">Insira sua senha:</label>
             <input id="senha" type="password"
                   placeholder="Digite sua senha" value={password}
                   onChange={(event) => setPassword(event.target.value)} required></input>

@@ -12,52 +12,54 @@ export function Cadastrate() {
   const [loading, setLoading] = useState(false);
 
   async function handleSubmit(event) {
-    event.preventDefault();
-    setError("");
-    setLoading(true);
+  event.preventDefault();
+  setError("");
+  setLoading(true);
 
-    if (password !== confirmPassword) {
-      setError("As senhas não coincidem.");
-      setLoading(false);
-      return;
-    }
+  if (password !== confirmPassword) {
+    setError("As senhas não coincidem.");
+    setLoading(false);
+    return;
+  }
 
-    try {
-      const data = await accounts.cadastrate({
-        username,
-        email,
-        nasce,
-        password,
-      });
+  try {
+    const data = await accounts.cadastrate({
+      username,
+      email,
+      nasce,
+      password,
+    });
 
-      console.log("Cadastro realizado com sucesso:", data);
-    } catch (error) {
-  console.error("Erro completo:", error);
-  console.error("error.response:", error.response);
-  console.error("error.request:", error.request);
-  console.error("error.message:", error.message);
-  console.error("error.code:", error.code);
+    console.log("Cadastro realizado com sucesso:", data);
+  } catch (error) {
+    console.error("Erro completo:", error);
+    console.error("error.response:", error.response);
+    console.error("error.request:", error.request);
+    console.error("error.message:", error.message);
+    console.error("error.code:", error.code);
 
-  if (error.response) {
-    const data = error.response.data;
+    if (error.response) {
+      const data = error.response.data;
 
-    if (data?.errors) {
-      const mensagens = Object.values(data.errors).flat().join(" | ");
-      setError(`Erro ${error.response.status}: ${mensagens}`);
-    } else if (data?.message) {
-      setError(`Erro ${error.response.status}: ${data.message}`);
+      if (data?.errors) {
+        const mensagens = Object.values(data.errors).flat().join(" | ");
+        setError(`Erro ${error.response.status}: ${mensagens}`);
+      } else if (data?.message) {
+        setError(`Erro ${error.response.status}: ${data.message}`);
+      } else {
+        setError(`Erro ${error.response.status}: ${JSON.stringify(data)}`);
+      }
+    } else if (error.request) {
+      setError(
+        `Sem resposta do servidor. Código: ${error.code || "N/A"} | Mensagem: ${error.message || "N/A"}`
+      );
     } else {
-      setError(`Erro ${error.response.status}: ${JSON.stringify(data)}`);
+      setError(`Erro interno no front: ${error.message}`);
     }
-  } else if (error.request) {
-    setError(
-      `Sem resposta do servidor. Código: ${error.code || "N/A"} | Mensagem: ${error.message || "N/A"}`
-    );
-  } else {
-    setError(`Erro interno no front: ${error.message}`);
+  } finally {
+    setLoading(false);
   }
 }
-  }
 
   return (
     <div className="main">
