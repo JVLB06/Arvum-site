@@ -100,7 +100,7 @@ nav .logo span {
     color: rgb(245, 245, 245);
     text-align: center;
 }
-.option a {
+.option button {
     color: rgb(245, 245, 245);
     padding-right: 3px;
     padding-left: 3px;
@@ -110,11 +110,27 @@ nav .logo span {
     font-weight: bold;
     text-decoration: none;
 }
+.option button:hover {
+    color: var(--secondary-color);
+    padding-right: 3px;
+    padding-left: 3px;
+    font-size: 20px;
+    border-radius: 20px;
+    background-color: rgb(245, 245, 245);
+    font-weight: bold;
+    text-decoration: none;
+}
 .option span {
     background: none;
     text-align: left;
     justify-content: left;
     color: rgb(245, 245, 245);
+}
+.option span:hover {
+    background: none;
+    text-align: left;
+    justify-content: left;
+    color: var(--secondary-color);
 }
 .opcoes h2 {
     color: rgb(245, 245, 245);
