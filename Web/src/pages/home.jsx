@@ -1,22 +1,33 @@
-import { Navbar } from "../components/navBar";
+import { Navbar } from "../components/navBar.jsx";
 import "../styles/home.css";
 import patinhas from "../assets/patinhas_sorrindo.png";
+import { Link } from 'react-router-dom';
 
 export function Home() {
   return (
     
     <div className="main">
         <Navbar>
-            <button data-target="#home" className="head_button"><strong>Home</strong></button>
-            <button data-target="#sobre" className="head_button"><strong>Sobre</strong></button>
-            
+            <button className="head_button"
+                onClick={() =>
+                document.getElementById("home").scrollIntoView({ behavior: "smooth" })}>
+                <strong>Home</strong></button>
+            <button className="head_button"
+                onClick={() =>
+                document.getElementById("sobre").scrollIntoView({ behavior: "smooth" })}>
+            <strong>Sobre</strong></button>            
+            <Link to="/login">
+                <button className="head_button"><strong>Login</strong></button>
+            </Link>
         </Navbar>
     <div className="corpo">
         <div className="superior">
             <div className="texto">
                 <h1 id="home"></h1>
                 <h2>Venha trabalhar com a Arvum, cadastre-se já e conheça um pouco mais sobre a gente</h2>
-                
+                <Link to="/cadastrate">
+                    <button className="cadastre2"><strong>Cadastre-se</strong></button>
+                </Link>
             </div>
             <div className="imagem">
                 <img src={patinhas} alt="Tio patinhas"></img>
