@@ -3,6 +3,7 @@ import { Home } from "./pages/home.jsx";
 import { Login } from "./pages/login.jsx";
 import { Cadastrate } from "./pages/cadastrate.jsx";
 import { Dashboard } from "./pages/dashboard.jsx";
+import { CadastrateReceipt } from "./pages/cadastrate_receipt.jsx";
 
 // O "Segurança" da rota
 const ProtectedRoute = ({ children }) => {

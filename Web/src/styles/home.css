@@ -1,10 +1,12 @@
 .sugest {
-    margin-left:40px;
+    margin-left: 40px;
 }
-.sla{
+
+.sla {
     margin-right: 40px;
 }
-.head_button{
+
+.head_button {
     background: none;
     color: rgb(224, 224, 224);
     border: none;
@@ -12,74 +14,91 @@
     margin: 0 5px;
     cursor: pointer;
     font-size: 16px;
-  }
-.head_button:hover{
+}
+
+.head_button:hover {
     color: var(--secondary-color);
-  }
+}
+
 .corpo {
     margin-top: 150px;
-    background-color: none;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-start;
+    width: 100%;
+}
+
+.superior {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 40px 30px;
+    box-sizing: border-box;
+    display: grid;
+    grid-template-columns: minmax(320px, 520px) minmax(280px, 1fr);
+    align-items: center;
+    gap: 40px;
+}
+
+.texto {
+    color: var(--text-color);
     display: flex;
     flex-direction: column;
-}
-.superior {
-    background-color: none;
-    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 16px;
     width: 100%;
-    margin-right: 50px;
-    margin-left: 50px;
-    padding-bottom: 30px;
-    justify-content: space-between;
 }
-.texto {
-    background-color: none;
-    color: var(--text-color);
-    flex: 1;  /* Faz o texto ocupar o máximo de espaço possível à esquerda */
-    display: flex;
-    text-align: center;
-    max-width: 500px;
-    width:auto;
-    line-height: 1.6;
-    flex-direction: column;  /* Empilha os textos */
-    gap: 10px;  /* Espaço entre os parágrafos */
+
+.texto h2 {
+    margin: 0;
+    line-height: 1.4;
 }
+
 .imagem {
-    background-color: none;
-    flex: 1;  /* Faz a imagem ocupar metade da largura */
     display: flex;
-    justify-content: center;  /* Centraliza a imagem horizontalmente */
-    align-items: center;  /* Centraliza a imagem verticalmente */
+    justify-content: center;
+    align-items: center;
+    width: 100%;
 }
+
 .imagem img {
-    max-width: 100%;  /* Garante que a imagem não ultrapasse o tamanho do contêiner */
-    height: 450px;
+    display: block;
+    height: 420px;
+    width: auto;
+    max-width: 100%;
+    object-fit: contain;
 }
+
 .inferior {
-    background-color: none;
-    padding: 20px;
-    padding-top: 30px;
-    text-align: center;
-    margin-top: 20px;  /* Garante que a parte inferior não fique colada na parte superior */
-    width: 100%;  /* Garante que a parte inferior ocupe toda a largura disponível */
-    flex-shrink: 0;  /* Impede que a parte inferior encolha */
-    position: relative;  /* Garante que a parte inferior fique na parte de baixo */
+    width: 100%;
+    display: flex;
+    justify-content:end;
+    padding: 20px 40px 30px;
+    box-sizing: border-box;
+    margin-top: 20px;
 }
+
 .inferior h1 {
-    color: var(--secondary-color);  /* Cor do título */
+    color: var(--secondary-color);
     margin-bottom: 20px;
 }
+
 .sobre {
-    background-color: var(--primary-color);  /* Cor de fundo do quadrado */
-    border-radius: 15px;  /* Arredonda os cantos */
+    background-color: var(--primary-color);
+    border-radius: 15px;
     padding: 20px;
-    display: inline-block;  /* Faz o quadrado ocupar apenas o espaço necessário */
-    width: 100%;  /* Garante que ocupe toda a largura disponível na parte inferior */
-    max-width: 1000px;  /* Limita a largura do quadrado */
+    width: 100%;
+    max-width: 1000px;
+    box-sizing: border-box;
 }
+
 .sobre p {
-    color: var(--neutral-gray);  /* Cor do texto dentro do quadrado */
+    color: var(--neutral-gray);
 }
-.cadastre{
+
+.cadastre {
     background-color: var(--bg-color);
     color: var(--text-color);
     border-radius: 10px;
@@ -88,34 +107,70 @@
     margin-left: 18px;
     margin-right: 18px;
 }
-.cadastre:hover{
+
+.cadastre:hover {
     background-color: var(--secondary-color);
 }
-.cadastre2{
+
+.cadastre2 {
     background-color: var(--primary-color);
     color: rgb(224, 224, 224);
     border-radius: 10px;
     border: none;
-    padding: 8px;
-    width: auto;
-    min-width: 100px;
-    max-width: 100px;
-    display: inline-block;  /* Faz o botão se ajustar ao conteúdo e não ocupar toda a largura da div */
-    text-align: center;  /* Garante que o texto fique centralizado */
+    padding: 10px 16px;
+    min-width: 120px;
+    display: inline-block;
+    text-align: center;
     margin-top: 18px;
     margin-bottom: 18px;
+    cursor: pointer;
 }
-.cadastre2:hover{
+
+.cadastre2:hover {
     background-color: var(--secondary-color);
 }
+
 footer {
     width: 100%;
     padding: 20px 0;
     justify-content: space-between;
     background-color: var(--primary-color);
-    border-top: 14px solid var(--secondary-color); /* Linha dourada */
+    border-top: 14px solid var(--secondary-color);
     color: var(--secondary-color);
     display: flex;
     flex-wrap: nowrap;
     gap: 50px;
+}
+
+/* Responsivo */
+@media (max-width: 900px) {
+    .superior {
+        grid-template-columns: 1fr;
+        text-align: center;
+        padding: 0 20px 30px;
+    }
+
+    .texto {
+        align-items: center;
+    }
+
+    .imagem img {
+        height: 320px;
+    }
+
+    .inferior {
+        padding: 20px;
+    }
+
+    footer {
+        flex-wrap: wrap;
+        justify-content: center;
+        text-align: center;
+        gap: 20px;
+    }
+
+    .sugest,
+    .sla {
+        margin: 0;
+    }
 }

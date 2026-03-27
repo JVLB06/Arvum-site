@@ -47,22 +47,22 @@ export function Dashboard() {
         <div className="main">
             <Navbar>
                 
-                <Link to="extrato">
+                <Link to="/extrato">
                     <button className="head_button"><strong>Extrato</strong></button>
                 </Link>
-                <Link to="renda">
+                <Link to="/renda">
                     <button className="head_button"><strong>Renda</strong></button>
                 </Link>
-                <Link to="gastos">
+                <Link to="/gastos">
                     <button className="head_button"><strong>Gastos</strong></button>
                 </Link>
-                <Link to="investimentos">
+                <Link to="/investimentos">
                     <button className="head_button"><strong>Investimentos</strong></button>
                 </Link>
-                <Link to="metas">
+                <Link to="/metas">
                     <button className="head_button"><strong>Metas</strong></button>
                 </Link>
-                <Link to="perfil">
+                <Link to="/perfil">
                     <button className="head_button"><strong>Perfil</strong></button>      
                 </Link>   
             </Navbar>
@@ -77,22 +77,22 @@ export function Dashboard() {
                 <div className="funcoes">
                     <div className="opcoes">
                         <div className="option">
-                            <Link to="cadastrar_renda">
+                            <Link to="/cadastrar_renda">
                                 <button><span>Incluir nova renda</span></button>
                             </Link>
                         </div>
                         <div className="option">
-                            <Link to="cadastrar_gasto">
+                            <Link to="/cadastrar_gasto">
                                 <button><span>Incluir novo gasto</span></button>
                             </Link>
                         </div>
                         <div className="option">
-                            <Link to="cadastrar_investimento">
+                            <Link to="/cadastrar_investimento">
                                 <button><span>Incluir novo investimento</span></button>
                             </Link>
                         </div>
                         <div className="option">
-                            <Link to="cadastrar_meta">
+                            <Link to="/cadastrar_meta">
                                 <button><span>Incluir nova meta</span></button>
                             </Link>
                         </div>
