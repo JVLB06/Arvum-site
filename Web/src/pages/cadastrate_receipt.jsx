@@ -3,15 +3,15 @@ import cadastrate from "../services/cadastrate.js";
 import "../styles/cadastrate_receipt.css";
 
 export function CadastrateReceipt() {
-    const [description, setDescription] = useState("");
-    const [minValue, setMinValue] = useState("");
-    const [maxValue, setMaxValue] = useState("");
-    const [date, setDate] = useState("");
+    const [descricao, setdescricao] = useState("");
+    const [vlr_min, setvlr_min] = useState("");
+    const [vlr_max, setvlr_max] = useState("");
+    const [data, setdata] = useState("");
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(false);
 
     function preencherNomeRenda(valor) {
-        setDescription(valor);
+        setdescricao(valor);
     }
 
     async function enviaRenda(event) {
@@ -20,19 +20,19 @@ export function CadastrateReceipt() {
         setLoading(true);
 
         try {
-            const data = await cadastrate.createRenda({
-                description,
-                minValue,
-                maxValue,
-                date,
+            const dados = await cadastrate.createRenda({
+                descricao,
+                vlr_min,
+                vlr_max,
+                data,
             });
 
             alert("Renda cadastrada com sucesso!");
 
-            setDescription("");
-            setMinValue("");
-            setMaxValue("");
-            setDate("");
+            setdescricao("");
+            setvlr_min("");
+            setvlr_max("");
+            setdata("");
         } catch (err) {
             const mensagem =
                 err?.response?.data?.message ||
@@ -75,8 +75,8 @@ export function CadastrateReceipt() {
                             type="text"
                             required
                             placeholder="Qualquer tipo de entrada é válida"
-                            value={description}
-                            onChange={(e) => setDescription(e.target.value)}
+                            value={descricao}
+                            onChange={(e) => setdescricao(e.target.value)}
                         />
                         <br />
 
@@ -86,8 +86,8 @@ export function CadastrateReceipt() {
                             name="renda_cad_data"
                             type="date"
                             required
-                            value={date}
-                            onChange={(e) => setDate(e.target.value)}
+                            value={data}
+                            onChange={(e) => setdata(e.target.value)}
                         />
                         <br />
 
@@ -98,10 +98,10 @@ export function CadastrateReceipt() {
                             type="number"
                             step="0.01"
                             required
-                            value={minValue}
+                            value={vlr_min}
                             onChange={(e) => {
-                                setMinValue(e.target.value);
-                                setMaxValue(e.target.value);
+                                setvlr_min(e.target.value);
+                                setvlr_max(e.target.value);
                             }}
                         />
                         <br />

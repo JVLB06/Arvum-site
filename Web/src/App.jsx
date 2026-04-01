@@ -27,6 +27,9 @@ export default function App() {
         <Route path="logged" element={<ProtectedRoute>
           <Dashboard />
         </ProtectedRoute>}/>
+        <Route path="/cadastrar_renda" element={<ProtectedRoute>
+          <CadastrateReceipt />
+        </ProtectedRoute>}/>
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
     </BrowserRouter>

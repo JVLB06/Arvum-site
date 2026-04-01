@@ -97,7 +97,7 @@ export function Dashboard() {
                             </Link>
                         </div>
                         <div className="option">
-                            <Link to="cadastrar_extrato">
+                            <Link to="/cadastrar_extrato">
                                 <button><span>Incluir novo lançamento</span></button>
                             </Link>
                         </div>
