@@ -1,6 +1,7 @@
 import { useState } from "react";
 import cadastrate from "../services/cadastrate.js";
 import "../styles/cadastrate_receipt.css";
+import { BackButtonHeader } from "../components/BackButtonHeader.jsx";
 
 export function CadastrateReceipt() {
     const [descricao, setdescricao] = useState("");
@@ -51,20 +52,8 @@ export function CadastrateReceipt() {
         <div className="main">
             <div className="grid">
                 <section className="form">
-                    <div className="header">
-                        <button
-                            className="back-button"
-                            onClick={() => window.history.back()}
-                            type="button"
-                        >
-                            &lt;
-                        </button>
-                        <h1>
-                            <strong>
-                                Qual <span>renda</span> você quer incluir?
-                            </strong>
-                        </h1>
-                    </div>
+                    <BackButtonHeader title={<>
+                        Qual <span>renda</span> você quer incluir?</>} />
 
                     <form onSubmit={enviaRenda}>
                         <label htmlFor="renda_cad_nome">Nome da renda</label>
