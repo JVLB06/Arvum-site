@@ -1,7 +1,7 @@
 import { useState } from "react";
 import cadastrate from "../services/cadastrate.js";
 import "../styles/cadastrate_expenses.css";
-import { BackButtonHeader } from "../components/BackButtonHeader.jsx";
+import { BackButtonHeader } from "../components/backButtonHeader.jsx";
 
 export function CadastrateExpenses() {
     const [descricao, setDescricao] = useState("");

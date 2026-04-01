@@ -1,7 +1,7 @@
 import { useState } from "react";
 import cadastrate from "../services/cadastrate.js";
 import "../styles/cadastrate_goal.css";
-import { BackButtonHeader } from "../components/BackButtonHeader.jsx";
+import { BackButtonHeader } from "../components/backButtonHeader.jsx";
 
 export function CadastrateGoal() {
     const [descricao, setDescricao] = useState("");
