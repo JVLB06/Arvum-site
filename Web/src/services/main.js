@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: 'http://136.248.106.107:5000', // Altere para a sua URL
+  baseURL: 'https://arvum-api.duckdns.org', // Altere para a sua URL
   headers: {
     'Content-Type': 'application/json',
   }
