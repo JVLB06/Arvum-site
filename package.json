@@ -1,5 +1,23 @@
 {
+  "name": "arvum-site",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "react-router dev",
+    "build": "react-router build",
+    "start": "react-router-serve ./build/server/index.js",
+    "typecheck": "react-router typecheck"
+  },
   "dependencies": {
+    "@react-router/node": "^7.13.1",
+    "@react-router/serve": "^7.13.1",
+    "isbot": "^5.0.0",
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4",
     "react-router-dom": "^7.13.1"
+  },
+  "devDependencies": {
+    "@react-router/dev": "^7.13.1",
+    "vite": "^6.0.0"
   }
 }
