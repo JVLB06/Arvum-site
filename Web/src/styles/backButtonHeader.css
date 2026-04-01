@@ -1,0 +1,34 @@
+.header{
+    display: flex;
+    align-items: center; /* Alinha os itens verticalmente */
+    justify-content: space-between; /* Distribui espaço entre os elementos */
+    flex-wrap: nowrap; /* Evita quebra de linha */
+    padding: 10px;
+}
+.header h1 {
+    margin: 0;
+    color: var(--primary-color);
+    font-size: 30px;
+    text-align: center;
+    flex-grow: 1; /* Permite que o texto ocupe o espaço restante */
+}
+/* Destaca apenas uma palavra */
+.header span {
+    color: var(--secondary-color); /* Substitua por qualquer cor desejada */
+    font-weight: bold;
+}
+/* Botão de retorno (seta "<") */
+.back-button {
+    font-size: 60px; /* Aumenta o tamanho */
+    font-weight: bold;
+    background: none;
+    border: none;
+    color: var(--primary-color);
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.back-button:hover {
+    color: var(--secondary-color);
+    transform: scale(1.1); /* Aumenta levemente no hover */
+}
