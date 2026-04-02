@@ -1,0 +1,65 @@
+nav {
+    width: 100%;
+    padding: 20px 0;
+    justify-content: space-between;
+    background-color: var(--primary-color);
+    border-bottom: 14px solid var(--secondary-color); /* Linha dourada */
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 50px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Sombra suave para destacar */
+}
+
+/* Botão de retorno (seta "<") */
+.back-button {
+    font-size: 60px; /* Aumenta o tamanho */
+    font-weight: bold;
+    background: none;
+    border: none;
+    color: var(--primary-color);
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.back-button:hover {
+    color: var(--secondary-color);
+    transform: scale(1.1); /* Aumenta levemente no hover */
+}
+
+nav .logo {
+    display: flex;
+    align-items: center;
+    margin-left: 20px;
+}
+
+nav .logo img {
+    max-height: 40px; /* Ajuste conforme necessário */
+    margin-right: 10px;
+}
+
+nav .logo span {
+    color: rgb(224, 224, 224);
+    font-size: 20px;
+    font-weight: bold;
+}
+/* Botão de troca de tema como um círculo */
+.nav-right{
+    display: flex;
+    align-items: center;
+    gap: 18px; /* Ajusta o espaço entre os botões */
+    margin-right: 20px;;
+}
+.tema {  /*Botão para troca de tema*/
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--bg-color) 50%, var(--text-color) 50%); /* Metade branca, metade preta */
+    border: 2px solid var(--secondary-color); /* Borda dourada */
+    cursor: pointer;
+    position: relative;
+    transition: box-shadow 0.3s ease; /* Transição para o efeito de sombra */
+}
+/* Efeito de sombra no hover */
+.tema:hover {
+    background: linear-gradient(135deg, var(--text-color) 50%, var(--bg-color) 50%); /* Metade branca, metade preta */
+}
