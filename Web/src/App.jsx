@@ -8,6 +8,8 @@ import { CadastrateInvestmento } from "./pages/cadastrate_investment.jsx";
 import { CadastrateGoal } from "./pages/cadastrate_goal.jsx";
 import { CadastrateDebt } from "./pages/cadastrate_debt.jsx";
 import { CadastrateExpenses } from "./pages/cadastrate_expenses.jsx";
+import { Receipt } from "./pages/receipt.jsx";
+import { Expenses } from "./pages/expenses.jsx";
 
 // O "Segurança" da rota
 const ProtectedRoute = ({ children }) => {
@@ -45,6 +47,12 @@ export default function App() {
         </ProtectedRoute>}/>
         <Route path="/cadastrar_gasto" element={<ProtectedRoute>
           <CadastrateExpenses />
+        </ProtectedRoute>}/>
+        <Route path="/renda" element={<ProtectedRoute>
+          <Receipt />
+        </ProtectedRoute>}/>
+        <Route path="/gastos" element={<ProtectedRoute>
+          <Expenses />
         </ProtectedRoute>}/>
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>

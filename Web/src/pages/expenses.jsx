@@ -4,10 +4,10 @@ import PieChart from "../components/pieGraph.jsx";
 import ColumnChart from "../components/columnGraph.jsx";
 import { Navbar } from "../components/controlNavBar.jsx";
 import { Link } from "react-router-dom";
-import "../styles/receipt.css";
+import "../styles/expenses.css";
 
-export function Receipt() {
-    const [rendas, setRendas] = useState([]);
+export function Expenses() {
+    const [gastos, setGastos] = useState([]);
     const [dadosGraficoPie, setDadosGraficoPie] = useState([]);
     const [dadosGraficoCol, setDadosGraficoCol] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -23,10 +23,10 @@ export function Receipt() {
         "rgb(210, 105, 30)"
     ];
 
-    function normalizarListaRendas(response) {
+    function normalizarListaGastos(response) {
         return Array.isArray(response.data)
             ? response.data
-            : response.data?.rendas || [];
+            : response.data?.gastos || [];
     }
 
     function ehMesAtual(dataString) {
@@ -41,10 +41,10 @@ export function Receipt() {
         );
     }
 
-    function agruparRendasMesAtualPorTipo(listaRendas) {
+    function agruparGastosMesAtualPorTipo(listaGastos) {
         const agrupado = {};
 
-        listaRendas
+        listaGastos
             .filter((item) => ehMesAtual(item.data))
             .forEach((item) => {
                 const idTipo = item.id_divida_item;
@@ -64,10 +64,10 @@ export function Receipt() {
         return Object.values(agrupado);
     }
 
-    function agruparRendasPorMes(listaRendas) {
+    function agruparGastosPorMes(listaGastos) {
         const agrupado = {};
 
-        listaRendas.forEach((item) => {
+        listaGastos.forEach((item) => {
             if (!item.data) return;
 
             const dataItem = new Date(item.data);
@@ -90,18 +90,18 @@ export function Receipt() {
             }));
     }
 
-    const carregaRendas = async () => {
+    const carregaGastos = async () => {
         try {
             setLoading(true);
 
-            const response = await expenses.getRenda();
-            const listaRendas = normalizarListaRendas(response);
+            const response = await expenses.getGastos();
+            const listaGastos = normalizarListaGastos(response);
 
-            const rendasAgrupadas = agruparRendasMesAtualPorTipo(listaRendas);
+            const gastosAgrupadas = agruparGastosMesAtualPorTipo(listaGastos);
 
-            setRendas(rendasAgrupadas);
+            setGastos(gastosAgrupadas);
         } catch (error) {
-            console.error("Erro ao carregar rendas:", error);
+            console.error("Erro ao carregar gastos:", error);
         } finally {
             setLoading(false);
         }
@@ -109,12 +109,12 @@ export function Receipt() {
 
     const carregarDadosPie = async () => {
         try {
-            const response = await expenses.getRenda();
-            const listaRendas = normalizarListaRendas(response);
+            const response = await expenses.getGastos();
+            const listaGastos = normalizarListaGastos(response);
 
-            const rendasAgrupadas = agruparRendasMesAtualPorTipo(listaRendas);
+            const gastosAgrupadas = agruparGastosMesAtualPorTipo(listaGastos);
 
-            const formatadoParaGrafico = rendasAgrupadas.map((item, index) => ({
+            const formatadoParaGrafico = gastosAgrupadas.map((item, index) => ({
                 label: item.label,
                 value: item.value,
                 color: CORES[index % CORES.length]
@@ -128,10 +128,10 @@ export function Receipt() {
 
     const carregarDadosCol = async () => {
         try {
-            const response = await expenses.getRenda();
-            const listaRendas = normalizarListaRendas(response);
+            const response = await expenses.getGastos();
+            const listaGastos = normalizarListaGastos(response);
 
-            const formatadoParaGrafico = agruparRendasPorMes(listaRendas);
+            const formatadoParaGrafico = agruparGastosPorMes(listaGastos);
 
             setDadosGraficoCol(formatadoParaGrafico);
         } catch (error) {
@@ -144,7 +144,7 @@ export function Receipt() {
             setLoading(true);
             try {
                 await Promise.all([
-                    carregaRendas(),
+                    carregaGastos(),
                     carregarDadosPie(),
                     carregarDadosCol()
                 ]);
@@ -161,28 +161,28 @@ export function Receipt() {
             <Navbar>
                 <Link to="/extrato">
                     <button className="head_button">
-                        <strong>Edit Renda</strong>
+                        <strong>Edit Gasto</strong>
                     </button>
                 </Link>
-                <Link to="/renda_add">
+                <Link to="/renda">
                     <button className="head_button">
-                        <strong>Add Renda</strong>
+                        <strong>Add Gasto</strong>
                     </button>
                 </Link>
             </Navbar>
 
             <div className="structure">
                 <div className="corpo">
-                    <div className="rendas">
-                        <h1>Totais de rendas no mês atual</h1>
+                    <div className="gastos">
+                        <h1>Totais de gastos no mês atual</h1>
                         <h2>
                             <span>Nome</span> Valor
                         </h2>
 
                         {loading ? (
-                            <p>Carregando rendas...</p>
-                        ) : rendas.length > 0 ? (
-                            rendas.map((renda, index) => (
+                            <p>Carregando gastos...</p>
+                        ) : gastos.length > 0 ? (
+                            gastos.map((renda, index) => (
                                 <div className="renda-item" key={renda.id || index}>
                                     <span>{renda.label}</span>
                                     <strong>
@@ -194,7 +194,7 @@ export function Receipt() {
                                 </div>
                             ))
                         ) : (
-                            <p>Nenhuma renda encontrada no mês atual.</p>
+                            <p>Nenhum gasto encontrado no mês atual.</p>
                         )}
                     </div>
 
