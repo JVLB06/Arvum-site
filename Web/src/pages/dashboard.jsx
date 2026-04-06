@@ -62,6 +62,9 @@ export function Dashboard() {
                 <Link to="/metas">
                     <button className="head_button"><strong>Metas</strong></button>
                 </Link>
+                <Link to="/dividas">
+                    <button className="head_button"><strong>Dividas</strong></button>
+                </Link>
                 <Link to="/perfil">
                     <button className="head_button"><strong>Perfil</strong></button>      
                 </Link>   
