@@ -13,6 +13,7 @@ import { Expenses } from "./pages/expenses.jsx";
 import { Investment } from "./pages/investments.jsx";
 import { Goal } from "./pages/goals.jsx";
 import { Debt } from "./pages/debts.jsx";
+import { CreateEntry } from "./pages/create_entry.jsx";
 
 // O "Segurança" da rota
 const ProtectedRoute = ({ children }) => {
@@ -65,6 +66,9 @@ export default function App() {
         </ProtectedRoute>}/>
         <Route path="/dividas" element={<ProtectedRoute>
           <Debt />
+        </ProtectedRoute>}/>
+        <Route path="/novo_lcto" element={<ProtectedRoute>
+          <CreateEntry />
         </ProtectedRoute>}/>
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
