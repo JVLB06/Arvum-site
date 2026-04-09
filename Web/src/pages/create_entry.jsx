@@ -121,10 +121,10 @@ export function CreateEntry() {
         // 1. Mapeia o tipo para a função do service
         const fetchMethods = {
           renda: cadastrate.getRenda,
-          gasto: cadastrate.getGastos,
-          investimento: cadastrate.getInvestimentosAtivos,
-          divida: cadastrate.getDividas,
-          meta: cadastrate.getMetas,
+          gasto: cadastrate.getExpenses,
+          investimento: cadastrate.getActiveInvestments,
+          divida: cadastrate.getDebts,
+          meta: cadastrate.getGoals,
         };
 
         const fetchData = fetchMethods[tipoSelecionado];
@@ -324,9 +324,8 @@ export function CreateEntry() {
                       >
                         <div className="flex items-start justify-between gap-3">
                           <div>
-                            <p className="text-sm font-semibold">{modelo.descricao}</p>
                             <p className="template-card__description mt-1 text-sm">
-                              {modelo.descricao || 'Sem descrição'}
+                              {modelo.nome || 'Sem descrição'}
                             </p>
                           </div>
 
@@ -342,7 +341,7 @@ export function CreateEntry() {
                           </div>
 
                           <span className="template-card__value text-sm font-semibold">
-                            {Number(modelo.vlr_min || 0).toLocaleString('pt-BR', {
+                            {Number(modelo.valor || 0).toLocaleString('pt-BR', {
                               style: 'currency',
                               currency: 'BRL',
                             })}
