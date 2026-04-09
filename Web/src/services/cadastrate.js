@@ -23,7 +23,7 @@ const cadastrate = {
 
   getActiveInvestments: async () => {
     const response = await api.get(`/user_plan/ler_investimentos_ativos`);
-    return response.data;
+    return response.data.invest;
   },
 
   getInactiveInvestments: async () => {
@@ -53,7 +53,7 @@ const cadastrate = {
 
   getDebts: async () => {
     const response = await api.get(`/user_plan/ler_dividas`);
-    return response.data;
+    return response.data.divida;
   },
 
   createDebt: async (debtData) => {
@@ -83,7 +83,7 @@ const cadastrate = {
 
   getGoals: async () => {
     const response = await api.get(`/user_plan/ler_metas`);
-    return response.data;
+    return response.data.meta;
   },
 
   createGoal: async (goalData) => {
@@ -113,7 +113,7 @@ const cadastrate = {
 
   getExpenses: async () => {
     const response = await api.get(`/user_plan/ler_gastos`);
-    return response.data;
+    return response.data.gasto;
   },
 
   createExpense: async (expenseData) => {

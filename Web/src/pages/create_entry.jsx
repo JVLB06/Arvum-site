@@ -10,6 +10,39 @@ import {
 import expenses from "../services/extract.js";
 import cadastrate from "../services/cadastrate.js";
 
+const MODEL_MAPPERS = {
+  renda: (item) => ({
+    id: item.id,
+    nome: item.descricao, // O C# mapeia 'nome' da tabela para 'descricao' no objeto
+    valor: item.vlr_min || 0,
+    data: item.data ? item.data.split('T')[0] : '',
+  }),
+  gasto: (item) => ({
+    id: item.id,
+    nome: item.descricao,
+    valor: item.vlr_min || 0,
+    data: item.data_init ? item.data_init.split('T')[0] : '',
+  }),
+  investimento: (item) => ({
+    id: item.id,
+    nome: item.descricao,
+    valor: item.vlr || 0,
+    data: item.data_init ? item.data_init.split('T')[0] : '',
+  }),
+  divida: (item) => ({
+    id: item.id,
+    nome: item.descricao,
+    valor: item.vlr || 0,
+    data: item.data_init ? item.data_init.split('T')[0] : '',
+  }),
+  meta: (item) => ({
+    id: item.id,
+    nome: item.descricao,
+    valor: item.vlr || 0,
+    data: item.data_init ? item.data_init.split('T')[0] : '',
+  }),
+};
+
 const TIPOS = [
   {
     value: 'renda',
@@ -70,6 +103,8 @@ export function CreateEntry() {
     resetSelectionAndForm();
   };
 
+  // Dentro do seu componente CreateEntry:
+
   useEffect(() => {
     if (!tipoSelecionado) {
       setModelos([]);
@@ -82,14 +117,40 @@ export function CreateEntry() {
       try {
         setLoadingModelos(true);
         setErro('');
-        const data = await cadastrate.getRenda(tipoSelecionado);
+
+        // 1. Mapeia o tipo para a função do service
+        const fetchMethods = {
+          renda: cadastrate.getRenda,
+          gasto: cadastrate.getGastos,
+          investimento: cadastrate.getInvestimentosAtivos,
+          divida: cadastrate.getDividas,
+          meta: cadastrate.getMetas,
+        };
+
+        const fetchData = fetchMethods[tipoSelecionado];
+        
+        if (!fetchData) {
+          console.error(`Método para o tipo ${tipoSelecionado} não encontrado.`);
+          return;
+        }
+
+        // 2. Chama a API (que já retorna .rendas, .invest, etc, conforme seu service)
+        const data = await fetchData();
+
         if (isMounted) {
-          setModelos(Array.isArray(data) ? data : []);
+          // 3. Normaliza os dados usando o Mapper
+          // O Mapper garante que 'modelos' sempre tenha a mesma estrutura
+          const normalized = (Array.isArray(data) ? data : []).map(item => 
+            MODEL_MAPPERS[tipoSelecionado](item)
+          );
+
+          setModelos(normalized);
         }
       } catch (error) {
+        console.error("Erro ao carregar modelos:", error);
         if (isMounted) {
           setModelos([]);
-          setErro('Não foi possível carregar os modelos dessa categoria.');
+          setErro('Não foi possível carregar os modelos desta categoria.');
         }
       } finally {
         if (isMounted) {
@@ -118,9 +179,9 @@ export function CreateEntry() {
     setItemVinculo(modelo);
     setFormData({
       id: modelo.id || '',
-      valor: formatCurrencyInput(modelo.vlr_min), // Use vlr_min ou vlr_max vindo do C#
-      data: modelo.data ? modelo.data.split('T')[0] : '', // Formata a data ISO para YYYY-MM-DD
-      descricao: modelo.descricao || '',
+      valor: formatCurrencyInput(modelo.valor), // Agora é sempre .valor
+      data: modelo.data || '',                  // Agora é sempre .data
+      descricao: modelo.nome || '',             // Agora é sempre .nome
     });
     setErro('');
   };
