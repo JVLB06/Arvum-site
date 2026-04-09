@@ -3,7 +3,7 @@ import api from './main';
 const cadastrate = {
   getRenda: async () => {
     const response = await api.get(`/user_plan/ler_renda`);
-    return response.data;
+    return response.data.rendas;
   },
 
   createRenda: async (rendaData) => {

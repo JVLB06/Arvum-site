@@ -82,7 +82,7 @@ export function CreateEntry() {
       try {
         setLoadingModelos(true);
         setErro('');
-        const data = await cadastrate(tipoSelecionado);
+        const data = await cadastrate.getRenda(tipoSelecionado);
         if (isMounted) {
           setModelos(Array.isArray(data) ? data : []);
         }
@@ -118,8 +118,8 @@ export function CreateEntry() {
     setItemVinculo(modelo);
     setFormData({
       id: modelo.id || '',
-      valor: formatCurrencyInput(modelo.valorPadrao),
-      data: modelo.dataPadrao || '',
+      valor: formatCurrencyInput(modelo.vlr_min), // Use vlr_min ou vlr_max vindo do C#
+      data: modelo.data ? modelo.data.split('T')[0] : '', // Formata a data ISO para YYYY-MM-DD
       descricao: modelo.descricao || '',
     });
     setErro('');
@@ -143,11 +143,14 @@ export function CreateEntry() {
       setErro('');
 
       const payload = {
+        historico: formData.descricao,
+        valor: formData.valor,
         tipo: tipoSelecionado,
-        ...formData,
+        data: formData.data,
+        id_ref: formData.id,
       };
 
-      await expenses(payload);
+      await expenses.createExpense(payload);
 
       // Após salvar, a tela volta para o estado inicial da categoria atual.
       resetSelectionAndForm();
@@ -260,7 +263,7 @@ export function CreateEntry() {
                       >
                         <div className="flex items-start justify-between gap-3">
                           <div>
-                            <p className="text-sm font-semibold">{modelo.nome}</p>
+                            <p className="text-sm font-semibold">{modelo.descricao}</p>
                             <p className="template-card__description mt-1 text-sm">
                               {modelo.descricao || 'Sem descrição'}
                             </p>
@@ -278,7 +281,7 @@ export function CreateEntry() {
                           </div>
 
                           <span className="template-card__value text-sm font-semibold">
-                            {Number(modelo.valorPadrao || 0).toLocaleString('pt-BR', {
+                            {Number(modelo.vlr_min || 0).toLocaleString('pt-BR', {
                               style: 'currency',
                               currency: 'BRL',
                             })}
