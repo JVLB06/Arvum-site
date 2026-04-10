@@ -24,9 +24,21 @@ export function Receipt() {
     ];
 
     function normalizarListaRendas(response) {
-        return Array.isArray(response.data)
-            ? response.data
-            : response.data?.rendas || [];
+        return Array.isArray(response?.rendas) ? response.rendas : [];
+    }
+
+    function mapearRendaPagamento(item) {
+        return {
+            idPagamento: item.id_divida,
+            data: item.data,
+            historico: item.historico,
+            valorPagamento: Number(item.vlr_pagamento || 0),
+            rendaId: item.divida_item?.id_divida_item,
+            rendaNome: item.divida_item?.nome || "Sem nome",
+            rendaValorBase: Number(item.divida_item?.valor || 0),
+            dataReferencia: item.divida_item?.data_init || null,
+            saldoExtrato: Number(item.saldo_extrato || 0),
+        };
     }
 
     function ehMesAtual(dataString) {
@@ -47,19 +59,40 @@ export function Receipt() {
         listaRendas
             .filter((item) => ehMesAtual(item.data))
             .forEach((item) => {
-                const idTipo = item.id_divida_item;
-                const valor = Number(item.vlr_pagamento || 0);
+                const idTipo = item.rendaId;
+                const valor = item.valorPagamento;
 
                 if (!agrupado[idTipo]) {
                     agrupado[idTipo] = {
                         id: idTipo,
-                        label: item.nome || `Renda ${idTipo}`,
+                        label: item.rendaNome || `Renda ${idTipo}`,
                         value: 0
                     };
                 }
 
                 agrupado[idTipo].value += valor;
             });
+
+        return Object.values(agrupado);
+    }
+
+    function agruparRendasTotalPorTipo(listaRendas) {
+        const agrupado = {};
+
+        listaRendas.forEach((item) => {
+            const idTipo = item.rendaId;
+            const valor = item.valorPagamento;
+
+            if (!agrupado[idTipo]) {
+                agrupado[idTipo] = {
+                    id: idTipo,
+                    label: item.rendaNome || `Renda ${idTipo}`,
+                    value: 0
+                };
+            }
+
+            agrupado[idTipo].value += valor;
+        });
 
         return Object.values(agrupado);
     }
@@ -72,7 +105,7 @@ export function Receipt() {
 
             const dataItem = new Date(item.data);
             const chaveMes = `${dataItem.getFullYear()}-${String(dataItem.getMonth() + 1).padStart(2, "0")}`;
-            const valor = Number(item.vlr_pagamento || 0);
+            const valor = item.valorPagamento;
 
             if (!agrupado[chaveMes]) {
                 agrupado[chaveMes] = 0;
@@ -90,64 +123,35 @@ export function Receipt() {
             }));
     }
 
-    const carregaRendas = async () => {
-        try {
-            setLoading(true);
-
-            const response = await expenses.getRenda();
-            const listaRendas = normalizarListaRendas(response);
-
-            const rendasAgrupadas = agruparRendasMesAtualPorTipo(listaRendas);
-
-            setRendas(rendasAgrupadas);
-        } catch (error) {
-            console.error("Erro ao carregar rendas:", error);
-        } finally {
-            setLoading(false);
-        }
-    };
-
-    const carregarDadosPie = async () => {
-        try {
-            const response = await expenses.getRenda();
-            const listaRendas = normalizarListaRendas(response);
-
-            const rendasAgrupadas = agruparRendasMesAtualPorTipo(listaRendas);
-
-            const formatadoParaGrafico = rendasAgrupadas.map((item, index) => ({
-                label: item.label,
-                value: item.value,
-                color: CORES[index % CORES.length]
-            }));
-
-            setDadosGraficoPie(formatadoParaGrafico);
-        } catch (error) {
-            console.error("Erro ao consolidar dados do gráfico de pizza:", error);
-        }
-    };
-
-    const carregarDadosCol = async () => {
-        try {
-            const response = await expenses.getRenda();
-            const listaRendas = normalizarListaRendas(response);
-
-            const formatadoParaGrafico = agruparRendasPorMes(listaRendas);
-
-            setDadosGraficoCol(formatadoParaGrafico);
-        } catch (error) {
-            console.error("Erro ao consolidar dados do gráfico de colunas:", error);
-        }
-    };
-
     useEffect(() => {
         async function carregarTudo() {
-            setLoading(true);
             try {
-                await Promise.all([
-                    carregaRendas(),
-                    carregarDadosPie(),
-                    carregarDadosCol()
-                ]);
+                setLoading(true);
+
+                const response = await expenses.obtainReceiptPayments();
+                const listaBruta = normalizarListaRendas(response);
+                const listaNormalizada = listaBruta.map(mapearRendaPagamento);
+
+                const rendasMesAtual = agruparRendasMesAtualPorTipo(listaNormalizada);
+                const rendasTotais = agruparRendasTotalPorTipo(listaNormalizada);
+                const rendasPorMes = agruparRendasPorMes(listaNormalizada);
+
+                setRendas(rendasMesAtual);
+
+                setDadosGraficoPie(
+                    rendasTotais.map((item, index) => ({
+                        label: item.label,
+                        value: item.value,
+                        color: CORES[index % CORES.length]
+                    }))
+                );
+
+                setDadosGraficoCol(rendasPorMes);
+            } catch (error) {
+                console.error("Erro ao carregar dashboard de rendas:", error);
+                setRendas([]);
+                setDadosGraficoPie([]);
+                setDadosGraficoCol([]);
             } finally {
                 setLoading(false);
             }
