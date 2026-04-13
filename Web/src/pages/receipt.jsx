@@ -163,14 +163,14 @@ export function Receipt() {
     return (
         <div className="main">
             <Navbar>
-                <Link to="/extrato">
+                <Link to="/atualizar_renda">
                     <button className="head_button">
                         <strong>Edit Renda</strong>
                     </button>
                 </Link>
-                <Link to="/renda_add">
+                <Link to="/cadastrar_renda">
                     <button className="head_button">
-                        <strong>Add Renda</strong>
+                        <strong>+</strong>
                     </button>
                 </Link>
             </Navbar>

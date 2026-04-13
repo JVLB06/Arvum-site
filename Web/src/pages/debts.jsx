@@ -159,14 +159,14 @@ export function Debt() {
     return (
         <div className="main">
             <Navbar>
-                <Link to="/extrato">
+                <Link to="/atualizar_divida">
                     <button className="head_button">
                         <strong>Edit Divida</strong>
                     </button>
                 </Link>
-                <Link to="/renda_add">
+                <Link to="/cadastrar_divida">
                     <button className="head_button">
-                        <strong>Add Divida</strong>
+                        <strong>+</strong>
                     </button>
                 </Link>
             </Navbar>

@@ -159,14 +159,14 @@ export function Expenses() {
     return (
         <div className="main">
             <Navbar>
-                <Link to="/extrato">
+                <Link to="/atualizar_gasto">
                     <button className="head_button">
                         <strong>Edit Gasto</strong>
                     </button>
                 </Link>
-                <Link to="/renda">
+                <Link to="/cadastrar_gasto">
                     <button className="head_button">
-                        <strong>Add Gasto</strong>
+                        <strong>+</strong>
                     </button>
                 </Link>
             </Navbar>

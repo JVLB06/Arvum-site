@@ -159,14 +159,14 @@ export function Goal() {
     return (
         <div className="main">
             <Navbar>
-                <Link to="/extrato">
+                <Link to="/atualizar_meta">
                     <button className="head_button">
                         <strong>Edit Meta</strong>
                     </button>
                 </Link>
-                <Link to="/renda_add">
+                <Link to="/cadastrar_meta">
                     <button className="head_button">
-                        <strong>Add Meta</strong>
+                        <strong>+</strong>
                     </button>
                 </Link>
             </Navbar>
