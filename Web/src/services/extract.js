@@ -5,6 +5,13 @@ function unwrapPayload(data, key) {
 }
 
 const expenses = {
+  getExtract: async (dateIni, dateEnd) => {
+    const response = await api.get('/extrato/extrato', {
+      params: { data_ini: dateIni, data_fim: dateEnd },
+    });
+    return response.data;
+  },
+
   createExpense: async (expenseData) => {
     const response = await api.post('/extrato/incluir_lancamento', expenseData);
     return response.data;

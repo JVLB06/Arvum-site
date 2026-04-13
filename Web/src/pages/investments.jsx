@@ -159,14 +159,14 @@ export function Investment() {
     return (
         <div className="main">
             <Navbar>
-                <Link to="/extrato">
+                <Link to="/atualizar_investimento">
                     <button className="head_button">
                         <strong>Edit Investimento</strong>
                     </button>
                 </Link>
-                <Link to="/renda_add">
+                <Link to="/cadastrar_investimento">
                     <button className="head_button">
-                        <strong>Add Investimento</strong>
+                        <strong>+</strong>
                     </button>
                 </Link>
             </Navbar>
