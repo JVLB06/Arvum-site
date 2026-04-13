@@ -19,6 +19,7 @@ import { UpdateGoal } from "./pages/update_goal.jsx";
 import { UpdateInvestment } from "./pages/update_investment.jsx";
 import { UpdateReceipt } from "./pages/update_receipt.jsx";
 import { UpdateExpenses } from "./pages/update_expenses.jsx";
+import { Extract } from "./pages/extract.jsx";
 
 // O "Segurança" da rota
 const ProtectedRoute = ({ children }) => {
@@ -89,6 +90,9 @@ export default function App() {
         </ProtectedRoute>}/>
         <Route path="/atualizar_gasto" element={<ProtectedRoute>
           <UpdateExpenses />
+        </ProtectedRoute>}/>
+        <Route path="/extrato" element={<ProtectedRoute>
+          <Extract />
         </ProtectedRoute>}/>
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
