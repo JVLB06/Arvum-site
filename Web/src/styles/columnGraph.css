@@ -1,0 +1,43 @@
+
+.dados {
+    flex: 1; /* Ocupa o espaço disponível */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.grafico-container {
+    width: 100%;
+    max-width: 600px;
+    align-items: center;
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+}
+/* Ajusta o canvas do gráfico */
+canvas {
+    width: 400px !important;
+    height:
+    400px !important;
+}
+.legenda {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    background-color: none;
+    padding: 10px;
+}
+
+.legenda-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 5px;
+    color: var(--text-color);
+}
+
+.legenda-item span {
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+}

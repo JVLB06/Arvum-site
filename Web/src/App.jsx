@@ -8,6 +8,12 @@ import { CadastrateInvestmento } from "./pages/cadastrate_investment.jsx";
 import { CadastrateGoal } from "./pages/cadastrate_goal.jsx";
 import { CadastrateDebt } from "./pages/cadastrate_debt.jsx";
 import { CadastrateExpenses } from "./pages/cadastrate_expenses.jsx";
+import { Receipt } from "./pages/receipt.jsx";
+import { Expenses } from "./pages/expenses.jsx";
+import { Investment } from "./pages/investments.jsx";
+import { Goal } from "./pages/goals.jsx";
+import { Debt } from "./pages/debts.jsx";
+import { CreateEntry } from "./pages/create_entry.jsx";
 
 // O "Segurança" da rota
 const ProtectedRoute = ({ children }) => {
@@ -45,6 +51,24 @@ export default function App() {
         </ProtectedRoute>}/>
         <Route path="/cadastrar_gasto" element={<ProtectedRoute>
           <CadastrateExpenses />
+        </ProtectedRoute>}/>
+        <Route path="/renda" element={<ProtectedRoute>
+          <Receipt />
+        </ProtectedRoute>}/>
+        <Route path="/gastos" element={<ProtectedRoute>
+          <Expenses />
+        </ProtectedRoute>}/>
+        <Route path="/investimentos" element={<ProtectedRoute>
+          <Investment />
+        </ProtectedRoute>}/>
+        <Route path="/metas" element={<ProtectedRoute>
+          <Goal />
+        </ProtectedRoute>}/>
+        <Route path="/dividas" element={<ProtectedRoute>
+          <Debt />
+        </ProtectedRoute>}/>
+        <Route path="/novo_lcto" element={<ProtectedRoute>
+          <CreateEntry />
         </ProtectedRoute>}/>
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>

@@ -62,6 +62,9 @@ export function Dashboard() {
                 <Link to="/metas">
                     <button className="head_button"><strong>Metas</strong></button>
                 </Link>
+                <Link to="/dividas">
+                    <button className="head_button"><strong>Dividas</strong></button>
+                </Link>
                 <Link to="/perfil">
                     <button className="head_button"><strong>Perfil</strong></button>      
                 </Link>   
@@ -102,7 +105,7 @@ export function Dashboard() {
                             </Link>
                         </div>
                         <div className="option">
-                            <Link to="/cadastrar_extrato">
+                            <Link to="/novo_lcto">
                                 <button><span>Incluir novo lançamento</span></button>
                             </Link>
                         </div>
