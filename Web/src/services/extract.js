@@ -6,7 +6,7 @@ function unwrapPayload(data, key) {
 
 const expenses = {
   getExtract: async (dateIni, dateEnd) => {
-    const response = await api.get('/extrato/extrato', {
+    const response = await api.get('/extrato/ler_extrato', {
       params: { data_ini: dateIni, data_fim: dateEnd },
     });
     return response.data;
