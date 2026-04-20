@@ -6,6 +6,8 @@ import { Link } from 'react-router-dom';
 import "../styles/dashboard.css";
 
 export function Dashboard() {
+    const FraseDoDia = () => {
+      const [dados, setDados] = useState({ content: "Carregando frase...", author: "" })};
     const [dadosGrafico, setDadosGrafico] = useState([]);
     const [loading, setLoading] = useState(true);
 
@@ -41,6 +43,10 @@ export function Dashboard() {
 
     useEffect(() => {
         carregarDadosDashboard();
+        const buscarDados = async () => {
+            const resultado = await getTranslatedQuote();
+            setDados(resultado)};
+        buscarDados();
     }, []);
 
     return (
@@ -112,7 +118,7 @@ export function Dashboard() {
                         <h2>Frase do pensador:</h2>
                     </div>
                     <div className="pensador">
-                        <h3><em>Frase</em> - Autor</h3>
+                        <h3><em>{dados.content}</em> - {dados.author}</h3>
                     </div>
                 </div>
             </div>        
