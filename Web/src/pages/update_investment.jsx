@@ -133,9 +133,7 @@ export function UpdateInvestment() {
         setError("");
 
         try {
-            await cadastrate.inactivateInvestment({
-                id_invest: investimento.id_invest,
-            });
+            await cadastrate.inactivateInvestment(investimento.id_invest);
 
             alert("Investimento removido com sucesso!");
 

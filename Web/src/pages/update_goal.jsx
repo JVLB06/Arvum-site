@@ -136,9 +136,7 @@ export function UpdateGoal() {
         setError("");
 
         try {
-            await cadastrate.inactivateGoal({
-                id_meta: meta.id_meta,
-            });
+            await cadastrate.inactivateGoal(meta.id_meta);
 
             alert("Meta removida com sucesso!");
 

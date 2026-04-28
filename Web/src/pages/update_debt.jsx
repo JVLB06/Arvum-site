@@ -138,9 +138,7 @@ export function UpdateDebt() {
         setError("");
 
         try {
-            await cadastrate.inactivateDebt({
-                id_divida: divida.id_divida,
-            });
+            await cadastrate.inactivateDebt(divida.id_divida);
 
             alert("Dívida removida com sucesso!");
 
