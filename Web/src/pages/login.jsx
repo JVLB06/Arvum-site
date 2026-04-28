@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { getTranslatedQuote } from './services/phrase';
+import { getTranslatedQuote } from '../services/phrase.js';
 import accounts from "../services/auth.js";
 import "../styles/login.css";
 
@@ -8,8 +8,7 @@ export function Login() {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
-    const FraseDoDia = () => {
-      const [dados, setDados] = useState({ content: "Carregando frase...", author: "" })};
+    const [dados, setDados] = useState({ content: "Carregando frase...", author: "" });
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
 

@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { getTranslatedQuote } from './services/phrase';
+import { getTranslatedQuote } from '../services/phrase.js';
 import accounts from "../services/auth.js";
 import "../styles/cadastrate.css";
 
@@ -10,8 +10,7 @@ export function Cadastrate() {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
-  const FraseDoDia = () => {
-    const [dados, setDados] = useState({ content: "Carregando frase...", author: "" })};
+  const [dados, setDados] = useState({ content: "Carregando frase...", author: "" });
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
