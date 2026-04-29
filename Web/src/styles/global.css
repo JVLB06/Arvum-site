@@ -14,7 +14,7 @@
     --neutral-gray: rgb(74, 74, 74); /* Cinza mais claro para contraste */
 }
 
-body, html {
+body, html, main {
     margin: 0;
     padding: 0;
     background: linear-gradient(135deg, var(--bg-color), var(--neutral-gray));
