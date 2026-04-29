@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { getTranslatedQuote } from '../services/phrase.js';
 import accounts from "../services/auth.js";
 import "../styles/login.css";
 
@@ -7,8 +8,18 @@ export function Login() {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
+    const [dados, setDados] = useState({ content: "Carregando frase...", author: "" });
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
+
+    useEffect(() => {
+    // Função interna para buscar os dados
+    const buscarDados = async () => {
+      const resultado = await getTranslatedQuote();
+      setDados(resultado);
+    };
+      buscarDados();
+    }, []);
 
     async function handleSubmit(event) {
       event.preventDefault();
@@ -45,7 +56,9 @@ export function Login() {
         </div>
         <form className="grid" onSubmit={handleSubmit}>
           <aside className="pensar">
-            <p id="frase_do_dia"><em>Frase</em> - Autor</p>
+            <p id="frase_do_dia">
+              <em>{dados.content}</em> - {dados.author}
+            </p>
           </aside>
           <section className="form">
             <label htmlFor="login_user">Email?</label>

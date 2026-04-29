@@ -152,9 +152,7 @@ export function UpdateExpenses() {
         setError("");
 
         try {
-            await cadastrate.inactivateExpense({
-                id_gasto: gasto.id_gasto,
-            });
+            await cadastrate.inactivateExpense(gasto.id_gasto);
 
             alert("Gasto removido com sucesso!");
 

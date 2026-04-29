@@ -17,6 +17,7 @@ const INITIAL_EDIT_FORM = {
     tipo: "",
     data: "",
     valor: "",
+    historico: "",
 };
 
 function formatCurrency(value) {
@@ -35,6 +36,17 @@ function formatDate(value) {
     if (Number.isNaN(date.getTime())) return value;
 
     return date.toLocaleDateString("pt-BR");
+}
+
+function normalizeExtractItem(item) {
+    return {
+        id: item?.extrato_id ?? item?.id ?? "",
+        historico: item?.historico ?? "",
+        tipo: item?.tipo ?? "",
+        data: item?.data ?? "",
+        valor: item?.valor ?? 0,
+        saldo: item?.saldo ?? 0,
+    };
 }
 
 export function Extract() {
@@ -183,7 +195,7 @@ export function Extract() {
                 ? response.lancamentos
                 : [];
 
-            setItems(extractItems);
+            setItems(extractItems.map(normalizeExtractItem));
 
             /**
              * Como esse endpoint atual não veio paginado,
@@ -250,6 +262,7 @@ export function Extract() {
         setEditForm({
             id: item.id,
             tipo: item.tipo,
+            historico: item.historico,
             data: item.data ? String(item.data).split("T")[0] : "",
             valor: item.valor ?? "",
         });
@@ -281,6 +294,7 @@ export function Extract() {
             await expenses.updateExpense({
                 id: editForm.id,
                 tipo: editForm.tipo,
+                historico: editForm.historico,
                 data: editForm.data,
                 valor: editForm.valor,
             });
@@ -292,6 +306,7 @@ export function Extract() {
                               ...item,
                               data: editForm.data,
                               valor: Number(editForm.valor),
+                              historico: editForm.historico,
                           }
                         : item
                 )

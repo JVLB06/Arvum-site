@@ -1,11 +1,13 @@
 import { useState, useEffect } from "react";
 import expenses from "../services/extract.js";
 import PieChart from "../components/pieGraph.jsx"; 
+import { getTranslatedQuote } from '../services/phrase.js';
 import { Navbar } from "../components/navBar.jsx";
 import { Link } from 'react-router-dom';
 import "../styles/dashboard.css";
 
 export function Dashboard() {
+    const [dados, setDados] = useState({ content: "Carregando frase...", author: "" });
     const [dadosGrafico, setDadosGrafico] = useState([]);
     const [loading, setLoading] = useState(true);
 
@@ -24,11 +26,11 @@ export function Dashboard() {
 
             // Montamos o array no formato esperado pelo PieChart
             const formatadoParaGrafico = [
-                { label: 'Renda', value: renda.data.valor, color: 'rgb(11, 61, 46)' },
-                { label: 'Investimento', value: investimentos.data.valor, color: 'rgb(8, 76, 97)' },
-                { label: 'Dívida', value: dividas.data.valor, color: 'rgb(145, 40, 36)' },
-                { label: 'Metas', value: metas.data.valor, color: 'rgb(201, 162, 39)' },
-                { label: 'Gasto', value: gastos.data.valor, color: 'rgb(180, 100, 30)' },
+                { label: 'Renda', value: renda.reduce((acc, item) => acc + item.valor, 0), color: 'rgb(11, 61, 46)' },
+                { label: 'Investimento', value: investimentos.reduce((acc, item) => acc + item.valor, 0), color: 'rgb(8, 76, 97)' },
+                { label: 'Dívida', value: dividas.reduce((acc, item) => acc + item.valor, 0), color: 'rgb(145, 40, 36)' },
+                { label: 'Metas', value: metas.reduce((acc, item) => acc + item.valor, 0), color: 'rgb(201, 162, 39)' },
+                { label: 'Gasto', value: gastos.reduce((acc, item) => acc + item.valor, 0), color: 'rgb(180, 100, 30)' },
             ];
 
             setDadosGrafico(formatadoParaGrafico);
@@ -41,6 +43,10 @@ export function Dashboard() {
 
     useEffect(() => {
         carregarDadosDashboard();
+        const buscarDados = async () => {
+            const resultado = await getTranslatedQuote();
+            setDados(resultado)};
+        buscarDados();
     }, []);
 
     return (
@@ -112,7 +118,7 @@ export function Dashboard() {
                         <h2>Frase do pensador:</h2>
                     </div>
                     <div className="pensador">
-                        <h3><em>Frase</em> - Autor</h3>
+                        <h3><em>{dados.content}</em> - {dados.author}</h3>
                     </div>
                 </div>
             </div>        

@@ -21,9 +21,7 @@ const cadastrate = {
   },
 
   deleteRenda: async (deleteData) => {
-    const response = await api.delete('/user_plan/inativar_renda', {
-      data: deleteData,
-    });
+    const response = await api.delete(`/user_plan/inativar_renda/${deleteData}`);
     return response.data;
   },
 
@@ -52,10 +50,8 @@ const cadastrate = {
     return response.data;
   },
 
-  inactivateInvestment: async (inactivateData) => {
-    const response = await api.delete('/user_plan/inativar_investimento', {
-      data: inactivateData,
-    });
+  inactivateInvestment: async (investimentoData) => {
+    const response = await api.delete(`/user_plan/inativar_investimento/${investimentoData}`);
     return response.data;
   },
 
@@ -74,10 +70,8 @@ const cadastrate = {
     return response.data;
   },
 
-  inactivateDebt: async (inactivateData) => {
-    const response = await api.delete('/user_plan/inativar_divida', {
-      data: inactivateData,
-    });
+  inactivateDebt: async (dividaData) => {
+    const response = await api.delete(`/user_plan/inativar_divida/${dividaData}`);
     return response.data;
   },
 
@@ -106,10 +100,8 @@ const cadastrate = {
     return response.data;
   },
 
-  inactivateGoal: async (inactivateData) => {
-    const response = await api.delete('/user_plan/inativar_meta', {
-      data: inactivateData,
-    });
+  inactivateGoal: async (metaData) => {
+    const response = await api.delete(`/user_plan/inativar_meta/${metaData}`);
     return response.data;
   },
 
@@ -138,10 +130,8 @@ const cadastrate = {
     return response.data;
   },
 
-  inactivateExpense: async (inactivateData) => {
-    const response = await api.delete('/user_plan/inativar_gasto', {
-      data: inactivateData,
-    });
+  inactivateExpense: async (gastoData) => {
+    const response = await api.delete(`/user_plan/inativar_gasto/${gastoData}`);
     return response.data;
   },
 };

@@ -38,7 +38,7 @@ export function UpdateReceipt() {
             setLoadingList(true);
             setError("");
 
-            const data = await cadastrate.getRendas();
+            const data = await cadastrate.getRenda();
             const normalized = Array.isArray(data) ? data.map(normalizeRenda) : [];
             setRendas(normalized);
         } catch (err) {
@@ -133,9 +133,7 @@ export function UpdateReceipt() {
         setError("");
 
         try {
-            await cadastrate.deleteRenda({
-                id_renda: renda.id_renda,
-            });
+            await cadastrate.deleteRenda(renda.id_renda);
 
             alert("Renda removida com sucesso!");
 

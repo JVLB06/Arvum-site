@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { getTranslatedQuote } from '../services/phrase.js';
 import accounts from "../services/auth.js";
 import "../styles/cadastrate.css";
 
@@ -9,7 +10,18 @@ export function Cadastrate() {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
+  const [dados, setDados] = useState({ content: "Carregando frase...", author: "" });
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    // Função interna para buscar os dados
+    const buscarDados = async () => {
+      const resultado = await getTranslatedQuote();
+      setDados(resultado);
+    };
+
+    buscarDados();
+  }, []);
 
   async function handleSubmit(event) {
   event.preventDefault();
@@ -127,7 +139,7 @@ export function Cadastrate() {
 
         <aside className="pensar">
           <p id="frase_do_dia">
-            <em>Frase</em> - Autor
+            <em>{dados.content}</em> - {dados.author}
           </p>
           <button type="submit" disabled={loading}>
             {loading ? "Cadastrando..." : "Cadastrar"}
