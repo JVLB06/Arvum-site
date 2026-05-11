@@ -1,8 +1,8 @@
 import api from './main';
 
 const think = {
-    getMesures: (id) => {
-        return api.get(`/thinking/indicadores/${id}`);
+    getMeasures: () => {
+        return api.get('/thinking/indicadores');
     },
 
     createPreferences: (data) => {
@@ -10,11 +10,11 @@ const think = {
     },
 
     updatePreferences: (data) => {
-        return api.post('/thinking/atualizar_preferencias', data);
+        return api.put('/thinking/atualizar_preferencias', data);
     },
 
-    getPreferences: (id) => {
-        return api.get(`/thinking/ler_preferencias/${id}`);
+    getPreferences: () => {
+        return api.get('/thinking/ler_preferencias');
     }
 };
 

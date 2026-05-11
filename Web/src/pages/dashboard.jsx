@@ -76,10 +76,10 @@ export function Dashboard() {
                 <Link to="/dividas">
                     <button className="head_button"><strong>Dividas</strong></button>
                 </Link>
-                <Link to="/perfil">
+                <Link to="/pensamento">
                     <button className="head_button"><strong>Perfil</strong></button>      
                 </Link>
-                <button className="head_button" onClick={signOut}><strong>Sair</strong></button>   
+                {/* <button className="head_button" onClick={signOut}><strong>Sair</strong></button>    */}
             </Navbar>
             <div className="corpo">
                 <main>

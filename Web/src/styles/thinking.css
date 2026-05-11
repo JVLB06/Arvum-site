@@ -1,0 +1,415 @@
+/* =======================================================
+   ESTRUTURA PRINCIPAL
+======================================================= */
+
+.main {
+    width: 100%;
+    height: 100vh;
+
+    display: flex;
+    flex-direction: column;
+
+    overflow: hidden;
+}
+
+/* =======================================================
+   ÁREA PRINCIPAL
+======================================================= */
+
+.structure {
+
+    flex: 1;
+
+    width: 100%;
+    height: 100%;
+
+    padding: 1.5rem;
+    box-sizing: border-box;
+
+    display: flex;
+    gap: 1.5rem;
+
+    overflow: hidden;
+}
+
+/* =======================================================
+   PAINEL ESQUERDO
+======================================================= */
+
+.pensador {
+
+    flex: 1.2;
+
+    background-color: var(--primary-color);
+
+    border-radius: 2rem;
+
+    padding: 2rem;
+
+    box-sizing: border-box;
+
+    display: flex;
+    flex-direction: column;
+
+    overflow: hidden;
+
+    min-height: 0;
+}
+
+/* =======================================================
+   TÍTULOS
+======================================================= */
+
+.pensador h2,
+.reducao h2,
+.exclusao h2 {
+
+    margin: 0 0 1.5rem 0;
+
+    color: var(--secondary-color);
+
+    font-size: 2rem;
+    font-weight: 600;
+}
+
+/* =======================================================
+   LISTA DE PENSAMENTOS
+======================================================= */
+
+.pensamentos {
+
+    flex: 1;
+
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+
+    overflow-y: auto;
+
+    padding-right: 0.5rem;
+
+    min-height: 0;
+}
+
+/* Scroll invisível */
+
+.pensamentos::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+}
+
+.pensamentos {
+    scrollbar-width: none;
+}
+
+/* =======================================================
+   ITENS DAS FRASES
+======================================================= */
+
+.pensamento_item {
+
+    color: var(--secondary-color);
+
+    font-size: 1.2rem;
+    line-height: 1.6;
+
+    padding: 1rem;
+
+    border-radius: 1rem;
+
+    background: rgba(255,255,255,0.03);
+
+    word-break: break-word;
+}
+
+/* =======================================================
+   ÁREA DIREITA
+======================================================= */
+
+.sugestoes {
+
+    flex: 1;
+
+    display: flex;
+    flex-direction: column;
+
+    gap: 1.5rem;
+
+    overflow: hidden;
+
+    min-height: 0;
+}
+
+/* =======================================================
+   BOXES DIREITA
+======================================================= */
+
+.reducao,
+.exclusao {
+
+    flex: 1;
+
+    background-color: var(--primary-color);
+
+    border-radius: 2rem;
+
+    padding: 2rem;
+
+    box-sizing: border-box;
+
+    display: flex;
+    flex-direction: column;
+
+    overflow: hidden;
+
+    min-height: 0;
+}
+
+/* =======================================================
+   LISTAS
+======================================================= */
+
+.lista_reducao,
+.lista_exclusao {
+
+    flex: 1;
+
+    display: flex;
+    flex-direction: column;
+
+    gap: 1rem;
+
+    overflow-y: auto;
+
+    padding-right: 0.4rem;
+
+    min-height: 0;
+}
+
+/* Scroll invisível */
+
+.lista_reducao::-webkit-scrollbar,
+.lista_exclusao::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+}
+
+.lista_reducao,
+.lista_exclusao {
+    scrollbar-width: none;
+}
+
+/* =======================================================
+   ITENS DAS SUGESTÕES
+======================================================= */
+
+.sugestao_item {
+
+    width: 100%;
+
+    min-height: 70px;
+
+    background-color: rgb(220, 220, 220);
+
+    border-radius: 999px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    overflow: hidden;
+
+    flex-shrink: 0;
+}
+
+/* =======================================================
+   NOME
+======================================================= */
+
+.sugestao_item .nome {
+
+    flex: 1;
+
+    padding: 1rem 1.5rem;
+
+    color: var(--text-color);
+
+    font-size: 1rem;
+    font-weight: 500;
+
+    display: flex;
+    align-items: center;
+}
+
+/* =======================================================
+   VALORES
+======================================================= */
+
+.sugestao_item .valor {
+
+    min-width: 180px;
+
+    height: 100%;
+
+    background-color: transparent;
+
+    border-left: 3px solid var(--secondary-color);
+
+    color: var(--secondary-color);
+
+    font-weight: bold;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 0 1rem;
+
+    font-size: 1rem;
+}
+
+/* =======================================================
+   BOTÕES NAVBAR
+======================================================= */
+
+.head_button {
+
+    background-color: transparent;
+
+    border: none;
+
+    color: var(--secondary-color);
+
+    font-size: 1rem;
+
+    cursor: pointer;
+
+    transition: 0.2s ease;
+}
+
+.head_button:hover {
+
+    transform: scale(1.05);
+
+    opacity: 0.85;
+}
+
+/* =======================================================
+   RESPONSIVIDADE TABLET
+======================================================= */
+
+@media (max-width: 1100px) {
+
+    .structure {
+
+        flex-direction: column;
+
+        overflow-y: auto;
+    }
+
+    .pensador {
+
+        min-height: 45vh;
+    }
+
+    .sugestoes {
+
+        min-height: 45vh;
+    }
+
+    .reducao,
+    .exclusao {
+
+        min-height: 300px;
+    }
+}
+
+/* =======================================================
+   RESPONSIVIDADE MOBILE
+======================================================= */
+
+@media (max-width: 700px) {
+
+    .structure {
+
+        padding: 1rem;
+        gap: 1rem;
+    }
+
+    .pensador,
+    .reducao,
+    .exclusao {
+
+        padding: 1.2rem;
+
+        border-radius: 1.5rem;
+    }
+
+    .pensador h2,
+    .reducao h2,
+    .exclusao h2 {
+
+        font-size: 1.4rem;
+    }
+
+    .pensamento_item {
+
+        font-size: 1rem;
+    }
+
+    .sugestao_item {
+
+        min-height: 60px;
+    }
+
+    .sugestao_item .nome {
+
+        font-size: 0.9rem;
+
+        padding: 0.8rem 1rem;
+    }
+
+    .sugestao_item .valor {
+
+        min-width: 120px;
+
+        font-size: 0.85rem;
+
+        padding: 0 0.5rem;
+    }
+}
+
+/* =======================================================
+   MOBILE PEQUENO
+======================================================= */
+
+@media (max-width: 450px) {
+
+    .sugestao_item {
+
+        flex-direction: column;
+
+        border-radius: 1.2rem;
+
+        min-height: auto;
+    }
+
+    .sugestao_item .nome {
+
+        width: 100%;
+
+        justify-content: center;
+    }
+
+    .sugestao_item .valor {
+
+        width: 100%;
+
+        min-width: unset;
+
+        border-left: none;
+        border-top: 2px solid var(--secondary-color);
+
+        padding: 0.8rem;
+    }
+}
