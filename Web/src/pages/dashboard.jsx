@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import expenses from "../services/extract.js";
 import PieChart from "../components/pieGraph.jsx"; 
 import { getTranslatedQuote } from '../services/phrase.js';
-import { accounts } from "../services/auth.js";
+import accounts from "../services/auth.js";
 import { Navbar } from "../components/navBar.jsx";
 import { Link } from 'react-router-dom';
 import "../styles/dashboard.css";
@@ -76,10 +76,10 @@ export function Dashboard() {
                 <Link to="/dividas">
                     <button className="head_button"><strong>Dividas</strong></button>
                 </Link>
-                <Link to="/pensamento">
+                <Link to="/pensando">
                     <button className="head_button"><strong>Perfil</strong></button>      
                 </Link>
-                {/* <button className="head_button" onClick={signOut}><strong>Sair</strong></button>    */}
+                <button className="head_button" onClick={signOut}><strong>Sair</strong></button>
             </Navbar>
             <div className="corpo">
                 <main>
