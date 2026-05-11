@@ -289,9 +289,7 @@
 
 .head_button:hover {
 
-    transform: scale(1.05);
-
-    opacity: 0.85;
+    color: var(--bg-color);
 }
 
 /* =======================================================
