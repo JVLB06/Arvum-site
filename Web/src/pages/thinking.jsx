@@ -104,15 +104,9 @@ export function Thinking() {
 
             <Navbar>
 
-                <Link>
+                <Link to="/deletar_preferencias">
                     <button className="head_button">
-                        Add Preferencia
-                    </button>
-                </Link>
-
-                <Link>
-                    <button className="head_button">
-                        Update Preferencia
+                        Gerencias Preferencias
                     </button>
                 </Link>
 

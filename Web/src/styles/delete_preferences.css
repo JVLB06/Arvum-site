@@ -1,0 +1,9 @@
+/* Ajusta a estrutura principal */
+.corpo {
+    display: flex;
+    flex-direction: row; /* Alinha lado a lado */
+    justify-content: space-evenly;
+    align-items: flex-start;
+    padding: 10px;
+    gap: 20px;
+}
