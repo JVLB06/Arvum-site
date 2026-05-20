@@ -133,7 +133,7 @@ export function Thinking() {
 
             <Navbar>
 
-                <Link to="/deletar_preferencias">
+                <Link to="/gerenciar_preferencias">
                     <button className="head_button">
                         Gerencias Preferencias
                     </button>

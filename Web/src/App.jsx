@@ -21,6 +21,7 @@ import { UpdateReceipt } from "./pages/update_receipt.jsx";
 import { UpdateExpenses } from "./pages/update_expenses.jsx";
 import { Extract } from "./pages/extract.jsx";
 import { Thinking } from "./pages/thinking.jsx";
+import { Preferences } from "./pages/preferences_management.jsx"
 
 // O "Segurança" da rota
 const ProtectedRoute = ({ children }) => {
@@ -97,6 +98,9 @@ export default function App() {
         </ProtectedRoute>}/>
         <Route path="/pensando" element={<ProtectedRoute>
           <Thinking />
+        </ProtectedRoute>} />
+        <Route path="/gerenciar_preferencias" elemente={<ProtectedRoute>
+          <Preferences />
         </ProtectedRoute>} />
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>

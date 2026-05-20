@@ -11,6 +11,14 @@ const think = {
 
     getPreferences: () => {
         return api.get('/thinking/ler_preferencias');
+    },
+
+    deletePreferences: () => {
+        return api.delete('/thinking/deletar_preferencia/', {
+            params: {
+                id: preferenciaId
+            }
+        });
     }
 };
 
