@@ -1,20 +1,24 @@
 import api from './main';
 
 const think = {
-    getMesures: (id) => {
-        return api.get(`/thinking/indicadores/${id}`);
+    getMeasures: () => {
+        return api.get('/thinking/indicadores');
     },
 
     createPreferences: (data) => {
         return api.post('/thinking/criar_preferencias', data);
     },
 
-    updatePreferences: (data) => {
-        return api.post('/thinking/atualizar_preferencias', data);
+    getPreferences: () => {
+        return api.get('/thinking/ler_preferencias');
     },
 
-    getPreferences: (id) => {
-        return api.get(`/thinking/ler_preferencias/${id}`);
+    deletePreferences: () => {
+        return api.delete('/thinking/deletar_preferencia/', {
+            params: {
+                id: preferenciaId
+            }
+        });
     }
 };
 

@@ -16,9 +16,10 @@ const accounts = {
     return response.data;
   },
 
+  //Remover token e redirecionar para login
   logout: () => {
     localStorage.removeItem('token');
-    window.location.href = '/login'; // Redirecionamento simples
+    window.location.href = '/'; // Redirecionamento simples
   },
 
   // GET: Validar conexão
