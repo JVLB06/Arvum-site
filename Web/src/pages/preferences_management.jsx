@@ -6,59 +6,52 @@ import "../styles/preferences_management.css";
 
 export function Preferences() {
     const [loading, setLoading] = useState(true);
-    const [preferencias, setPreferencias] = useState(true);
+    // Ajustado de true para [] para evitar que o .map quebre no primeiro render
+    const [preferencias, setPreferencias] = useState([]); 
 
+    // 1. Função isolada corretamente
     const getPreferencias = (data) => {
-
         if (data && Array.isArray(data)) {
-
             setPreferencias(data);
-
         } else {
-
             setPreferencias([]);
         }
-
-    useEffect(() => {
-
-        try {
-
-            const response = await think.getPreferences();
-
-            const data = response.data;
-
-            getPreferencias(data);
-        
-        } catch (error) {
-
-            console.error("Erro ao obter preferências:", error);
-
-        } finally {
-
-            setLoading(false);
-        }
-
-    }, []);
-    
     };
 
+    // 2. useEffect corrigido com uma função async interna
+    useEffect(() => {
+        const carregarDados = async () => {
+            try {
+                const response = await think.getPreferences();
+                const data = response.data;
+                getPreferencias(data);
+            } catch (error) {
+                console.error("Erro ao obter preferências:", error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        carregarDados();
+    }, []);
+
     const excluirPreferencia = async (preferenciaId) => {
-
         try {
-
             await think.deletePreferences({
                 id: preferenciaId
             });
-
             alert("Item excluído com sucesso");
-
+            // Dica: Seria bom chamar carregarDados() aqui para atualizar a tela após excluir!
         } catch (error) {
-
             console.error("Erro ao bloquear item:", error);
-
             alert("Erro ao bloquear item");
         }
     };
+
+    // Renderização condicional para o estado de loading (boa prática)
+    if (loading) {
+        return <div className="main"><Navbar /><h2>Carregando preferências...</h2></div>;
+    }
 
     return (
         <div className="main">
@@ -67,7 +60,6 @@ export function Preferences() {
             <div className="structure">
                 <div className="preference-container">
                     <table className="preference-table">
-                        {/* Cabeçalho Geral da Tabela */}
                         <thead>
                             <tr>
                                 <th>Nome</th>
@@ -77,7 +69,6 @@ export function Preferences() {
                             </tr>
                         </thead>
                         
-                        {/* Corpo da Tabela com a Lista */}
                         <tbody>
                             {preferencias.map((item) => (
                                 <tr className="preferencia_item" key={item.IdPreferencia}>
@@ -85,7 +76,6 @@ export function Preferences() {
                                         {item.GastoNome}
                                     </td>
                                     
-                                    {/* Validação Booleana usando Ternário */}
                                     <td className="reducao">
                                         {item.Reduzir ? "❌ Bloqueado" : "✅ Liberado"}
                                     </td>
@@ -94,7 +84,6 @@ export function Preferences() {
                                         {item.Excluir ? "❌ Bloqueado" : "✅ Liberado"}
                                     </td>
                                     
-                                    {/* Botão de Excluir com onClick */}
                                     <td className="acoes">
                                         <button 
                                             className="btn-deletar"
@@ -109,7 +98,6 @@ export function Preferences() {
                         </tbody>
                     </table>
                 </div>
-
             </div>
         </div>
     );
