@@ -12,6 +12,8 @@ export function Thinking() {
     const [reducoes, setReducoes] = useState([]);
     const [exclusoes, setExclusoes] = useState([]);
 
+    const [menuAberto, setMenuAberto] = useState(null);
+
     /*
     =========================================
     FRASES
@@ -57,6 +59,33 @@ export function Thinking() {
             setExclusoes(data.exclusoes);
         } else {
             setExclusoes([]);
+        }
+    };
+
+    /*
+    =========================================
+    BLOQUEAR ITEM
+    =========================================
+    */
+
+    const bloquearItem = async (gastoId, excluir) => {
+
+        try {
+
+            await think.createPreferences({
+                idGasto: gastoId,
+                excluir: excluir
+            });
+
+            alert("Item bloqueado com sucesso");
+
+            setMenuAberto(null);
+
+        } catch (error) {
+
+            console.error("Erro ao bloquear item:", error);
+
+            alert("Erro ao bloquear item");
         }
     };
 
@@ -163,15 +192,56 @@ export function Thinking() {
                                         key={item.gastoId}
                                     >
 
-                                        <div className="nome">
-                                            {item.nome}
+                                        <div className="sugestao_conteudo">
+
+                                            <div className="nome">
+                                                {item.nome}
+                                            </div>
+
+                                            <div className="valor">
+
+                                                R$ {item.valorAtual?.toFixed(2)}
+                                                {" -> "}
+                                                R$ {item.valorSugerido?.toFixed(2)}
+
+                                            </div>
+
                                         </div>
 
-                                        <div className="valor">
+                                        <div className="acoes_container">
 
-                                            R$ {item.valorAtual?.toFixed(2)}
-                                            {" -> "}
-                                            R$ {item.valorSugerido?.toFixed(2)}
+                                            <button
+                                                className="menu_button"
+                                                onClick={() =>
+                                                    setMenuAberto(
+                                                        menuAberto === item.gastoId
+                                                            ? null
+                                                            : item.gastoId
+                                                    )
+                                                }
+                                            >
+                                                ⋮
+                                            </button>
+
+                                            {
+                                                menuAberto === item.gastoId && (
+                                                    <div className="menu_dropdown">
+
+                                                        <button
+                                                            className="menu_item"
+                                                            onClick={() =>
+                                                                bloquearItem(
+                                                                    item.gastoId,
+                                                                    false
+                                                                )
+                                                            }
+                                                        >
+                                                            BLOQUEAR
+                                                        </button>
+
+                                                    </div>
+                                                )
+                                            }
 
                                         </div>
 
@@ -201,15 +271,56 @@ export function Thinking() {
                                         key={item.gastoId}
                                     >
 
-                                        <div className="nome">
-                                            {item.nome}
+                                        <div className="sugestao_conteudo">
+
+                                            <div className="nome">
+                                                {item.nome}
+                                            </div>
+
+                                            <div className="valor">
+
+                                                R$ {item.valorAtual?.toFixed(2)}
+                                                {" -> "}
+                                                R$ 0,00
+
+                                            </div>
+
                                         </div>
 
-                                        <div className="valor">
+                                        <div className="acoes_container">
 
-                                            R$ {item.valorAtual?.toFixed(2)}
-                                            {" -> "}
-                                            R$ 0,00
+                                            <button
+                                                className="menu_button"
+                                                onClick={() =>
+                                                    setMenuAberto(
+                                                        menuAberto === item.gastoId
+                                                            ? null
+                                                            : item.gastoId
+                                                    )
+                                                }
+                                            >
+                                                ⋮
+                                            </button>
+
+                                            {
+                                                menuAberto === item.gastoId && (
+                                                    <div className="menu_dropdown">
+
+                                                        <button
+                                                            className="menu_item"
+                                                            onClick={() =>
+                                                                bloquearItem(
+                                                                    item.gastoId,
+                                                                    true
+                                                                )
+                                                            }
+                                                        >
+                                                            BLOQUEAR
+                                                        </button>
+
+                                                    </div>
+                                                )
+                                            }
 
                                         </div>
 

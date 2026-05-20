@@ -9,10 +9,6 @@ const think = {
         return api.post('/thinking/criar_preferencias', data);
     },
 
-    updatePreferences: (data) => {
-        return api.put('/thinking/atualizar_preferencias', data);
-    },
-
     getPreferences: () => {
         return api.get('/thinking/ler_preferencias');
     }
