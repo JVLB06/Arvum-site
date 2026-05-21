@@ -70,31 +70,39 @@ export function Preferences() {
                         </thead>
                         
                         <tbody>
-                            {preferencias.map((item) => (
-                                <tr className="preferencia_item" key={item.IdPreferencia}>
-                                    <td className="nome">
-                                        {item.GastoNome}
-                                    </td>
-                                    
-                                    <td className="reducao">
-                                        {item.Reduzir ? "❌ Bloqueado" : "✅ Liberado"}
-                                    </td>
-                                    
-                                    <td className="exclusao">
-                                        {item.Excluir ? "❌ Bloqueado" : "✅ Liberado"}
-                                    </td>
-                                    
-                                    <td className="acoes">
-                                        <button 
-                                            className="btn-deletar"
-                                            onClick={() => excluirPreferencia(item.IdPreferencia)}
-                                            title="Cancelar tudo (Excluir)"
-                                        >
-                                            🗑️
-                                        </button>
+                            {preferencias.length > 0 ? (
+                                preferencias.map((item) => (
+                                    <tr className="preferencia_item" key={item.IdPreferencia}>
+                                        <td className="nome">
+                                            {item.GastoNome}
+                                        </td>
+
+                                        <td className="reducao">
+                                            {item.Reduzir ? "❌ Bloqueado" : "✅ Liberado"}
+                                        </td>
+
+                                        <td className="exclusao">
+                                            {item.Excluir ? "❌ Bloqueado" : "✅ Liberado"}
+                                        </td>
+
+                                        <td className="acoes">
+                                            <button
+                                                className="btn-deletar"
+                                                onClick={() => excluirPreferencia(item.IdPreferencia)}
+                                                title="Cancelar tudo (Excluir)"
+                                            >
+                                                🗑️
+                                            </button>
+                                        </td>
+                                    </tr>
+                                ))
+                            ) : (
+                                <tr>
+                                    <td colSpan="4" className="sem-preferencias">
+                                        Nenhuma preferência registrada.
                                     </td>
                                 </tr>
-                            ))}
+                            )}
                         </tbody>
                     </table>
                 </div>
