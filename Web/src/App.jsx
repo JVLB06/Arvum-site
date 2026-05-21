@@ -99,7 +99,7 @@ export default function App() {
         <Route path="/pensando" element={<ProtectedRoute>
           <Thinking />
         </ProtectedRoute>} />
-        <Route path="/gerenciar_preferencias" elemente={<ProtectedRoute>
+        <Route path="/gerenciar_preferencias" element={<ProtectedRoute>
           <Preferences />
         </ProtectedRoute>} />
         <Route path="*" element={<Navigate to="/" />} />

@@ -1,258 +1,92 @@
 /* =======================================================
-   ESTRUTURA PRINCIPAL
-======================================================= */
-
-.main {
-    width: 100%;
-    height: 100vh;
-
-    display: flex;
-    flex-direction: column;
-
-    overflow: hidden;
-}
-
-/* =======================================================
-   ÁREA PRINCIPAL
-======================================================= */
-
-.structure {
-
-    flex: 1;
-
-    width: 100%;
-    height: 100%;
-
-    padding: 1.5rem;
-    box-sizing: border-box;
-
-    display: flex;
-    gap: 1.5rem;
-
-    overflow: hidden;
-}
-
-/* =======================================================
-   BOXES DIREITA
-======================================================= */
-
-.preference-container {
-
-    flex: 1;
-
-    background-color: var(--primary-color);
-
-    border-radius: 2rem;
-
-    padding: 2rem;
-
-    box-sizing: border-box;
-
-    display: flex;
-    flex-direction: column;
-
-    overflow: hidden;
-
-    min-height: 0;
-}
-
-/* =======================================================
-   LISTAS
+   TABELA
 ======================================================= */
 
 .preference-table {
 
-    flex: 1;
+    width: 100%;
 
-    display: flex;
-    flex-direction: column;
-
-    gap: 1rem;
-
-    overflow-y: auto;
-
-    padding-right: 0.4rem;
-
-    min-height: 0;
-}
-
-/* Scroll invisível */
-
-.preference-table::-webkit-scrollbar {
-    width: 0;
-    height: 0;
-}
-
-.preference-table {
-    scrollbar-width: none;
-}
-
-/* =======================================================
-   NOME
-======================================================= */
-
-.preferencia_item .nome {
-
-    flex: 1;
-
-    padding: 1rem 1.5rem;
+    border-collapse: collapse;
 
     color: var(--text-color);
-
-    font-size: 1rem;
-    font-weight: 500;
-
-    display: flex;
-    align-items: center;
 }
 
-/* =======================================================
-   VALORES
-======================================================= */
+/* Cabeçalho */
 
-.preferencia_item .reducao,
-.preference-table .exclusao,
-.preference-table .acoes {
+.preference-table thead tr {
 
-    min-width: 180px;
+    border-bottom: 3px solid var(--secondary-color);
+}
 
-    height: 100%;
+.preference-table th {
 
-    background-color: transparent;
+    padding: 1rem;
 
-    border-left: 3px solid var(--secondary-color);
+    text-align: center;
 
     color: var(--secondary-color);
 
-    font-weight: bold;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    padding: 0 1rem;
-
     font-size: 1rem;
+
+    font-weight: bold;
 }
 
+/* Linhas */
 
+.preference-table td {
 
-/* =======================================================
-   RESPONSIVIDADE TABLET
-======================================================= */
+    padding: 1rem;
 
-@media (max-width: 1100px) {
+    text-align: center;
 
-    .structure {
-
-        flex-direction: column;
-
-        overflow-y: auto;
-    }
-
-    .pensador {
-
-        min-height: 45vh;
-    }
-
-    .sugestoes {
-
-        min-height: 45vh;
-    }
-
-    .reducao,
-    .exclusao {
-
-        min-height: 300px;
-    }
+    border-bottom: 1px solid rgba(255,255,255,0.1);
 }
 
-/* =======================================================
-   RESPONSIVIDADE MOBILE
-======================================================= */
+/* Nome alinhado à esquerda */
 
-@media (max-width: 700px) {
+.preference-table .nome {
 
-    .structure {
+    text-align: left;
 
-        padding: 1rem;
-        gap: 1rem;
-    }
-
-    .pensador,
-    .reducao,
-    .exclusao {
-
-        padding: 1.2rem;
-
-        border-radius: 1.5rem;
-    }
-
-    .pensador h2,
-    .reducao h2,
-    .exclusao h2 {
-
-        font-size: 1.4rem;
-    }
-
-    .pensamento_item {
-
-        font-size: 1rem;
-    }
-
-    .sugestao_item {
-
-        min-height: 60px;
-    }
-
-    .sugestao_item .nome {
-
-        font-size: 0.9rem;
-
-        padding: 0.8rem 1rem;
-    }
-
-    .sugestao_item .valor {
-
-        min-width: 120px;
-
-        font-size: 0.85rem;
-
-        padding: 0 0.5rem;
-    }
+    font-weight: 500;
 }
 
-/* =======================================================
-   MOBILE PEQUENO
-======================================================= */
+/* Linha hover */
 
-@media (max-width: 450px) {
+.preferencia_item:hover {
 
-    .sugestao_item {
+    background-color: rgba(255,255,255,0.05);
+}
 
-        flex-direction: column;
+/* Sem preferências */
 
-        border-radius: 1.2rem;
+.sem-preferencias {
 
-        min-height: auto;
-    }
+    padding: 2rem !important;
 
-    .sugestao_item .nome {
+    text-align: center;
 
-        width: 100%;
+    color: var(--text-color);
 
-        justify-content: center;
-    }
+    font-style: italic;
+}
 
-    .sugestao_item .valor {
+/* Botão */
 
-        width: 100%;
+.btn-deletar {
 
-        min-width: unset;
+    background: transparent;
 
-        border-left: none;
-        border-top: 2px solid var(--secondary-color);
+    border: none;
 
-        padding: 0.8rem;
-    }
+    cursor: pointer;
+
+    font-size: 1.2rem;
+
+    transition: transform 0.2s ease;
+}
+
+.btn-deletar:hover {
+
+    transform: scale(1.15);
 }
