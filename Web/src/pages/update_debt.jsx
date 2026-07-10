@@ -5,21 +5,23 @@ import "../styles/cadastrate_debt.css";
 import { BackButtonHeader } from "../components/backButtonHeader.jsx";
 
 const INITIAL_FORM = {
-    id_divida: "",
-    descricao: "",
-    vlr: "",
-    data_venc: "",
-    data_init: "",
+    id: "",
+    description: "",
+    value: "",
+    endDate: "",
+    initDate: "",
 };
 
 function normalizeDebt(item) {
     return {
-        id_divida: item?.id ?? item?.id_divida ?? "",
-        descricao: item?.descricao ?? item?.nome ?? "",
-        vlr: item?.vlr ?? "",
-        data_init: item?.data_init ? String(item.data_init).split("T")[0] : "",
-        data_venc:
-            item?.data_venc
+        id: item?.id ?? item?.id ?? "",
+        description: item?.description ?? item?.descricao ?? item?.nome ?? "",
+        value: item?.value ?? item?.vlr ?? "",
+        initDate: item?.initDate ? String(item.initDate).split("T")[0] : item?.data_init ? String(item.data_init).split("T")[0] : "",
+        endDate:
+            item?.endDate
+                ? String(item.endDate).split("T")[0]
+                : item?.data_venc
                 ? String(item.data_venc).split("T")[0]
                 : item?.data_fim
                 ? String(item.data_fim).split("T")[0]
@@ -73,13 +75,13 @@ export function UpdateDebt() {
     }
 
     function preencherFormulario(divida) {
-        setSelectedId(divida.id_divida);
+        setSelectedId(divida.id);
         setFormData({
-            id_divida: divida.id_divida,
-            descricao: divida.descricao,
-            vlr: divida.vlr,
-            data_init: divida.data_init,
-            data_venc: divida.data_venc,
+            id: divida.id,
+            description: divida.description,
+            value: divida.value,
+            initDate: divida.initDate,
+            endDate: divida.endDate,
         });
         setError("");
     }
@@ -93,7 +95,7 @@ export function UpdateDebt() {
     async function salvarEdicao(event) {
         event.preventDefault();
 
-        if (!formData.id_divida) {
+        if (!formData.id) {
             setError("Selecione uma dívida para editar.");
             return;
         }
@@ -103,11 +105,11 @@ export function UpdateDebt() {
 
         try {
             await cadastrate.updateDebt({
-                id: formData.id_divida,
-                descricao: formData.descricao,
-                vlr: formData.vlr,
-                data_init: formData.data_init,
-                data_venc: formData.data_venc,
+                id: formData.id,
+                description: formData.description,
+                value: parseFloat(formData.value),
+                initDate: formData.initDate,
+                endDate: formData.endDate,
             });
 
             alert("Dívida atualizada com sucesso!");
@@ -129,20 +131,20 @@ export function UpdateDebt() {
 
     async function removerDivida(divida) {
         const confirmar = window.confirm(
-            `Deseja realmente remover a dívida "${divida.descricao}"?`
+            `Deseja realmente remover a dívida "${divida.description}"?`
         );
 
         if (!confirmar) return;
 
-        setDeletingId(divida.id_divida);
+        setDeletingId(divida.id);
         setError("");
 
         try {
-            await cadastrate.inactivateDebt(divida.id_divida);
+            await cadastrate.inactivateDebt(divida.id);
 
             alert("Dívida removida com sucesso!");
 
-            if (selectedId === divida.id_divida) {
+            if (selectedId === divida.id) {
                 limparFormulario();
             }
 
@@ -178,11 +180,11 @@ export function UpdateDebt() {
                         <br />
                         <input
                             id="divida_edit_nome"
-                            name="descricao"
+                            name="description"
                             type="text"
                             required
                             placeholder="Selecione uma dívida para editar"
-                            value={formData.descricao}
+                            value={formData.description}
                             onChange={handleInputChange}
                         />
                         <br />
@@ -190,10 +192,10 @@ export function UpdateDebt() {
                         <label htmlFor="divida_edit_data_init">Data início:</label>
                         <input
                             id="divida_edit_data_init"
-                            name="data_init"
+                            name="initDate"
                             type="date"
                             required
-                            value={formData.data_init}
+                            value={formData.initDate}
                             onChange={handleInputChange}
                         />
                         <br />
@@ -201,10 +203,10 @@ export function UpdateDebt() {
                         <label htmlFor="divida_edit_data_fim">Data fim prevista</label>
                         <input
                             id="divida_edit_data_fim"
-                            name="data_venc"
+                            name="endDate"
                             type="date"
                             required
-                            value={formData.data_venc}
+                            value={formData.endDate}
                             onChange={handleInputChange}
                         />
                         <br />
@@ -212,11 +214,11 @@ export function UpdateDebt() {
                         <label htmlFor="divida_edit_vlr">Valor total dívida:</label>
                         <input
                             id="divida_edit_vlr"
-                            name="vlr"
+                            name="value"
                             type="number"
                             step="0.01"
                             required
-                            value={formData.vlr}
+                            value={formData.value}
                             onChange={handleInputChange}
                         />
                         <br />
@@ -260,11 +262,11 @@ export function UpdateDebt() {
                                         ) : (
                                             dividas.map((divida) => {
                                                 const isSelected =
-                                                    selectedId === divida.id_divida;
+                                                    selectedId === divida.id;
 
                                                 return (
                                                     <div
-                                                        key={divida.id_divida}
+                                                        key={divida.id}
                                                         className={`fill-button item-row ${
                                                             isSelected ? "item-row-active" : ""
                                                         }`}
@@ -284,11 +286,11 @@ export function UpdateDebt() {
                                                             }}
                                                         >
                                                             <span className="item-title">
-                                                                {divida.descricao}
+                                                                {divida.description}
                                                             </span>
 
                                                             <span className="item-subtitle">
-                                                                {Number(divida.vlr || 0).toLocaleString(
+                                                                {Number(divida.value || 0).toLocaleString(
                                                                     "pt-BR",
                                                                     {
                                                                         style: "currency",
@@ -315,7 +317,7 @@ export function UpdateDebt() {
                                                                 className="icon-button danger"
                                                                 title="Excluir"
                                                                 disabled={
-                                                                    deletingId === divida.id_divida
+                                                                    deletingId === divida.id
                                                                 }
                                                                 onClick={() =>
                                                                     removerDivida(divida)

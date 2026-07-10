@@ -73,8 +73,10 @@ export function Thinking() {
         try {
 
             await think.createPreferences({
-                idGasto: gastoId,
-                excluir: excluir
+                externalId: gastoId,
+                exclude: excluir,
+                reduce: !excluir,
+                block: false
             });
 
             alert("Item bloqueado com sucesso");

@@ -10,11 +10,13 @@ const cadastrate = {
     return unwrapPayload(response.data, 'rendas');
   },
 
+  // Esperado: { receiptId?, name, minValue, maxValue, paymentDate }
   createRenda: async (rendaData) => {
     const response = await api.post('/user_plan/criar_renda', rendaData);
     return response.data;
   },
 
+  // Esperado: { receiptId?, name, minValue, maxValue, paymentDate }
   updateRenda: async (rendaData) => {
     const response = await api.put('/user_plan/atualizar_renda', rendaData);
     return response.data;
@@ -35,16 +37,19 @@ const cadastrate = {
     return unwrapPayload(response.data, 'invest');
   },
 
+  // Esperado: { id, description, value, interest, initialDate }
   createInvestment: async (investmentData) => {
     const response = await api.post('/user_plan/criar_investimento', investmentData);
     return response.data;
   },
 
+  // Esperado: { id, description, value, interest, initialDate }
   updateInvestment: async (investmentData) => {
     const response = await api.put('/user_plan/atualizar_investimento', investmentData);
     return response.data;
   },
 
+  // Esperado: { id, receiveDate, receivedValue }
   concludeInvestment: async (concludeData) => {
     const response = await api.put('/user_plan/concluir_investimento', concludeData);
     return response.data;
@@ -60,11 +65,13 @@ const cadastrate = {
     return unwrapPayload(response.data, 'divida');
   },
 
+  // Esperado: { id?, description, value, endDate, initDate }
   createDebt: async (debtData) => {
     const response = await api.post('/user_plan/criar_divida', debtData);
     return response.data;
   },
 
+  // Esperado: { id?, description, value, endDate, initDate }
   updateDebt: async (debtData) => {
     const response = await api.put('/user_plan/atualizar_divida', debtData);
     return response.data;
@@ -90,11 +97,13 @@ const cadastrate = {
     return unwrapPayload(response.data, 'meta');
   },
 
+  // Esperado: { userId?, id?, description, value, goalDate, progress }
   createGoal: async (goalData) => {
     const response = await api.post('/user_plan/criar_meta', goalData);
     return response.data;
   },
 
+  // Esperado: { userId?, id?, description, value, goalDate, progress }
   updateGoal: async (goalData) => {
     const response = await api.put('/user_plan/atualizar_meta', goalData);
     return response.data;
@@ -120,11 +129,13 @@ const cadastrate = {
     return unwrapPayload(response.data, 'gasto');
   },
 
+  // Esperado: { userId?, id?, description, minValue, maxValue, priority, dueDate, isFixed }
   createExpense: async (expenseData) => {
     const response = await api.post('/user_plan/criar_gasto', expenseData);
     return response.data;
   },
 
+  // Esperado: { userId?, id?, description, minValue, maxValue, priority, dueDate, isFixed }
   updateExpense: async (expenseData) => {
     const response = await api.put('/user_plan/atualizar_gasto', expenseData);
     return response.data;

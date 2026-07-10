@@ -22,10 +22,10 @@ export function CadastrateReceipt() {
 
         try {
             const dados = await cadastrate.createRenda({
-                descricao,
-                vlr_min,
-                vlr_max,
-                data,
+                name: descricao,
+                minValue: parseFloat(vlr_min),
+                maxValue: parseFloat(vlr_max),
+                paymentDate: data,
             });
 
             alert("Renda cadastrada com sucesso!");

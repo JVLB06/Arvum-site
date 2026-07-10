@@ -36,9 +36,9 @@ export function Cadastrate() {
 
   try {
     const data = await accounts.cadastrate({
-      username,
+      userName: username,
       email,
-      nasce,
+      birthDate: nasce,
       password,
     });
 

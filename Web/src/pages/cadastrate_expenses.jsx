@@ -24,12 +24,12 @@ export function CadastrateExpenses() {
 
         try {
             const dados = await cadastrate.createExpense({
-                descricao,
-                vlr_min,
-                vlr_max,
-                data_venc,
-                prioridade,
-                fixvar
+                description: descricao,
+                minValue: parseFloat(vlr_min),
+                maxValue: parseFloat(vlr_max),
+                dueDate: data_venc,
+                priority: parseInt(prioridade),
+                isFixed: fixvar
             });
 
             alert("Gasto cadastrado com sucesso!");

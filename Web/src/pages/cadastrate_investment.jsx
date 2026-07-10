@@ -22,10 +22,10 @@ export function CadastrateInvestmento() {
 
         try {
             const dados = await cadastrate.createInvestment({
-                descricao,
-                vlr,
-                data_init,
-                juro
+                description: descricao,
+                value: parseFloat(vlr),
+                initialDate: data_init,
+                interest: parseFloat(juro)
             });
 
             alert("Investimento cadastrado com sucesso!");

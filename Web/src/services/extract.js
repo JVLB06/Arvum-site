@@ -7,21 +7,24 @@ function unwrapPayload(data, key) {
 const expenses = {
   getExtract: async (dateIni, dateEnd) => {
     const response = await api.get('/extrato/ler_extrato', {
-      params: { data_ini: dateIni, data_fim: dateEnd },
+      params: { InitialDate: dateIni, EndDate: dateEnd },
     });
     return response.data;
   },
 
+  // Esperado: { id?, name, value, extractDate, kind, balance, externalId? }
   createExpense: async (expenseData) => {
     const response = await api.post('/extrato/incluir_lancamento', expenseData);
     return response.data;
   },
 
+  // Esperado: { id?, name, value, extractDate, kind, balance, externalId? }
   updateExpense: async (expenseData) => {
     const response = await api.put('/extrato/atualizar_lancamento', expenseData);
     return response.data;
   },
 
+  // Esperado: { id, kind }
   deleteExpense: async (expenseData) => {
     const response = await api.delete('/extrato/remover_lancamento', {
       data: expenseData,

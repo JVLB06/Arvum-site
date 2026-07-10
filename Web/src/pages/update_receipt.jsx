@@ -5,20 +5,20 @@ import "../styles/cadastrate_receipt.css";
 import { BackButtonHeader } from "../components/backButtonHeader.jsx";
 
 const INITIAL_FORM = {
-    id_renda: "",
-    descricao: "",
-    vlr_min: "",
-    vlr_max: "",
-    data: "",
+    receiptId: "",
+    name: "",
+    minValue: "",
+    maxValue: "",
+    paymentDate: "",
 };
 
 function normalizeRenda(item) {
     return {
-        id_renda: item?.id ?? item?.id_renda ?? "",
-        descricao: item?.descricao ?? item?.nome ?? "",
-        vlr_min: item?.vlr_min ?? "",
-        vlr_max: item?.vlr_max ?? item?.vlr_min ?? "",
-        data: item?.data ? String(item.data).split("T")[0] : "",
+        receiptId: item?.receiptId ?? item?.id ?? "",
+        name: item?.name ?? item?.descricao ?? item?.nome ?? "",
+        minValue: item?.minValue ?? item?.vlr_min ?? "",
+        maxValue: item?.maxValue ?? item?.vlr_max ?? item?.vlr_min ?? "",
+        paymentDate: item?.paymentDate ? String(item.paymentDate).split("T")[0] : item?.data ? String(item.data).split("T")[0] : "",
     };
 }
 
@@ -68,13 +68,13 @@ export function UpdateReceipt() {
     }
 
     function preencherFormulario(renda) {
-        setSelectedId(renda.id_renda);
+        setSelectedId(renda.receiptId);
         setFormData({
-            id_renda: renda.id_renda,
-            descricao: renda.descricao,
-            vlr_min: renda.vlr_min,
-            vlr_max: renda.vlr_max,
-            data: renda.data,
+            receiptId: renda.receiptId,
+            name: renda.name,
+            minValue: renda.minValue,
+            maxValue: renda.maxValue,
+            paymentDate: renda.paymentDate,
         });
         setError("");
     }
@@ -88,7 +88,7 @@ export function UpdateReceipt() {
     async function salvarEdicao(event) {
         event.preventDefault();
 
-        if (!formData.id_renda) {
+        if (!formData.receiptId) {
             setError("Selecione uma renda para editar.");
             return;
         }
@@ -98,11 +98,11 @@ export function UpdateReceipt() {
 
         try {
             await cadastrate.updateRenda({
-                id_renda: formData.id_renda,
-                descricao: formData.descricao,
-                vlr_min: formData.vlr_min,
-                vlr_max: formData.vlr_max,
-                data: formData.data,
+                receiptId: formData.receiptId,
+                name: formData.name,
+                minValue: parseFloat(formData.minValue),
+                maxValue: parseFloat(formData.maxValue),
+                paymentDate: formData.paymentDate,
             });
 
             alert("Renda atualizada com sucesso!");
@@ -124,20 +124,20 @@ export function UpdateReceipt() {
 
     async function removerRenda(renda) {
         const confirmar = window.confirm(
-            `Deseja realmente remover a renda "${renda.descricao}"?`
+            `Deseja realmente remover a renda "${renda.name}"?`
         );
 
         if (!confirmar) return;
 
-        setDeletingId(renda.id_renda);
+        setDeletingId(renda.receiptId);
         setError("");
 
         try {
-            await cadastrate.deleteRenda(renda.id_renda);
+            await cadastrate.deleteRenda(renda.receiptId);
 
             alert("Renda removida com sucesso!");
 
-            if (selectedId === renda.id_renda) {
+            if (selectedId === renda.receiptId) {
                 limparFormulario();
             }
 
@@ -173,11 +173,11 @@ export function UpdateReceipt() {
                         <br />
                         <input
                             id="renda_edit_nome"
-                            name="descricao"
+                            name="name"
                             type="text"
                             required
                             placeholder="Selecione uma renda para editar"
-                            value={formData.descricao}
+                            value={formData.name}
                             onChange={handleInputChange}
                         />
                         <br />
@@ -187,10 +187,10 @@ export function UpdateReceipt() {
                         </label>
                         <input
                             id="renda_edit_data"
-                            name="data"
+                            name="paymentDate"
                             type="date"
                             required
-                            value={formData.data}
+                            value={formData.paymentDate}
                             onChange={handleInputChange}
                         />
                         <br />
@@ -198,11 +198,11 @@ export function UpdateReceipt() {
                         <label htmlFor="renda_edit_vlr_min">Valor mínimo:</label>
                         <input
                             id="renda_edit_vlr_min"
-                            name="vlr_min"
+                            name="minValue"
                             type="number"
                             step="0.01"
                             required
-                            value={formData.vlr_min}
+                            value={formData.minValue}
                             onChange={handleInputChange}
                         />
                         <br />
@@ -210,11 +210,11 @@ export function UpdateReceipt() {
                         <label htmlFor="renda_edit_vlr_max">Valor máximo:</label>
                         <input
                             id="renda_edit_vlr_max"
-                            name="vlr_max"
+                            name="maxValue"
                             type="number"
                             step="0.01"
                             required
-                            value={formData.vlr_max}
+                            value={formData.maxValue}
                             onChange={handleInputChange}
                         />
                         <br />
@@ -259,11 +259,11 @@ export function UpdateReceipt() {
                                         ) : (
                                             rendas.map((renda) => {
                                                 const isSelected =
-                                                    selectedId === renda.id_renda;
+                                                    selectedId === renda.receiptId;
 
                                                 return (
                                                     <div
-                                                        key={renda.id_renda}
+                                                        key={renda.receiptId}
                                                         className={`fill-button item-row ${
                                                             isSelected ? "item-row-active" : ""
                                                         }`}
@@ -283,12 +283,12 @@ export function UpdateReceipt() {
                                                             }}
                                                         >
                                                             <span className="item-title">
-                                                                {renda.descricao}
+                                                                {renda.name}
                                                             </span>
 
                                                             <span className="item-subtitle">
                                                                 {Number(
-                                                                    renda.vlr_min || 0
+                                                                    renda.minValue || 0
                                                                 ).toLocaleString("pt-BR", {
                                                                     style: "currency",
                                                                     currency: "BRL",
@@ -313,7 +313,7 @@ export function UpdateReceipt() {
                                                                 className="icon-button danger"
                                                                 title="Excluir"
                                                                 disabled={
-                                                                    deletingId === renda.id_renda
+                                                                    deletingId === renda.receiptId
                                                                 }
                                                                 onClick={() =>
                                                                     removerRenda(renda)

@@ -5,6 +5,7 @@ const think = {
         return api.get('/thinking/indicadores');
     },
 
+    // Esperado: { externalId, exclude, reduce, block }
     createPreferences: (data) => {
         return api.post('/thinking/criar_preferencias', data);
     },
@@ -13,12 +14,9 @@ const think = {
         return api.get('/thinking/ler_preferencias');
     },
 
-    deletePreferences: () => {
-        return api.delete('/thinking/deletar_preferencia/', {
-            params: {
-                id: preferenciaId
-            }
-        });
+    // Esperado: preferenciaId como parâmetro
+    deletePreferences: (preferenciaId) => {
+        return api.delete(`/thinking/deletar_preferencia/${preferenciaId}`);
     }
 };
 
