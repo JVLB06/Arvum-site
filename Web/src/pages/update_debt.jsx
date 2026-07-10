@@ -6,20 +6,22 @@ import { BackButtonHeader } from "../components/backButtonHeader.jsx";
 
 const INITIAL_FORM = {
     id: "",
-    description: "",
+    name: "",
     value: "",
-    endDate: "",
+    receiveDate: "",
     initDate: "",
 };
 
 function normalizeDebt(item) {
     return {
         id: item?.id ?? item?.id ?? "",
-        description: item?.description ?? item?.descricao ?? item?.nome ?? "",
+        name: item?.name ?? item?.description ?? item?.descricao ?? item?.nome ?? "",
         value: item?.value ?? item?.vlr ?? "",
-        initDate: item?.initDate ? String(item.initDate).split("T")[0] : item?.data_init ? String(item.data_init).split("T")[0] : "",
-        endDate:
-            item?.endDate
+        initDate: item?.initialDate ?? item?.initDate ? String(item.initialDate || item.initDate).split("T")[0] : item?.data_init ? String(item.data_init).split("T")[0] : "",
+        receiveDate:
+            item?.receiveDate
+                ? String(item.receiveDate).split("T")[0]
+                : item?.endDate
                 ? String(item.endDate).split("T")[0]
                 : item?.data_venc
                 ? String(item.data_venc).split("T")[0]
@@ -78,10 +80,10 @@ export function UpdateDebt() {
         setSelectedId(divida.id);
         setFormData({
             id: divida.id,
-            description: divida.description,
+            name: divida.name,
             value: divida.value,
             initDate: divida.initDate,
-            endDate: divida.endDate,
+            receiveDate: divida.receiveDate,
         });
         setError("");
     }
@@ -106,10 +108,10 @@ export function UpdateDebt() {
         try {
             await cadastrate.updateDebt({
                 id: formData.id,
-                description: formData.description,
+                name: formData.name,
                 value: parseFloat(formData.value),
-                initDate: formData.initDate,
-                endDate: formData.endDate,
+                initialDate: formData.initDate,
+                receiveDate: formData.receiveDate,
             });
 
             alert("Dívida atualizada com sucesso!");
@@ -131,7 +133,7 @@ export function UpdateDebt() {
 
     async function removerDivida(divida) {
         const confirmar = window.confirm(
-            `Deseja realmente remover a dívida "${divida.description}"?`
+            `Deseja realmente remover a dívida "${divida.name}"?`
         );
 
         if (!confirmar) return;
@@ -180,11 +182,11 @@ export function UpdateDebt() {
                         <br />
                         <input
                             id="divida_edit_nome"
-                            name="description"
+                            name="name"
                             type="text"
                             required
                             placeholder="Selecione uma dívida para editar"
-                            value={formData.description}
+                            value={formData.name}
                             onChange={handleInputChange}
                         />
                         <br />
@@ -203,10 +205,10 @@ export function UpdateDebt() {
                         <label htmlFor="divida_edit_data_fim">Data fim prevista</label>
                         <input
                             id="divida_edit_data_fim"
-                            name="endDate"
+                            name="receiveDate"
                             type="date"
                             required
-                            value={formData.endDate}
+                            value={formData.receiveDate}
                             onChange={handleInputChange}
                         />
                         <br />
@@ -286,7 +288,7 @@ export function UpdateDebt() {
                                                             }}
                                                         >
                                                             <span className="item-title">
-                                                                {divida.description}
+                                                                {divida.name}
                                                             </span>
 
                                                             <span className="item-subtitle">

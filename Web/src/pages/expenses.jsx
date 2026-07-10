@@ -94,8 +94,8 @@ export function Expenses() {
         try {
             setLoading(true);
 
-            const response = await expenses.getGastos();
-            const listaGastos = normalizarListaGastos(response);
+            const response = await expenses.obtainExpensePayments();
+            const listaGastos = Array.isArray(response) ? response : response?.gastos || [];
 
             const gastosAgrupadas = agruparGastosMesAtualPorTipo(listaGastos);
 
@@ -109,8 +109,8 @@ export function Expenses() {
 
     const carregarDadosPie = async () => {
         try {
-            const response = await expenses.getGastos();
-            const listaGastos = normalizarListaGastos(response);
+            const response = await expenses.obtainExpensePayments();
+            const listaGastos = Array.isArray(response) ? response : response?.gastos || [];
 
             const gastosAgrupadas = agruparGastosMesAtualPorTipo(listaGastos);
 
@@ -128,8 +128,8 @@ export function Expenses() {
 
     const carregarDadosCol = async () => {
         try {
-            const response = await expenses.getGastos();
-            const listaGastos = normalizarListaGastos(response);
+            const response = await expenses.obtainExpensePayments();
+            const listaGastos = Array.isArray(response) ? response : response?.gastos || [];
 
             const formatadoParaGrafico = agruparGastosPorMes(listaGastos);
 

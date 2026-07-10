@@ -94,8 +94,8 @@ export function Debt() {
         try {
             setLoading(true);
 
-            const response = await expenses.getDivida();
-            const listaDividas = normalizarListaDividas(response);
+            const response = await expenses.obtainDebtPayments();
+            const listaDividas = Array.isArray(response) ? response : response?.dividas || [];
 
             const dividasAgrupadas = agruparDividasMesAtualPorTipo(listaDividas);
 
@@ -109,8 +109,8 @@ export function Debt() {
 
     const carregarDadosPie = async () => {
         try {
-            const response = await expenses.getDivida();
-            const listaDividas = normalizarListaDividas(response);
+            const response = await expenses.obtainDebtPayments();
+            const listaDividas = Array.isArray(response) ? response : response?.dividas || [];
 
             const dividasAgrupadas = agruparDividasMesAtualPorTipo(listaDividas);
 
@@ -128,8 +128,8 @@ export function Debt() {
 
     const carregarDadosCol = async () => {
         try {
-            const response = await expenses.getDivida();
-            const listaDividas = normalizarListaDividas(response);
+            const response = await expenses.obtainDebtPayments();
+            const listaDividas = Array.isArray(response) ? response : response?.dividas || [];
 
             const formatadoParaGrafico = agruparDividasPorMes(listaDividas);
 
