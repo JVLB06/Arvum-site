@@ -14,10 +14,10 @@ const INITIAL_FILTERS = {
 
 const INITIAL_EDIT_FORM = {
     id: "",
-    tipo: "",
-    data: "",
-    valor: "",
-    historico: "",
+    kind: "",
+    extractDate: "",
+    value: "",
+    name: "",
 };
 
 function formatCurrency(value) {
@@ -40,12 +40,12 @@ function formatDate(value) {
 
 function normalizeExtractItem(item) {
     return {
-        id: item?.extrato_id ?? item?.id ?? "",
-        historico: item?.historico ?? "",
-        tipo: item?.tipo ?? "",
-        data: item?.data ?? "",
-        valor: item?.valor ?? 0,
-        saldo: item?.saldo ?? 0,
+        id: item?.id ?? item?.extrato_id ?? "",
+        name: item?.name ?? item?.historico ?? "",
+        kind: item?.kind ?? item?.tipo ?? "",
+        extractDate: item?.extractDate ?? item?.data ?? "",
+        value: item?.value ?? item?.valor ?? 0,
+        balance: item?.balance ?? item?.saldo ?? 0,
     };
 }
 
@@ -261,10 +261,10 @@ export function Extract() {
     function openEditModal(item) {
         setEditForm({
             id: item.id,
-            tipo: item.tipo,
-            historico: item.historico,
-            data: item.data ? String(item.data).split("T")[0] : "",
-            valor: item.valor ?? "",
+            tipo: item.kind,
+            historico: item.name,
+            data: item.extractDate ? String(item.extractDate).split("T")[0] : "",
+            valor: item.value ?? "",
         });
 
         setIsEditModalOpen(true);
@@ -328,7 +328,7 @@ export function Extract() {
 
     async function handleDelete(item) {
         const confirmed = window.confirm(
-            `Deseja realmente excluir o lançamento "${item.historico}"?`
+            `Deseja realmente excluir o lançamento "${item.name}"?`
         );
 
         if (!confirmed) return;
@@ -340,7 +340,7 @@ export function Extract() {
         try {
             await expenses.deleteExpense({
                 id: item.id,
-                tipo: item.tipo,
+                tipo: item.kind,
             });
 
             setItems((prev) => prev.filter((extractItem) => extractItem.id !== item.id));
@@ -432,7 +432,7 @@ export function Extract() {
                     <div className="extract-table">
                         {items.map((item, index) => {
                             const isLastItem = index === items.length - 1;
-                            const isNegative = Number(item.valor) < 0;
+                            const isNegative = Number(item.value) < 0;
                             const isMenuOpen = openMenuId === item.id;
                             const isDeleting = deletingId === item.id;
 
@@ -443,17 +443,17 @@ export function Extract() {
                                     ref={isLastItem ? lastItemRef : null}
                                 >
                                     <div className="extract-item-date">
-                                        {formatDate(item.data)}
+                                        {formatDate(item.extractDate)}
                                     </div>
 
                                     <div className="extract-item-main">
                                         <div className="extract-item-texts">
                                             <strong className="extract-item-title">
-                                                {item.historico}
+                                                {item.name}
                                             </strong>
 
                                             <span className="extract-item-type">
-                                                {item.tipo}
+                                                {item.kind}
                                             </span>
                                         </div>
 
@@ -465,11 +465,11 @@ export function Extract() {
                                                         : "extract-item-value--positive"
                                                 }`}
                                             >
-                                                {formatCurrency(item.valor)}
+                                                {formatCurrency(item.value)}
                                             </strong>
 
                                             <span className="extract-item-balance">
-                                                Saldo: {formatCurrency(item.saldo)}
+                                                Saldo: {formatCurrency(item.balance)}
                                             </span>
                                         </div>
 

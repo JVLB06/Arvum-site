@@ -5,25 +5,29 @@ import "../styles/cadastrate_goal.css";
 import { BackButtonHeader } from "../components/backButtonHeader.jsx";
 
 const INITIAL_FORM = {
-    id_meta: "",
-    descricao: "",
-    vlr: "",
-    data_prev: "",
+    id: "",
+    description: "",
+    value: "",
+    goalDate: "",
+    progress: 0,
 };
 
 function normalizeGoal(item) {
     return {
-        id_meta: item?.id ?? item?.id_meta ?? "",
-        descricao: item?.descricao ?? item?.nome ?? "",
-        vlr: item?.vlr ?? "",
-        data_prev:
-            item?.data_prev
+        id: item?.id ?? item?.id ?? "",
+        description: item?.description ?? item?.descricao ?? item?.nome ?? "",
+        value: item?.value ?? item?.vlr ?? "",
+        goalDate:
+            item?.goalDate
+                ? String(item.goalDate).split("T")[0]
+                : item?.data_prev
                 ? String(item.data_prev).split("T")[0]
                 : item?.data_venc
                 ? String(item.data_venc).split("T")[0]
                 : item?.data_init
                 ? String(item.data_init).split("T")[0]
                 : "",
+        progress: item?.progress ?? 0,
     };
 }
 
@@ -73,12 +77,13 @@ export function UpdateGoal() {
     }
 
     function preencherFormulario(meta) {
-        setSelectedId(meta.id_meta);
+        setSelectedId(meta.id);
         setFormData({
-            id_meta: meta.id_meta,
-            descricao: meta.descricao,
-            vlr: meta.vlr,
-            data_prev: meta.data_prev,
+            id: meta.id,
+            description: meta.description,
+            value: meta.value,
+            goalDate: meta.goalDate,
+            progress: meta.progress,
         });
         setError("");
     }
@@ -92,7 +97,7 @@ export function UpdateGoal() {
     async function salvarEdicao(event) {
         event.preventDefault();
 
-        if (!formData.id_meta) {
+        if (!formData.id) {
             setError("Selecione uma meta para editar.");
             return;
         }
@@ -102,10 +107,11 @@ export function UpdateGoal() {
 
         try {
             await cadastrate.updateGoal({
-                id: formData.id_meta,
-                descricao: formData.descricao,
-                vlr: formData.vlr,
-                data_venc: formData.data_prev,
+                id: formData.id,
+                description: formData.description,
+                value: parseFloat(formData.value),
+                goalDate: formData.goalDate,
+                progress: formData.progress,
             });
 
             alert("Meta atualizada com sucesso!");
@@ -127,20 +133,20 @@ export function UpdateGoal() {
 
     async function removerMeta(meta) {
         const confirmar = window.confirm(
-            `Deseja realmente remover a meta "${meta.descricao}"?`
+            `Deseja realmente remover a meta "${meta.description}"?`
         );
 
         if (!confirmar) return;
 
-        setDeletingId(meta.id_meta);
+        setDeletingId(meta.id);
         setError("");
 
         try {
-            await cadastrate.inactivateGoal(meta.id_meta);
+            await cadastrate.inactivateGoal(meta.id);
 
             alert("Meta removida com sucesso!");
 
-            if (selectedId === meta.id_meta) {
+            if (selectedId === meta.id) {
                 limparFormulario();
             }
 
@@ -176,11 +182,11 @@ export function UpdateGoal() {
                         <br />
                         <input
                             id="meta_edit_nome"
-                            name="descricao"
+                            name="description"
                             type="text"
                             required
                             placeholder="Selecione uma meta para editar"
-                            value={formData.descricao}
+                            value={formData.description}
                             onChange={handleInputChange}
                         />
                         <br />
@@ -190,10 +196,10 @@ export function UpdateGoal() {
                         </label>
                         <input
                             id="meta_edit_data"
-                            name="data_prev"
+                            name="goalDate"
                             type="date"
                             required
-                            value={formData.data_prev}
+                            value={formData.goalDate}
                             onChange={handleInputChange}
                         />
                         <br />
@@ -201,11 +207,11 @@ export function UpdateGoal() {
                         <label htmlFor="meta_edit_vlr">Valor desejado:</label>
                         <input
                             id="meta_edit_vlr"
-                            name="vlr"
+                            name="value"
                             type="number"
                             step="0.01"
                             required
-                            value={formData.vlr}
+                            value={formData.value}
                             onChange={handleInputChange}
                         />
                         <br />
@@ -249,11 +255,11 @@ export function UpdateGoal() {
                                         ) : (
                                             metas.map((meta) => {
                                                 const isSelected =
-                                                    selectedId === meta.id_meta;
+                                                    selectedId === meta.id;
 
                                                 return (
                                                     <div
-                                                        key={meta.id_meta}
+                                                        key={meta.id}
                                                         className={`fill-button item-row ${
                                                             isSelected ? "item-row-active" : ""
                                                         }`}
@@ -273,11 +279,11 @@ export function UpdateGoal() {
                                                             }}
                                                         >
                                                             <span className="item-title">
-                                                                {meta.descricao}
+                                                                {meta.description}
                                                             </span>
 
                                                             <span className="item-subtitle">
-                                                                {Number(meta.vlr || 0).toLocaleString(
+                                                                {Number(meta.value || 0).toLocaleString(
                                                                     "pt-BR",
                                                                     {
                                                                         style: "currency",
@@ -303,7 +309,7 @@ export function UpdateGoal() {
                                                                 type="button"
                                                                 className="icon-button danger"
                                                                 title="Excluir"
-                                                                disabled={deletingId === meta.id_meta}
+                                                                disabled={deletingId === meta.id}
                                                                 onClick={() => removerMeta(meta)}
                                                             >
                                                                 <Trash2 size={16} />

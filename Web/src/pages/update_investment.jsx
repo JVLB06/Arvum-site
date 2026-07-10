@@ -5,20 +5,20 @@ import "../styles/cadastrate_investment.css";
 import { BackButtonHeader } from "../components/backButtonHeader.jsx";
 
 const INITIAL_FORM = {
-    id_invest: "",
-    descricao: "",
-    vlr: "",
-    data_init: "",
-    juro: "",
+    id: "",
+    description: "",
+    value: "",
+    initialDate: "",
+    interest: "",
 };
 
 function normalizeInvestment(item) {
     return {
-        id_invest: item?.id ?? item?.id_invest ?? "",
-        descricao: item?.descricao ?? item?.nome ?? "",
-        vlr: item?.vlr ?? "",
-        data_init: item?.data_init ? String(item.data_init).split("T")[0] : "",
-        juro: item?.juro ?? "",
+        id: item?.id ?? item?.id ?? "",
+        description: item?.description ?? item?.descricao ?? item?.nome ?? "",
+        value: item?.value ?? item?.vlr ?? "",
+        initialDate: item?.initialDate ? String(item.initialDate).split("T")[0] : item?.data_init ? String(item.data_init).split("T")[0] : "",
+        interest: item?.interest ?? item?.juro ?? "",
     };
 }
 
@@ -68,13 +68,13 @@ export function UpdateInvestment() {
     }
 
     function preencherFormulario(investimento) {
-        setSelectedId(investimento.id_invest);
+        setSelectedId(investimento.id);
         setFormData({
-            id_invest: investimento.id_invest,
-            descricao: investimento.descricao,
-            vlr: investimento.vlr,
-            data_init: investimento.data_init,
-            juro: investimento.juro,
+            id: investimento.id,
+            description: investimento.description,
+            value: investimento.value,
+            initialDate: investimento.initialDate,
+            interest: investimento.interest,
         });
         setError("");
     }
@@ -88,7 +88,7 @@ export function UpdateInvestment() {
     async function salvarEdicao(event) {
         event.preventDefault();
 
-        if (!formData.id_invest) {
+        if (!formData.id) {
             setError("Selecione um investimento para editar.");
             return;
         }
@@ -98,11 +98,11 @@ export function UpdateInvestment() {
 
         try {
             await cadastrate.updateInvestment({
-                id: formData.id_invest,
-                descricao: formData.descricao,
-                vlr: formData.vlr,
-                data_init: formData.data_init,
-                juro: formData.juro,
+                id: formData.id,
+                description: formData.description,
+                value: parseFloat(formData.value),
+                initialDate: formData.initialDate,
+                interest: parseFloat(formData.interest),
             });
 
             alert("Investimento atualizado com sucesso!");
@@ -124,20 +124,20 @@ export function UpdateInvestment() {
 
     async function removerInvestimento(investimento) {
         const confirmar = window.confirm(
-            `Deseja realmente remover o investimento "${investimento.descricao}"?`
+            `Deseja realmente remover o investimento "${investimento.description}"?`
         );
 
         if (!confirmar) return;
 
-        setDeletingId(investimento.id_invest);
+        setDeletingId(investimento.id);
         setError("");
 
         try {
-            await cadastrate.inactivateInvestment(investimento.id_invest);
+            await cadastrate.inactivateInvestment(investimento.id);
 
             alert("Investimento removido com sucesso!");
 
-            if (selectedId === investimento.id_invest) {
+            if (selectedId === investimento.id) {
                 limparFormulario();
             }
 
@@ -173,11 +173,11 @@ export function UpdateInvestment() {
                         <br />
                         <input
                             id="investimento_edit_nome"
-                            name="descricao"
+                            name="description"
                             type="text"
                             required
                             placeholder="Selecione um investimento para editar"
-                            value={formData.descricao}
+                            value={formData.description}
                             onChange={handleInputChange}
                         />
                         <br />
@@ -185,10 +185,10 @@ export function UpdateInvestment() {
                         <label htmlFor="investimento_edit_data_init">Data início:</label>
                         <input
                             id="investimento_edit_data_init"
-                            name="data_init"
+                            name="initialDate"
                             type="date"
                             required
-                            value={formData.data_init}
+                            value={formData.initialDate}
                             onChange={handleInputChange}
                         />
                         <br />
@@ -196,11 +196,11 @@ export function UpdateInvestment() {
                         <label htmlFor="investimento_edit_vlr">Valor aplicado:</label>
                         <input
                             id="investimento_edit_vlr"
-                            name="vlr"
+                            name="value"
                             type="number"
                             step="0.01"
                             required
-                            value={formData.vlr}
+                            value={formData.value}
                             onChange={handleInputChange}
                         />
                         <br />
@@ -208,11 +208,11 @@ export function UpdateInvestment() {
                         <label htmlFor="investimento_edit_juros">Juros:</label>
                         <input
                             id="investimento_edit_juros"
-                            name="juro"
+                            name="interest"
                             type="number"
                             step="0.01"
                             required
-                            value={formData.juro}
+                            value={formData.interest}
                             onChange={handleInputChange}
                         />
                         <br />
@@ -256,11 +256,11 @@ export function UpdateInvestment() {
                                         ) : (
                                             investimentos.map((investimento) => {
                                                 const isSelected =
-                                                    selectedId === investimento.id_invest;
+                                                    selectedId === investimento.id;
 
                                                 return (
                                                     <div
-                                                        key={investimento.id_invest}
+                                                        key={investimento.id}
                                                         className={`fill-button item-row ${
                                                             isSelected ? "item-row-active" : ""
                                                         }`}
@@ -282,18 +282,18 @@ export function UpdateInvestment() {
                                                             }}
                                                         >
                                                             <span className="item-title">
-                                                                {investimento.descricao}
+                                                                {investimento.description}
                                                             </span>
 
                                                             <span className="item-subtitle">
                                                                 {Number(
-                                                                    investimento.vlr || 0
+                                                                    investimento.value || 0
                                                                 ).toLocaleString("pt-BR", {
                                                                     style: "currency",
                                                                     currency: "BRL",
                                                                 })}
                                                                 {" • "}
-                                                                Juros: {investimento.juro}%
+                                                                Juros: {investimento.interest}%
                                                             </span>
                                                         </div>
 
@@ -315,7 +315,7 @@ export function UpdateInvestment() {
                                                                 title="Excluir"
                                                                 disabled={
                                                                     deletingId ===
-                                                                    investimento.id_invest
+                                                                    investimento.id
                                                                 }
                                                                 onClick={() =>
                                                                     removerInvestimento(investimento)

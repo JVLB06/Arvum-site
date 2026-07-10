@@ -12,34 +12,34 @@ import cadastrate from "../services/cadastrate.js";
 
 const MODEL_MAPPERS = {
   renda: (item) => ({
-    id: item.id,
-    nome: item.descricao, // O C# mapeia 'nome' da tabela para 'descricao' no objeto
-    valor: item.vlr_min || 0,
-    data: item.data ? item.data.split('T')[0] : '',
+    id: item.id || item.receiptId,
+    nome: item.name || item.descricao,
+    valor: item.minValue || item.vlr_min || 0,
+    data: item.paymentDate ? item.paymentDate.split('T')[0] : item.data ? item.data.split('T')[0] : '',
   }),
   gasto: (item) => ({
     id: item.id,
-    nome: item.descricao,
-    valor: item.vlr_min || 0,
-    data: item.data_init ? item.data_init.split('T')[0] : '',
+    nome: item.description || item.descricao,
+    valor: item.minValue || item.vlr_min || 0,
+    data: item.dueDate ? item.dueDate.split('T')[0] : item.data_init ? item.data_init.split('T')[0] : '',
   }),
   investimento: (item) => ({
     id: item.id,
-    nome: item.descricao,
-    valor: item.vlr || 0,
-    data: item.data_init ? item.data_init.split('T')[0] : '',
+    nome: item.description || item.descricao,
+    valor: item.value || item.vlr || 0,
+    data: item.initialDate ? item.initialDate.split('T')[0] : item.data_init ? item.data_init.split('T')[0] : '',
   }),
   divida: (item) => ({
     id: item.id,
-    nome: item.descricao,
-    valor: item.vlr || 0,
-    data: item.data_init ? item.data_init.split('T')[0] : '',
+    nome: item.description || item.descricao,
+    valor: item.value || item.vlr || 0,
+    data: item.initDate ? item.initDate.split('T')[0] : item.data_init ? item.data_init.split('T')[0] : '',
   }),
   meta: (item) => ({
     id: item.id,
-    nome: item.descricao,
-    valor: item.vlr || 0,
-    data: item.data_init ? item.data_init.split('T')[0] : '',
+    nome: item.description || item.descricao,
+    valor: item.value || item.vlr || 0,
+    data: item.goalDate ? item.goalDate.split('T')[0] : item.data_init ? item.data_init.split('T')[0] : '',
   }),
 };
 
@@ -204,11 +204,11 @@ export function CreateEntry() {
       setErro('');
 
       const payload = {
-        historico: formData.descricao,
-        valor: formData.valor,
-        tipo: tipoSelecionado,
-        data: formData.data,
-        id_ref: formData.id,
+        name: formData.descricao,
+        value: parseFloat(formData.valor),
+        kind: tipoSelecionado,
+        extractDate: formData.data,
+        externalId: formData.id,
       };
 
       await expenses.createExpense(payload);

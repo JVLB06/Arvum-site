@@ -37,9 +37,7 @@ export function Preferences() {
 
     const excluirPreferencia = async (preferenciaId) => {
         try {
-            await think.deletePreferences({
-                id: preferenciaId
-            });
+            await think.deletePreferences(preferenciaId);
             alert("Item excluído com sucesso");
             // Dica: Seria bom chamar carregarDados() aqui para atualizar a tela após excluir!
         } catch (error) {

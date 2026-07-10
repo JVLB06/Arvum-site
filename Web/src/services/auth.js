@@ -2,6 +2,7 @@ import api from './main';
 
 const accounts = {
   // POST: Login do usuário
+  // Esperado: { username, password }
   login: async (userData) => {
     const response = await api.post('/contas/login', userData);
     if (response.data.access_token) {
@@ -11,6 +12,7 @@ const accounts = {
   },
 
   // POST: Cadastrar usuário
+  // Esperado: { userName, password, birthDate, email }
   cadastrate: async (userData) => {
     const response = await api.post(`/contas/cadastro`, userData);
     return response.data;

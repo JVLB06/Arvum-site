@@ -21,9 +21,10 @@ export function CadastrateGoal() {
 
         try {
             const dados = await cadastrate.createGoal({
-                descricao,
-                vlr,
-                data_prev
+                description: descricao,
+                value: parseFloat(vlr),
+                goalDate: data_prev,
+                progress: 0
             });
 
             alert("Meta cadastrada com sucesso!");

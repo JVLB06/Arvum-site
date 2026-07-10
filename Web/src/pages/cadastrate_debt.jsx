@@ -22,10 +22,10 @@ export function CadastrateDebt() {
 
         try {
             const dados = await cadastrate.createDebt({
-                descricao,
-                vlr,
-                data_venc,
-                data_init
+                description: descricao,
+                value: parseFloat(vlr),
+                endDate: data_venc,
+                initDate: data_init
             });
 
             alert("Dívida cadastrada com sucesso!");

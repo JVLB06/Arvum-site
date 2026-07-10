@@ -5,34 +5,40 @@ import "../styles/cadastrate_expenses.css";
 import { BackButtonHeader } from "../components/backButtonHeader.jsx";
 
 const INITIAL_FORM = {
-    id_gasto: "",
-    descricao: "",
-    vlr_min: "",
-    vlr_max: "",
-    data_venc: "",
-    prioridade: 1,
-    fixvar: true,
+    id: "",
+    description: "",
+    minValue: "",
+    maxValue: "",
+    dueDate: "",
+    priority: 1,
+    isFixed: true,
 };
 
 function normalizeExpense(item) {
     return {
-        id_gasto: item?.id ?? item?.id_gasto ?? "",
-        descricao: item?.descricao ?? item?.nome ?? "",
-        vlr_min: item?.vlr_min ?? "",
-        vlr_max: item?.vlr_max ?? "",
-        data_venc:
-            item?.data_venc
+        id: item?.id ?? item?.id ?? "",
+        description: item?.description ?? item?.descricao ?? item?.nome ?? "",
+        minValue: item?.minValue ?? item?.vlr_min ?? "",
+        maxValue: item?.maxValue ?? item?.vlr_max ?? "",
+        dueDate:
+            item?.dueDate
+                ? String(item.dueDate).split("T")[0]
+                : item?.data_venc
                 ? String(item.data_venc).split("T")[0]
                 : item?.data_init
                 ? String(item.data_init).split("T")[0]
                 : "",
-        prioridade:
-            typeof item?.prioridade === "number"
-                ? item.prioridade
-                : Number(item?.prioridade ?? 1),
-        fixvar:
-            typeof item?.fixvar === "boolean"
-                ? item.fixvar
+        priority:
+            typeof item?.priority === "number"
+                ? item.priority
+                : typeof item?.priority === "number"
+                ? item.priority
+                : Number(item?.priority ?? item?.priority ?? 1),
+        isFixed:
+            typeof item?.isFixed === "boolean"
+                ? item.isFixed
+                : typeof item?.isFixed === "boolean"
+                ? item.isFixed
                 : item?.fix_var ?? true,
     };
 }
@@ -83,15 +89,15 @@ export function UpdateExpenses() {
     }
 
     function preencherFormulario(gasto) {
-        setSelectedId(gasto.id_gasto);
+        setSelectedId(gasto.id);
         setFormData({
-            id_gasto: gasto.id_gasto,
-            descricao: gasto.descricao,
-            vlr_min: gasto.vlr_min,
-            vlr_max: gasto.vlr_max,
-            data_venc: gasto.data_venc,
-            prioridade: gasto.prioridade,
-            fixvar: gasto.fixvar,
+            id: gasto.id,
+            description: gasto.description,
+            minValue: gasto.minValue,
+            maxValue: gasto.maxValue,
+            dueDate: gasto.dueDate,
+            priority: gasto.priority,
+            isFixed: gasto.isFixed,
         });
         setError("");
     }
@@ -105,7 +111,7 @@ export function UpdateExpenses() {
     async function salvarEdicao(event) {
         event.preventDefault();
 
-        if (!formData.id_gasto) {
+        if (!formData.id) {
             setError("Selecione um gasto para editar.");
             return;
         }
@@ -115,13 +121,13 @@ export function UpdateExpenses() {
 
         try {
             await cadastrate.updateExpense({
-                id: formData.id_gasto,
-                descricao: formData.descricao,
-                vlr_min: formData.vlr_min,
-                vlr_max: formData.vlr_max,
-                data: formData.data_venc,
-                prioridade: Number(formData.prioridade),
-                fixvar: formData.fixvar,
+                id: formData.id,
+                description: formData.description,
+                minValue: parseFloat(formData.minValue),
+                maxValue: parseFloat(formData.maxValue),
+                dueDate: formData.dueDate,
+                priority: parseInt(formData.priority),
+                isFixed: formData.isFixed,
             });
 
             alert("Gasto atualizado com sucesso!");
@@ -143,20 +149,20 @@ export function UpdateExpenses() {
 
     async function removerGasto(gasto) {
         const confirmar = window.confirm(
-            `Deseja realmente remover o gasto "${gasto.descricao}"?`
+            `Deseja realmente remover o gasto "${gasto.description}"?`
         );
 
         if (!confirmar) return;
 
-        setDeletingId(gasto.id_gasto);
+        setDeletingId(gasto.id);
         setError("");
 
         try {
-            await cadastrate.inactivateExpense(gasto.id_gasto);
+            await cadastrate.inactivateExpense(gasto.id);
 
             alert("Gasto removido com sucesso!");
 
-            if (selectedId === gasto.id_gasto) {
+            if (selectedId === gasto.id) {
                 limparFormulario();
             }
 
@@ -191,11 +197,11 @@ export function UpdateExpenses() {
                         <label htmlFor="gasto_edit_nome">Nome do gasto</label>
                         <input
                             id="gasto_edit_nome"
-                            name="descricao"
+                            name="description"
                             type="text"
                             required
                             placeholder="Selecione um gasto para editar"
-                            value={formData.descricao}
+                            value={formData.description}
                             onChange={handleInputChange}
                         />
                         <br />
@@ -203,10 +209,10 @@ export function UpdateExpenses() {
                         <label htmlFor="gasto_edit_data">Data do último pagamento:</label>
                         <input
                             id="gasto_edit_data"
-                            name="data_venc"
+                            name="dueDate"
                             type="date"
                             required
-                            value={formData.data_venc}
+                            value={formData.dueDate}
                             onChange={handleInputChange}
                         />
                         <br />
@@ -214,11 +220,11 @@ export function UpdateExpenses() {
                         <label htmlFor="gasto_edit_vlr_min">Valor mínimo:</label>
                         <input
                             id="gasto_edit_vlr_min"
-                            name="vlr_min"
+                            name="minValue"
                             type="number"
                             step="0.01"
                             required
-                            value={formData.vlr_min}
+                            value={formData.minValue}
                             onChange={handleInputChange}
                         />
                         <br />
@@ -226,84 +232,84 @@ export function UpdateExpenses() {
                         <label htmlFor="gasto_edit_vlr_max">Valor máximo:</label>
                         <input
                             id="gasto_edit_vlr_max"
-                            name="vlr_max"
+                            name="maxValue"
                             type="number"
                             step="0.01"
                             required
-                            value={formData.vlr_max}
+                            value={formData.maxValue}
                             onChange={handleInputChange}
                         />
                         <br />
 
                         <div className="radio-group">
-                            <label>Nível de prioridade:</label>
+                            <label>Nível de priority:</label>
 
                             <div className="radio-option">
                                 <input
                                     type="radio"
-                                    id="gasto_edit_prioridade_baixa"
-                                    name="prioridade"
+                                    id="gasto_edit_priority_baixa"
+                                    name="priority"
                                     value="0"
-                                    checked={Number(formData.prioridade) === 0}
+                                    checked={Number(formData.priority) === 0}
                                     onChange={(e) =>
                                         setFormData((prev) => ({
                                             ...prev,
-                                            prioridade: Number(e.target.value),
+                                            priority: Number(e.target.value),
                                         }))
                                     }
                                 />
-                                <label htmlFor="gasto_edit_prioridade_baixa">Baixa</label>
+                                <label htmlFor="gasto_edit_priority_baixa">Baixa</label>
                             </div>
 
                             <div className="radio-option">
                                 <input
                                     type="radio"
-                                    id="gasto_edit_prioridade_media"
-                                    name="prioridade"
+                                    id="gasto_edit_priority_media"
+                                    name="priority"
                                     value="1"
-                                    checked={Number(formData.prioridade) === 1}
+                                    checked={Number(formData.priority) === 1}
                                     onChange={(e) =>
                                         setFormData((prev) => ({
                                             ...prev,
-                                            prioridade: Number(e.target.value),
+                                            priority: Number(e.target.value),
                                         }))
                                     }
                                 />
-                                <label htmlFor="gasto_edit_prioridade_media">Média</label>
+                                <label htmlFor="gasto_edit_priority_media">Média</label>
                             </div>
 
                             <div className="radio-option">
                                 <input
                                     type="radio"
-                                    id="gasto_edit_prioridade_alta"
-                                    name="prioridade"
+                                    id="gasto_edit_priority_alta"
+                                    name="priority"
                                     value="2"
-                                    checked={Number(formData.prioridade) === 2}
+                                    checked={Number(formData.priority) === 2}
                                     onChange={(e) =>
                                         setFormData((prev) => ({
                                             ...prev,
-                                            prioridade: Number(e.target.value),
+                                            priority: Number(e.target.value),
                                         }))
                                     }
                                 />
-                                <label htmlFor="gasto_edit_prioridade_alta">Alta</label>
+                                <label htmlFor="gasto_edit_priority_alta">Alta</label>
                             </div>
 
                             <div className="radio-option">
                                 <input
                                     type="radio"
-                                    id="gasto_edit_prioridade_essencial"
-                                    name="prioridade"
+                                    id="gasto_edit_priority_essencial"
+                                    name="priority"
                                     value="3"
-                                    checked={Number(formData.prioridade) === 3}
+                                    checked={Number(formData.priority) === 3}
                                     onChange={(e) =>
                                         setFormData((prev) => ({
                                             ...prev,
-                                            prioridade: Number(e.target.value),
+                                            priority: Number(e.target.value),
                                         }))
                                     }
                                 />
-                                <label htmlFor="gasto_edit_prioridade_essencial">
+                                <label htmlFor="gasto_edit_priority_essencial">
                                     Essencial
                                 </label>
                             </div>
@@ -317,12 +323,12 @@ export function UpdateExpenses() {
                                 <input
                                     type="radio"
                                     id="gasto_edit_fixo"
-                                    name="fixvar"
-                                    checked={formData.fixvar === true}
+                                    name="isFixed"
+                                    checked={formData.isFixed === true}
                                     onChange={() =>
                                         setFormData((prev) => ({
                                             ...prev,
-                                            fixvar: true,
+                                            isFixed: true,
                                         }))
                                     }
                                 />
@@ -333,12 +339,12 @@ export function UpdateExpenses() {
                                 <input
                                     type="radio"
                                     id="gasto_edit_variavel"
-                                    name="fixvar"
-                                    checked={formData.fixvar === false}
+                                    name="isFixed"
+                                    checked={formData.isFixed === false}
                                     onChange={() =>
                                         setFormData((prev) => ({
                                             ...prev,
-                                            fixvar: false,
+                                            isFixed: false,
                                         }))
                                     }
                                 />
@@ -386,11 +392,11 @@ export function UpdateExpenses() {
                                         ) : (
                                             gastos.map((gasto) => {
                                                 const isSelected =
-                                                    selectedId === gasto.id_gasto;
+                                                    selectedId === gasto.id;
 
                                                 return (
                                                     <div
-                                                        key={gasto.id_gasto}
+                                                        key={gasto.id}
                                                         className={`fill-button item-row ${
                                                             isSelected ? "item-row-active" : ""
                                                         }`}
@@ -410,11 +416,11 @@ export function UpdateExpenses() {
                                                             }}
                                                         >
                                                             <span className="item-title">
-                                                                {gasto.descricao}
+                                                                {gasto.description}
                                                             </span>
 
                                                             <span className="item-subtitle">
-                                                                {Number(gasto.vlr_min || 0).toLocaleString(
+                                                                {Number(gasto.minValue || 0).toLocaleString(
                                                                     "pt-BR",
                                                                     {
                                                                         style: "currency",
@@ -422,7 +428,7 @@ export function UpdateExpenses() {
                                                                     }
                                                                 )}
                                                                 {" • "}
-                                                                {gasto.fixvar ? "Fixo" : "Variável"}
+                                                                {gasto.isFixed ? "Fixo" : "Variável"}
                                                             </span>
                                                         </div>
 
@@ -443,7 +449,7 @@ export function UpdateExpenses() {
                                                                 className="icon-button danger"
                                                                 title="Excluir"
                                                                 disabled={
-                                                                    deletingId === gasto.id_gasto
+                                                                    deletingId === gasto.id
                                                                 }
                                                                 onClick={() =>
                                                                     removerGasto(gasto)
