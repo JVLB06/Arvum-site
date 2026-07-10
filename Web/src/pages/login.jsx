@@ -30,7 +30,7 @@ export function Login() {
         const data = await accounts.login({ username, password });
         console.log("Login realizado com sucesso:", data);
 
-        if (!data.access_token) {
+        if (!data.token) {
           throw new Error("Token não retornado pela API.");
         }
 
