@@ -65,13 +65,13 @@ const cadastrate = {
     return unwrapPayload(response.data, 'divida');
   },
 
-  // Esperado: { id?, description, value, endDate, initDate }
+  // Esperado: { id?, name, value, receiveDate, initialDate, paid? }
   createDebt: async (debtData) => {
     const response = await api.post('/user_plan/criar_divida', debtData);
     return response.data;
   },
 
-  // Esperado: { id?, description, value, endDate, initDate }
+  // Esperado: { id?, name, value, receiveDate, initialDate, paid? }
   updateDebt: async (debtData) => {
     const response = await api.put('/user_plan/atualizar_divida', debtData);
     return response.data;

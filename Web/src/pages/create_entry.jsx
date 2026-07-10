@@ -31,9 +31,9 @@ const MODEL_MAPPERS = {
   }),
   divida: (item) => ({
     id: item.id,
-    nome: item.description || item.descricao,
+    nome: item.name || item.description || item.descricao,
     valor: item.value || item.vlr || 0,
-    data: item.initDate ? item.initDate.split('T')[0] : item.data_init ? item.data_init.split('T')[0] : '',
+    data: item.initialDate ? item.initialDate.split('T')[0] : item.initDate ? item.initDate.split('T')[0] : item.data_init ? item.data_init.split('T')[0] : '',
   }),
   meta: (item) => ({
     id: item.id,

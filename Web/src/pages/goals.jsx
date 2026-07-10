@@ -94,7 +94,7 @@ export function Goal() {
         try {
             setLoading(true);
 
-            const response = await expenses.getMeta();
+            const response = await expenses.obtainGoalPayments();
             const listaMetas = normalizarListaMetas(response);
 
             const metasAgrupadas = agruparMetasMesAtualPorTipo(listaMetas);
@@ -109,7 +109,7 @@ export function Goal() {
 
     const carregarDadosPie = async () => {
         try {
-            const response = await expenses.getMeta();
+            const response = await expenses.obtainGoalPayments();
             const listaMetas = normalizarListaMetas(response);
 
             const metasAgrupadas = agruparMetasMesAtualPorTipo(listaMetas);
@@ -128,7 +128,7 @@ export function Goal() {
 
     const carregarDadosCol = async () => {
         try {
-            const response = await expenses.getMeta();
+            const response = await expenses.obtainGoalPayments();
             const listaMetas = normalizarListaMetas(response);
 
             const formatadoParaGrafico = agruparMetasPorMes(listaMetas);

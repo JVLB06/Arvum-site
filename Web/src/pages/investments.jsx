@@ -94,7 +94,7 @@ export function Investment() {
         try {
             setLoading(true);
 
-            const response = await expenses.getInvestimento();
+            const response = await expenses.obtainInvestmentPayments();
             const listaInvestimentos = normalizarListaInvestimentos(response);
 
             const investimentosAgrupadas = agruparInvestimentosMesAtualPorTipo(listaInvestimentos);
@@ -109,7 +109,7 @@ export function Investment() {
 
     const carregarDadosPie = async () => {
         try {
-            const response = await expenses.getInvestimento();
+            const response = await expenses.obtainInvestmentPayments();
             const listaInvestimentos = normalizarListaInvestimentos(response);
 
             const investimentosAgrupadas = agruparInvestimentosMesAtualPorTipo(listaInvestimentos);
@@ -128,7 +128,7 @@ export function Investment() {
 
     const carregarDadosCol = async () => {
         try {
-            const response = await expenses.getInvestimento();
+            const response = await expenses.obtainInvestmentPayments();
             const listaInvestimentos = normalizarListaInvestimentos(response);
 
             const formatadoParaGrafico = agruparInvestimentosPorMes(listaInvestimentos);
