@@ -1,10 +1,11 @@
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: 'https://arvum-api.duckdns.org', // Altere para a sua URL
+  baseURL: 'https://adaptive-telephony-bikes-pressed.trycloudflare.com',
   headers: {
     'Content-Type': 'application/json',
-  }
+  },
+  withCredentials: true, // Permite envio de credenciais entre domínios
 });
 
 // Exemplo de interceptor para injetar Token de autenticação

@@ -1,4 +1,5 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { useEffect, useState } from "react";
 import { Home } from "./pages/home.jsx";
 import { Login } from "./pages/login.jsx";
 import { Cadastrate } from "./pages/cadastrate.jsx";
@@ -22,13 +23,33 @@ import { UpdateExpenses } from "./pages/update_expenses.jsx";
 import { Extract } from "./pages/extract.jsx";
 import { Thinking } from "./pages/thinking.jsx";
 import { Preferences } from "./pages/preferences_management.jsx"
+import accounts from "./services/auth.js";
 
 // O "Segurança" da rota
 const ProtectedRoute = ({ children }) => {
+  const [isValid, setIsValid] = useState(null);
   const token = localStorage.getItem('token');
-  
-  if (!token) {
-    // Se não tem token, manda pro login
+
+  useEffect(() => {
+    if (!token) {
+      setIsValid(false);
+      return;
+    }
+
+    // Valida o token contra o backend
+    const validateToken = async () => {
+      const result = await accounts.validate();
+      setIsValid(!!result);
+    };
+
+    validateToken();
+  }, [token]);
+
+  if (isValid === null) {
+    return <div>Validando...</div>; // Componente de loading
+  }
+
+  if (!isValid) {
     return <Navigate to="/login" replace />;
   }
 
