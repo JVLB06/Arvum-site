@@ -5,8 +5,8 @@ const accounts = {
   // Esperado: { username, password }
   login: async (userData) => {
     const response = await api.post('/contas/login', userData);
-    if (response.data.access_token) {
-      localStorage.setItem('token', response.data.access_token);
+    if (response.data.token) {
+      localStorage.setItem('token', response.data.token);
     }
     return response.data;
   },
