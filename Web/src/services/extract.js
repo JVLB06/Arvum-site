@@ -139,7 +139,7 @@ const expenses = {
   // Esperado: { id, kind }
   deleteExpense: async (expenseData) => {
     const response = await api.delete('/extrato/remover_lancamento', {
-      data: expenseData,
+      data: { id: expenseData.id, kind: expenseData.kind },
     });
     return response.data;
   },
