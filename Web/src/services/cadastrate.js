@@ -50,8 +50,8 @@ const cadastrate = {
   },
 
   // Esperado: { id, receiveDate, receivedValue }
-  concludeInvestment: async (concludeData) => {
-    const response = await api.put('/user_plan/concluir_investimento', concludeData);
+  concludeInvestment: async (investmentData) => {
+    const response = await api.put('/user_plan/concluir_investimento', investmentData);
     return response.data;
   },
 
@@ -82,14 +82,14 @@ const cadastrate = {
     return response.data;
   },
 
-  payDebt: async (payData) => {
-    const response = await api.put('/user_plan/pagar_divida', payData);
+  payDebt: async (debtId) => {
+    const response = await api.put(`/user_plan/pagar_divida/${debtId}`);
     return response.data;
   },
 
   getFinishedDebts: async () => {
     const response = await api.get('/user_plan/ler_dividas_quitadas');
-    return unwrapPayload(response.data, 'divida');
+    return Array.isArray(response.data) ? response.data : response.data?.divida || [];
   },
 
   getGoals: async () => {
@@ -114,14 +114,14 @@ const cadastrate = {
     return response.data;
   },
 
-  concludeGoal: async (concludeData) => {
-    const response = await api.put('/user_plan/concluir_meta', concludeData);
+  concludeGoal: async (goalId) => {
+    const response = await api.put(`/user_plan/concluir_meta/${goalId}`);
     return response.data;
   },
 
   getFinishedGoals: async () => {
     const response = await api.get('/user_plan/ler_metas_concluidas');
-    return unwrapPayload(response.data, 'meta');
+    return Array.isArray(response.data) ? response.data : response.data?.meta || [];
   },
 
   getExpenses: async () => {

@@ -204,10 +204,12 @@ export function CreateEntry() {
       setErro('');
 
       const payload = {
+        id: formData.id ? parseInt(formData.id) : undefined,
         name: formData.descricao,
         value: parseFloat(formData.valor),
         kind: tipoSelecionado,
         extractDate: formData.data,
+        balance: 0,
         externalId: formData.id,
       };
 

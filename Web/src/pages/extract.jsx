@@ -18,6 +18,7 @@ const INITIAL_EDIT_FORM = {
     extractDate: "",
     value: "",
     name: "",
+    balance: 0,
 };
 
 function formatCurrency(value) {
@@ -101,12 +102,10 @@ export function Extract() {
                  *   saldo: 1250.30
                  * }
                  */
-                const response = await expenses.loadExtract({
-                    page: pageToLoad,
-                    pageSize: PAGE_SIZE,
-                    startDate: filters.startDate || null,
-                    endDate: filters.endDate || null,
-                });
+                const response = await expenses.getExtract(
+                    filters.startDate || null,
+                    filters.endDate || null
+                );
 
                 const newItems = Array.isArray(response?.items) ? response.items : [];
                 const nextHasMore = Boolean(response?.hasMore);
@@ -261,10 +260,10 @@ export function Extract() {
     function openEditModal(item) {
         setEditForm({
             id: item.id,
-            tipo: item.kind,
-            historico: item.name,
-            data: item.extractDate ? String(item.extractDate).split("T")[0] : "",
-            valor: item.value ?? "",
+            kind: item.kind,
+            name: item.name,
+            extractDate: item.extractDate ? String(item.extractDate).split("T")[0] : "",
+            value: item.value ?? "",
         });
 
         setIsEditModalOpen(true);
@@ -293,10 +292,11 @@ export function Extract() {
         try {
             await expenses.updateExpense({
                 id: editForm.id,
-                tipo: editForm.tipo,
-                historico: editForm.historico,
-                data: editForm.data,
-                valor: editForm.valor,
+                name: editForm.name,
+                value: parseFloat(editForm.value),
+                kind: editForm.kind,
+                extractDate: editForm.extractDate,
+                balance: 0,
             });
 
             setItems((prev) =>
@@ -304,9 +304,9 @@ export function Extract() {
                     item.id === editForm.id
                         ? {
                               ...item,
-                              data: editForm.data,
-                              valor: Number(editForm.valor),
-                              historico: editForm.historico,
+                              extractDate: editForm.extractDate,
+                              value: Number(editForm.value),
+                              name: editForm.name,
                           }
                         : item
                 )
@@ -340,7 +340,7 @@ export function Extract() {
         try {
             await expenses.deleteExpense({
                 id: item.id,
-                tipo: item.kind,
+                kind: item.kind,
             });
 
             setItems((prev) => prev.filter((extractItem) => extractItem.id !== item.id));
@@ -547,9 +547,9 @@ export function Extract() {
                             <label htmlFor="extract_edit_date">Data</label>
                             <input
                                 id="extract_edit_date"
-                                name="data"
+                                name="extractDate"
                                 type="date"
-                                value={editForm.data}
+                                value={editForm.extractDate}
                                 onChange={handleEditInputChange}
                                 required
                             />
@@ -557,10 +557,10 @@ export function Extract() {
                             <label htmlFor="extract_edit_value">Valor</label>
                             <input
                                 id="extract_edit_value"
-                                name="valor"
+                                name="value"
                                 type="number"
                                 step="0.01"
-                                value={editForm.valor}
+                                value={editForm.value}
                                 onChange={handleEditInputChange}
                                 required
                             />
