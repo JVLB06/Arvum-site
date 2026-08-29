@@ -1,49 +1,139 @@
-nav {
+.navbar {
     width: 100%;
-    padding: 20px 0;
-    justify-content: space-between;
+    min-height: 72px;
+    padding: 12px 24px;
     background-color: var(--primary-color);
-    border-bottom: 14px solid var(--secondary-color); /* Linha dourada */
-    display: flex;
-    flex-wrap: nowrap;
-    gap: 50px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Sombra suave para destacar */
-}
-
-nav .logo {
+    border-bottom: 4px solid var(--secondary-color);
     display: flex;
     align-items: center;
-    margin-left: 20px;
+    justify-content: space-between;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-sizing: border-box;
+    gap: 16px;
 }
 
-nav .logo img {
-    max-height: 40px; /* Ajuste conforme necessário */
-    margin-right: 10px;
-}
-
-nav .logo span {
-    color: rgb(224, 224, 224);
-    font-size: 20px;
-    font-weight: bold;
-}
-/* Botão de troca de tema como um círculo */
-.nav-right{
+.navbar .logo {
     display: flex;
     align-items: center;
-    gap: 18px; /* Ajusta o espaço entre os botões */
-    margin-right: 20px;;
-}
-.tema {  /*Botão para troca de tema*/
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    background: linear-gradient(135deg, var(--bg-color) 50%, var(--text-color) 50%); /* Metade branca, metade preta */
-    border: 2px solid var(--secondary-color); /* Borda dourada */
+    gap: 12px;
     cursor: pointer;
-    position: relative;
-    transition: box-shadow 0.3s ease; /* Transição para o efeito de sombra */
+    text-decoration: none;
+    user-select: none;
+    flex-shrink: 0;
 }
-/* Efeito de sombra no hover */
+
+.navbar .logo-image,
+.navbar .logo-img {
+    height: 38px;
+    width: auto;
+    object-fit: contain;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+}
+
+.navbar .logo span {
+    color: #FFFFFF;
+    font-size: 22px;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+}
+
+.navbar .logo span strong {
+    color: var(--secondary-color);
+}
+
+.nav-links {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.head_button {
+    background: transparent;
+    color: rgba(255, 255, 255, 0.88);
+    border: 1px solid transparent;
+    padding: 8px 16px;
+    border-radius: var(--radius-pill, 999px);
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    text-decoration: none;
+}
+
+.head_button:hover {
+    background-color: rgba(212, 160, 23, 0.18);
+    color: var(--secondary-color);
+    border-color: rgba(212, 160, 23, 0.35);
+    transform: translateY(-1px);
+}
+
+.head_button.active,
+.head_button:active {
+    background-color: var(--secondary-color);
+    color: var(--primary-color);
+}
+
+.nav-right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-shrink: 0;
+}
+
+.tema {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.08);
+    border: 2px solid var(--secondary-color);
+    color: #FFFFFF;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 18px;
+    transition: all 0.25s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
 .tema:hover {
-    background: linear-gradient(135deg, var(--text-color) 50%, var(--bg-color) 50%); /* Metade branca, metade preta */
+    background-color: var(--secondary-color);
+    color: var(--primary-color);
+    transform: scale(1.08) rotate(15deg);
+}
+
+/* Responsividade */
+@media (max-width: 900px) {
+    .navbar {
+        padding: 10px 16px;
+        flex-wrap: wrap;
+    }
+
+    .nav-links {
+        order: 3;
+        width: 100%;
+        justify-content: flex-start;
+        overflow-x: auto;
+        padding-bottom: 4px;
+        flex-wrap: nowrap;
+        scrollbar-width: none;
+    }
+
+    .nav-links::-webkit-scrollbar {
+        display: none;
+    }
+
+    .head_button {
+        padding: 6px 12px;
+        font-size: 13px;
+        white-space: nowrap;
+    }
 }

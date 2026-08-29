@@ -1,8 +1,9 @@
-import { useEffect, useMemo, useState } from "react";
-import { Pencil, Trash2 } from "lucide-react";
+import React, { useEffect, useMemo, useState } from "react";
+import { Pencil, Trash2, CheckCircle2, RotateCcw, Save } from "lucide-react";
 import cadastrate from "../services/cadastrate.js";
-import "../styles/cadastrate_investment.css";
 import { BackButtonHeader } from "../components/backButtonHeader.jsx";
+import { AdBanner } from "../components/adBanner.jsx";
+import "../styles/cadastrate_investment.css";
 
 const INITIAL_FORM = {
     id: "",
@@ -27,6 +28,7 @@ export function UpdateInvestment() {
     const [investimentos, setInvestimentos] = useState([]);
     const [selectedId, setSelectedId] = useState(null);
     const [error, setError] = useState("");
+    const [success, setSuccess] = useState("");
     const [loadingList, setLoadingList] = useState(true);
     const [saving, setSaving] = useState(false);
     const [deletingId, setDeletingId] = useState(null);
@@ -60,7 +62,6 @@ export function UpdateInvestment() {
 
     function handleInputChange(event) {
         const { name, value } = event.target;
-
         setFormData((prev) => ({
             ...prev,
             [name]: value,
@@ -77,12 +78,14 @@ export function UpdateInvestment() {
             interest: investimento.interest,
         });
         setError("");
+        setSuccess("");
     }
 
     function limparFormulario() {
         setSelectedId(null);
         setFormData(INITIAL_FORM);
         setError("");
+        setSuccess("");
     }
 
     async function salvarEdicao(event) {
@@ -95,6 +98,7 @@ export function UpdateInvestment() {
 
         setSaving(true);
         setError("");
+        setSuccess("");
 
         try {
             await cadastrate.updateInvestment({
@@ -102,10 +106,10 @@ export function UpdateInvestment() {
                 description: formData.description,
                 value: parseFloat(formData.value),
                 initialDate: formData.initialDate,
-                interest: parseFloat(formData.interest),
+                interest: parseFloat(formData.interest || 0),
             });
 
-            alert("Investimento atualizado com sucesso!");
+            setSuccess("Investimento atualizado com sucesso!");
             await loadInvestments();
             limparFormulario();
         } catch (err) {
@@ -116,7 +120,6 @@ export function UpdateInvestment() {
                 "Erro ao atualizar investimento.";
 
             setError(mensagem);
-            alert(mensagem);
         } finally {
             setSaving(false);
         }
@@ -126,21 +129,18 @@ export function UpdateInvestment() {
         const confirmar = window.confirm(
             `Deseja realmente remover o investimento "${investimento.description}"?`
         );
-
         if (!confirmar) return;
 
         setDeletingId(investimento.id);
         setError("");
+        setSuccess("");
 
         try {
             await cadastrate.inactivateInvestment(investimento.id);
-
-            alert("Investimento removido com sucesso!");
-
+            setSuccess("Investimento removido com sucesso!");
             if (selectedId === investimento.id) {
                 limparFormulario();
             }
-
             await loadInvestments();
         } catch (err) {
             const mensagem =
@@ -150,191 +150,182 @@ export function UpdateInvestment() {
                 "Erro ao remover investimento.";
 
             setError(mensagem);
-            alert(mensagem);
         } finally {
             setDeletingId(null);
         }
     }
 
     return (
-        <div className="main">
-            <div className="grid">
-                <section className="form">
-                    <BackButtonHeader
-                        title={
-                            <>
-                                Gerenciar <span>investimento</span>
-                            </>
-                        }
-                    />
+        <div className="crud-page">
+            <BackButtonHeader
+                title={<>Qual <span className="highlight">investimento</span> você quer atualizar?</>}
+            />
 
-                    <form onSubmit={salvarEdicao}>
-                        <label htmlFor="investimento_edit_nome">Nome da aplicação</label>
-                        <br />
-                        <input
-                            id="investimento_edit_nome"
-                            name="description"
-                            type="text"
-                            required
-                            placeholder="Selecione um investimento para editar"
-                            value={formData.description}
-                            onChange={handleInputChange}
-                        />
-                        <br />
-
-                        <label htmlFor="investimento_edit_data_init">Data início:</label>
-                        <input
-                            id="investimento_edit_data_init"
-                            name="initialDate"
-                            type="date"
-                            required
-                            value={formData.initialDate}
-                            onChange={handleInputChange}
-                        />
-                        <br />
-
-                        <label htmlFor="investimento_edit_vlr">Valor aplicado:</label>
-                        <input
-                            id="investimento_edit_vlr"
-                            name="value"
-                            type="number"
-                            step="0.01"
-                            required
-                            value={formData.value}
-                            onChange={handleInputChange}
-                        />
-                        <br />
-
-                        <label htmlFor="investimento_edit_juros">Juros:</label>
-                        <input
-                            id="investimento_edit_juros"
-                            name="interest"
-                            type="number"
-                            step="0.01"
-                            required
-                            value={formData.interest}
-                            onChange={handleInputChange}
-                        />
-                        <br />
-
-                        {error && <p className="error-message">{error}</p>}
-
-                        <div className="button-row">
-                            <button
-                                type="submit"
-                                disabled={!hasSelectedItem || saving}
-                            >
-                                {saving ? "Salvando..." : "Salvar alteração"}
-                            </button>
-
-                            <button
-                                type="button"
-                                onClick={limparFormulario}
-                                disabled={!hasSelectedItem || saving}
-                            >
-                                Remover auto fill
-                            </button>
+            <main className="crud-container">
+                <div className="crud-split-layout">
+                    {/* LISTA DE INVESTIMENTOS */}
+                    <section className="crud-options-card">
+                        <div className="options-card-header">
+                            <h3 className="options-title">Itens para editar</h3>
                         </div>
-                    </form>
-                </section>
+                        <p className="options-subtitle">Clique no item para preencher ou no ícone para gerenciar:</p>
 
-                <aside className="sugestoes">
-                    <table className="suggestion-table">
-                        <thead>
-                            <tr>
-                                <th>Investimentos cadastrados</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>
-                                    <div className="scroll">
-                                        {loadingList ? (
-                                            <p>Carregando investimentos...</p>
-                                        ) : investimentos.length === 0 ? (
-                                            <p>Nenhum investimento cadastrado.</p>
-                                        ) : (
-                                            investimentos.map((investimento) => {
-                                                const isSelected =
-                                                    selectedId === investimento.id;
+                        <div className="manage-items-list">
+                            {loadingList ? (
+                                <p className="loading-text">Carregando investimentos...</p>
+                            ) : investimentos.length === 0 ? (
+                                <p className="empty-text">Nenhum investimento cadastrado.</p>
+                            ) : (
+                                investimentos.map((investimento) => {
+                                    const isSelected = selectedId === investimento.id;
+                                    return (
+                                        <div
+                                            key={investimento.id}
+                                            className={`manage-item-row ${isSelected ? "manage-item-row--active" : ""}`}
+                                        >
+                                            <div
+                                                className="manage-item-main"
+                                                onClick={() => preencherFormulario(investimento)}
+                                                role="button"
+                                                tabIndex={0}
+                                            >
+                                                <strong className="manage-item-name">{investimento.description}</strong>
+                                                <span className="manage-item-sub">
+                                                    {Number(investimento.value || 0).toLocaleString("pt-BR", {
+                                                        style: "currency",
+                                                        currency: "BRL",
+                                                    })}
+                                                    {investimento.interest ? ` • Juros: ${investimento.interest}%` : ""}
+                                                </span>
+                                            </div>
 
-                                                return (
-                                                    <div
-                                                        key={investimento.id}
-                                                        className={`fill-button item-row ${
-                                                            isSelected ? "item-row-active" : ""
-                                                        }`}
-                                                    >
-                                                        <div
-                                                            className="item-row-content"
-                                                            onClick={() =>
-                                                                preencherFormulario(investimento)
-                                                            }
-                                                            role="button"
-                                                            tabIndex={0}
-                                                            onKeyDown={(e) => {
-                                                                if (
-                                                                    e.key === "Enter" ||
-                                                                    e.key === " "
-                                                                ) {
-                                                                    preencherFormulario(investimento);
-                                                                }
-                                                            }}
-                                                        >
-                                                            <span className="item-title">
-                                                                {investimento.description}
-                                                            </span>
+                                            <div className="manage-item-actions">
+                                                <button
+                                                    type="button"
+                                                    className="action-icon-btn action-icon-btn--edit"
+                                                    title="Editar"
+                                                    onClick={() => preencherFormulario(investimento)}
+                                                >
+                                                    <Pencil size={16} />
+                                                </button>
+                                                <button
+                                                    type="button"
+                                                    className="action-icon-btn action-icon-btn--delete"
+                                                    title="Excluir"
+                                                    disabled={deletingId === investimento.id}
+                                                    onClick={() => removerInvestimento(investimento)}
+                                                >
+                                                    <Trash2 size={16} />
+                                                </button>
+                                            </div>
+                                        </div>
+                                    );
+                                })
+                            )}
+                        </div>
+                    </section>
 
-                                                            <span className="item-subtitle">
-                                                                {Number(
-                                                                    investimento.value || 0
-                                                                ).toLocaleString("pt-BR", {
-                                                                    style: "currency",
-                                                                    currency: "BRL",
-                                                                })}
-                                                                {" • "}
-                                                                Juros: {investimento.interest}%
-                                                            </span>
-                                                        </div>
+                    {/* FORMULÁRIO DE EDIÇÃO */}
+                    <section className="crud-form-card">
+                        <h2 className="crud-card-title">
+                            {hasSelectedItem ? "Editar Investimento Selecionado" : "Selecione uma aplicação"}
+                        </h2>
+                        <p className="crud-card-subtitle">
+                            {hasSelectedItem ? `Atualizando informações de: ${formData.description}` : "Selecione um item da lista ao lado para começar a editar"}
+                        </p>
 
-                                                        <div className="item-actions">
-                                                            <button
-                                                                type="button"
-                                                                className="icon-button"
-                                                                title="Editar"
-                                                                onClick={() =>
-                                                                    preencherFormulario(investimento)
-                                                                }
-                                                            >
-                                                                <Pencil size={16} />
-                                                            </button>
+                        <form onSubmit={salvarEdicao} className="crud-form">
+                            <div className="crud-input-group">
+                                <label htmlFor="investimento_edit_nome">Nome da aplicação</label>
+                                <input
+                                    id="investimento_edit_nome"
+                                    name="description"
+                                    type="text"
+                                    required
+                                    placeholder="Nome da aplicação"
+                                    value={formData.description}
+                                    onChange={handleInputChange}
+                                    disabled={!hasSelectedItem}
+                                />
+                            </div>
 
-                                                            <button
-                                                                type="button"
-                                                                className="icon-button danger"
-                                                                title="Excluir"
-                                                                disabled={
-                                                                    deletingId ===
-                                                                    investimento.id
-                                                                }
-                                                                onClick={() =>
-                                                                    removerInvestimento(investimento)
-                                                                }
-                                                            >
-                                                                <Trash2 size={16} />
-                                                            </button>
-                                                        </div>
-                                                    </div>
-                                                );
-                                            })
-                                        )}
-                                    </div>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </aside>
-            </div>
+                            <div className="crud-grid-2col">
+                                <div className="crud-input-group">
+                                    <label htmlFor="investimento_edit_data_init">Data início:</label>
+                                    <input
+                                        id="investimento_edit_data_init"
+                                        name="initialDate"
+                                        type="date"
+                                        required
+                                        value={formData.initialDate}
+                                        onChange={handleInputChange}
+                                        disabled={!hasSelectedItem}
+                                    />
+                                </div>
+
+                                <div className="crud-input-group">
+                                    <label htmlFor="investimento_edit_vlr">Valor aplicado:</label>
+                                    <input
+                                        id="investimento_edit_vlr"
+                                        name="value"
+                                        type="number"
+                                        step="0.01"
+                                        required
+                                        placeholder="0,00"
+                                        value={formData.value}
+                                        onChange={handleInputChange}
+                                        disabled={!hasSelectedItem}
+                                    />
+                                </div>
+                            </div>
+
+                            <div className="crud-input-group">
+                                <label htmlFor="investimento_edit_juros">Taxa de Juros anual (% estimada):</label>
+                                <input
+                                    id="investimento_edit_juros"
+                                    name="interest"
+                                    type="number"
+                                    step="0.01"
+                                    placeholder="0,00"
+                                    value={formData.interest}
+                                    onChange={handleInputChange}
+                                    disabled={!hasSelectedItem}
+                                />
+                            </div>
+
+                            {error && <div className="crud-msg-box crud-msg--error">{error}</div>}
+                            {success && <div className="crud-msg-box crud-msg--success"><CheckCircle2 size={16} /> {success}</div>}
+
+                            <div className="crud-actions-row">
+                                <button
+                                    type="submit"
+                                    className="crud-submit-btn"
+                                    disabled={!hasSelectedItem || saving}
+                                >
+                                    <Save size={18} />
+                                    <span>{saving ? "Salvando..." : "Atualizar"}</span>
+                                </button>
+
+                                {hasSelectedItem && (
+                                    <button
+                                        type="button"
+                                        className="crud-reset-btn"
+                                        onClick={limparFormulario}
+                                        disabled={saving}
+                                    >
+                                        <RotateCcw size={16} />
+                                        <span>Limpar seleção</span>
+                                    </button>
+                                )}
+                            </div>
+                        </form>
+                    </section>
+                </div>
+
+                <AdBanner slot="update-investment-slot" format="horizontal" />
+            </main>
         </div>
     );
 }
+
+export default UpdateInvestment;

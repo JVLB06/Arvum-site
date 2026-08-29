@@ -1,8 +1,9 @@
-import { useEffect, useMemo, useState } from "react";
-import { Pencil, Trash2 } from "lucide-react";
+import React, { useEffect, useMemo, useState } from "react";
+import { Pencil, Trash2, CheckCircle2, RotateCcw, Save } from "lucide-react";
 import cadastrate from "../services/cadastrate.js";
-import "../styles/cadastrate_receipt.css";
 import { BackButtonHeader } from "../components/backButtonHeader.jsx";
+import { AdBanner } from "../components/adBanner.jsx";
+import "../styles/cadastrate_receipt.css";
 
 const INITIAL_FORM = {
     receiptId: "",
@@ -27,6 +28,7 @@ export function UpdateReceipt() {
     const [rendas, setRendas] = useState([]);
     const [selectedId, setSelectedId] = useState(null);
     const [error, setError] = useState("");
+    const [success, setSuccess] = useState("");
     const [loadingList, setLoadingList] = useState(true);
     const [saving, setSaving] = useState(false);
     const [deletingId, setDeletingId] = useState(null);
@@ -60,7 +62,6 @@ export function UpdateReceipt() {
 
     function handleInputChange(event) {
         const { name, value } = event.target;
-
         setFormData((prev) => ({
             ...prev,
             [name]: value,
@@ -77,35 +78,38 @@ export function UpdateReceipt() {
             paymentDate: renda.paymentDate,
         });
         setError("");
+        setSuccess("");
     }
 
     function limparFormulario() {
         setSelectedId(null);
         setFormData(INITIAL_FORM);
         setError("");
+        setSuccess("");
     }
 
     async function salvarEdicao(event) {
         event.preventDefault();
 
         if (!formData.receiptId) {
-            setError("Selecione uma renda para editar.");
+            setError("Selecione uma renda na lista para editar.");
             return;
         }
 
         setSaving(true);
         setError("");
+        setSuccess("");
 
         try {
             await cadastrate.updateRenda({
                 receiptId: formData.receiptId,
                 name: formData.name,
                 minValue: parseFloat(formData.minValue),
-                maxValue: parseFloat(formData.maxValue),
+                maxValue: parseFloat(formData.maxValue || formData.minValue),
                 paymentDate: formData.paymentDate,
             });
 
-            alert("Renda atualizada com sucesso!");
+            setSuccess("Renda atualizada com sucesso!");
             await loadRendas();
             limparFormulario();
         } catch (err) {
@@ -116,31 +120,25 @@ export function UpdateReceipt() {
                 "Erro ao atualizar renda.";
 
             setError(mensagem);
-            alert(mensagem);
         } finally {
             setSaving(false);
         }
     }
 
     async function removerRenda(renda) {
-        const confirmar = window.confirm(
-            `Deseja realmente remover a renda "${renda.name}"?`
-        );
-
+        const confirmar = window.confirm(`Deseja realmente remover a renda "${renda.name}"?`);
         if (!confirmar) return;
 
         setDeletingId(renda.receiptId);
         setError("");
+        setSuccess("");
 
         try {
             await cadastrate.deleteRenda(renda.receiptId);
-
-            alert("Renda removida com sucesso!");
-
+            setSuccess("Renda removida com sucesso!");
             if (selectedId === renda.receiptId) {
                 limparFormulario();
             }
-
             await loadRendas();
         } catch (err) {
             const mensagem =
@@ -150,189 +148,165 @@ export function UpdateReceipt() {
                 "Erro ao remover renda.";
 
             setError(mensagem);
-            alert(mensagem);
         } finally {
             setDeletingId(null);
         }
     }
 
     return (
-        <div className="main">
-            <div className="grid">
-                <section className="form">
-                    <BackButtonHeader
-                        title={
-                            <>
-                                Gerenciar <span>rendas</span>
-                            </>
-                        }
-                    />
+        <div className="crud-page">
+            <BackButtonHeader
+                title={<>Qual <span className="highlight">renda</span> você quer atualizar?</>}
+            />
 
-                    <form onSubmit={salvarEdicao}>
-                        <label htmlFor="renda_edit_nome">Nome da renda</label>
-                        <br />
-                        <input
-                            id="renda_edit_nome"
-                            name="name"
-                            type="text"
-                            required
-                            placeholder="Selecione uma renda para editar"
-                            value={formData.name}
-                            onChange={handleInputChange}
-                        />
-                        <br />
-
-                        <label htmlFor="renda_edit_data">
-                            Data do último recebimento:
-                        </label>
-                        <input
-                            id="renda_edit_data"
-                            name="paymentDate"
-                            type="date"
-                            required
-                            value={formData.paymentDate}
-                            onChange={handleInputChange}
-                        />
-                        <br />
-
-                        <label htmlFor="renda_edit_vlr_min">Valor mínimo:</label>
-                        <input
-                            id="renda_edit_vlr_min"
-                            name="minValue"
-                            type="number"
-                            step="0.01"
-                            required
-                            value={formData.minValue}
-                            onChange={handleInputChange}
-                        />
-                        <br />
-
-                        <label htmlFor="renda_edit_vlr_max">Valor máximo:</label>
-                        <input
-                            id="renda_edit_vlr_max"
-                            name="maxValue"
-                            type="number"
-                            step="0.01"
-                            required
-                            value={formData.maxValue}
-                            onChange={handleInputChange}
-                        />
-                        <br />
-
-                        {error && <p className="error-message">{error}</p>}
-
-                        <div className="button-row">
-                            <button
-                                type="submit"
-                                name="submit"
-                                disabled={!hasSelectedItem || saving}
-                            >
-                                {saving ? "Salvando..." : "Salvar alteração"}
-                            </button>
-
-                            <button
-                                type="button"
-                                onClick={limparFormulario}
-                                disabled={!hasSelectedItem || saving}
-                            >
-                                Remover auto fill
-                            </button>
+            <main className="crud-container">
+                <div className="crud-split-layout">
+                    {/* ITENS PARA EDITAR (LADO ESQUERDO) */}
+                    <section className="crud-options-card">
+                        <div className="options-card-header">
+                            <h3 className="options-title">Itens para editar</h3>
                         </div>
-                    </form>
-                </section>
+                        <p className="options-subtitle">Clique no item para preencher ou no ícone para gerenciar:</p>
 
-                <aside className="sugestoes">
-                    <table className="suggestion-table">
-                        <thead>
-                            <tr>
-                                <th>Rendas cadastradas</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>
-                                    <div className="scroll">
-                                        {loadingList ? (
-                                            <p>Carregando rendas...</p>
-                                        ) : rendas.length === 0 ? (
-                                            <p>Nenhuma renda cadastrada.</p>
-                                        ) : (
-                                            rendas.map((renda) => {
-                                                const isSelected =
-                                                    selectedId === renda.receiptId;
+                        <div className="manage-items-list">
+                            {loadingList ? (
+                                <p className="loading-text">Carregando rendas...</p>
+                            ) : rendas.length === 0 ? (
+                                <p className="empty-text">Nenhuma renda cadastrada.</p>
+                            ) : (
+                                rendas.map((renda) => {
+                                    const isSelected = selectedId === renda.receiptId;
+                                    return (
+                                        <div
+                                            key={renda.receiptId}
+                                            className={`manage-item-row ${isSelected ? "manage-item-row--active" : ""}`}
+                                        >
+                                            <div
+                                                className="manage-item-main"
+                                                onClick={() => preencherFormulario(renda)}
+                                                role="button"
+                                                tabIndex={0}
+                                            >
+                                                <strong className="manage-item-name">{renda.name}</strong>
+                                                <span className="manage-item-sub">
+                                                    {Number(renda.minValue || 0).toLocaleString("pt-BR", {
+                                                        style: "currency",
+                                                        currency: "BRL",
+                                                    })}
+                                                </span>
+                                            </div>
 
-                                                return (
-                                                    <div
-                                                        key={renda.receiptId}
-                                                        className={`fill-button item-row ${
-                                                            isSelected ? "item-row-active" : ""
-                                                        }`}
-                                                    >
-                                                        <div
-                                                            className="item-row-content"
-                                                            onClick={() => preencherFormulario(renda)}
-                                                            role="button"
-                                                            tabIndex={0}
-                                                            onKeyDown={(e) => {
-                                                                if (
-                                                                    e.key === "Enter" ||
-                                                                    e.key === " "
-                                                                ) {
-                                                                    preencherFormulario(renda);
-                                                                }
-                                                            }}
-                                                        >
-                                                            <span className="item-title">
-                                                                {renda.name}
-                                                            </span>
+                                            <div className="manage-item-actions">
+                                                <button
+                                                    type="button"
+                                                    className="action-icon-btn action-icon-btn--edit"
+                                                    title="Editar"
+                                                    onClick={() => preencherFormulario(renda)}
+                                                >
+                                                    <Pencil size={16} />
+                                                </button>
+                                                <button
+                                                    type="button"
+                                                    className="action-icon-btn action-icon-btn--delete"
+                                                    title="Excluir"
+                                                    disabled={deletingId === renda.receiptId}
+                                                    onClick={() => removerRenda(renda)}
+                                                >
+                                                    <Trash2 size={16} />
+                                                </button>
+                                            </div>
+                                        </div>
+                                    );
+                                })
+                            )}
+                        </div>
+                    </section>
 
-                                                            <span className="item-subtitle">
-                                                                {Number(
-                                                                    renda.minValue || 0
-                                                                ).toLocaleString("pt-BR", {
-                                                                    style: "currency",
-                                                                    currency: "BRL",
-                                                                })}
-                                                            </span>
-                                                        </div>
+                    {/* FORMULÁRIO DE EDIÇÃO (LADO DIREITO) */}
+                    <section className="crud-form-card">
+                        <h2 className="crud-card-title">
+                            {hasSelectedItem ? "Editar Renda Selecionada" : "Selecione uma renda"}
+                        </h2>
+                        <p className="crud-card-subtitle">
+                            {hasSelectedItem ? `Atualizando informações de: ${formData.name}` : "Selecione um item da lista ao lado para começar a editar"}
+                        </p>
 
-                                                        <div className="item-actions">
-                                                            <button
-                                                                type="button"
-                                                                className="icon-button"
-                                                                title="Editar"
-                                                                onClick={() =>
-                                                                    preencherFormulario(renda)
-                                                                }
-                                                            >
-                                                                <Pencil size={16} />
-                                                            </button>
+                        <form onSubmit={salvarEdicao} className="crud-form">
+                            <div className="crud-input-group">
+                                <label htmlFor="renda_edit_nome">Nome da renda</label>
+                                <input
+                                    id="renda_edit_nome"
+                                    name="name"
+                                    type="text"
+                                    required
+                                    placeholder="Nome da renda"
+                                    value={formData.name}
+                                    onChange={handleInputChange}
+                                    disabled={!hasSelectedItem}
+                                />
+                            </div>
 
-                                                            <button
-                                                                type="button"
-                                                                className="icon-button danger"
-                                                                title="Excluir"
-                                                                disabled={
-                                                                    deletingId === renda.receiptId
-                                                                }
-                                                                onClick={() =>
-                                                                    removerRenda(renda)
-                                                                }
-                                                            >
-                                                                <Trash2 size={16} />
-                                                            </button>
-                                                        </div>
-                                                    </div>
-                                                );
-                                            })
-                                        )}
-                                    </div>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </aside>
-            </div>
+                            <div className="crud-input-group">
+                                <label htmlFor="renda_edit_data">Data estimada de recebimento:</label>
+                                <input
+                                    id="renda_edit_data"
+                                    name="paymentDate"
+                                    type="date"
+                                    required
+                                    value={formData.paymentDate}
+                                    onChange={handleInputChange}
+                                    disabled={!hasSelectedItem}
+                                />
+                            </div>
+
+                            <div className="crud-input-group">
+                                <label htmlFor="renda_edit_vlr_min">Valor médio recebido:</label>
+                                <input
+                                    id="renda_edit_vlr_min"
+                                    name="minValue"
+                                    type="number"
+                                    step="0.01"
+                                    required
+                                    placeholder="0,00"
+                                    value={formData.minValue}
+                                    onChange={handleInputChange}
+                                    disabled={!hasSelectedItem}
+                                />
+                            </div>
+
+                            {error && <div className="crud-msg-box crud-msg--error">{error}</div>}
+                            {success && <div className="crud-msg-box crud-msg--success"><CheckCircle2 size={16} /> {success}</div>}
+
+                            <div className="crud-actions-row">
+                                <button
+                                    type="submit"
+                                    className="crud-submit-btn"
+                                    disabled={!hasSelectedItem || saving}
+                                >
+                                    <Save size={18} />
+                                    <span>{saving ? "Salvando..." : "Atualizar"}</span>
+                                </button>
+
+                                {hasSelectedItem && (
+                                    <button
+                                        type="button"
+                                        className="crud-reset-btn"
+                                        onClick={limparFormulario}
+                                        disabled={saving}
+                                    >
+                                        <RotateCcw size={16} />
+                                        <span>Limpar seleção</span>
+                                    </button>
+                                )}
+                            </div>
+                        </form>
+                    </section>
+                </div>
+
+                <AdBanner slot="update-receipt-slot" format="horizontal" />
+            </main>
         </div>
     );
 }
+
+export default UpdateReceipt;

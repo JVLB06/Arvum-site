@@ -1,7 +1,9 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import cadastrate from "../services/cadastrate.js";
-import "../styles/cadastrate_receipt.css";
 import { BackButtonHeader } from "../components/backButtonHeader.jsx";
+import { AdBanner } from "../components/adBanner.jsx";
+import { PlusCircle, Sparkles, CheckCircle2 } from "lucide-react";
+import "../styles/cadastrate_receipt.css";
 
 export function CadastrateReceipt() {
     const [descricao, setdescricao] = useState("");
@@ -9,7 +11,10 @@ export function CadastrateReceipt() {
     const [vlr_max, setvlr_max] = useState("");
     const [data, setdata] = useState("");
     const [error, setError] = useState("");
+    const [success, setSuccess] = useState("");
     const [loading, setLoading] = useState(false);
+
+    const opcoesComuns = ["Salário", "Pro-labore", "Aluguel", "Venda informal", "Freelance", "Investimentos"];
 
     function preencherNomeRenda(valor) {
         setdescricao(valor);
@@ -18,18 +23,18 @@ export function CadastrateReceipt() {
     async function enviaRenda(event) {
         event.preventDefault();
         setError("");
+        setSuccess("");
         setLoading(true);
 
         try {
-            const dados = await cadastrate.createRenda({
+            await cadastrate.createRenda({
                 name: descricao,
                 minValue: parseFloat(vlr_min),
-                maxValue: parseFloat(vlr_max),
+                maxValue: parseFloat(vlr_max || vlr_min),
                 paymentDate: data,
             });
 
-            alert("Renda cadastrada com sucesso!");
-
+            setSuccess("Renda cadastrada com sucesso!");
             setdescricao("");
             setvlr_min("");
             setvlr_max("");
@@ -42,114 +47,101 @@ export function CadastrateReceipt() {
                 "Erro ao cadastrar renda.";
 
             setError(mensagem);
-            alert(mensagem);
         } finally {
             setLoading(false);
         }
     }
 
     return (
-        <div className="main">
-            <div className="grid">
-                <section className="form">
-                    <BackButtonHeader title={<>
-                        Qual <span>renda</span> você quer incluir?</>} />
+        <div className="crud-page">
+            <BackButtonHeader 
+                title={<>Qual <span className="highlight">renda</span> você quer incluir?</>} 
+            />
 
-                    <form onSubmit={enviaRenda}>
-                        <label htmlFor="renda_cad_nome">Nome da renda</label>
-                        <br />
-                        <input
-                            id="renda_cad_nome"
-                            name="renda_cad_nome"
-                            type="text"
-                            required
-                            placeholder="Qualquer tipo de entrada é válida"
-                            value={descricao}
-                            onChange={(e) => setdescricao(e.target.value)}
-                        />
-                        <br />
+            <main className="crud-container">
+                <div className="crud-split-layout">
+                    {/* FORMULÁRIO */}
+                    <section className="crud-form-card">
+                        <h2 className="crud-card-title">Dados da Renda</h2>
+                        <p className="crud-card-subtitle">Cadastre fontes de receita fixas ou variáveis</p>
 
-                        <label htmlFor="renda_cad_data">Data do último recebimento:</label>
-                        <input
-                            id="renda_cad_data"
-                            name="renda_cad_data"
-                            type="date"
-                            required
-                            value={data}
-                            onChange={(e) => setdata(e.target.value)}
-                        />
-                        <br />
+                        <form onSubmit={enviaRenda} className="crud-form">
+                            <div className="crud-input-group">
+                                <label htmlFor="renda_cad_nome">Nome da renda</label>
+                                <input
+                                    id="renda_cad_nome"
+                                    type="text"
+                                    required
+                                    placeholder="Ex: Salário, Aluguel, Freelance..."
+                                    value={descricao}
+                                    onChange={(e) => setdescricao(e.target.value)}
+                                />
+                            </div>
 
-                        <label htmlFor="renda_cad_vlr">Valor médio:</label>
-                        <input
-                            id="renda_cad_vlr"
-                            name="renda_cad_vlr"
-                            type="number"
-                            step="0.01"
-                            required
-                            value={vlr_min}
-                            onChange={(e) => {
-                                setvlr_min(e.target.value);
-                                setvlr_max(e.target.value);
-                            }}
-                        />
-                        <br />
+                            <div className="crud-input-group">
+                                <label htmlFor="renda_cad_data">Data estimada de recebimento:</label>
+                                <input
+                                    id="renda_cad_data"
+                                    type="date"
+                                    required
+                                    value={data}
+                                    onChange={(e) => setdata(e.target.value)}
+                                />
+                            </div>
 
-                        <button type="submit" name="submit" disabled={loading}>
-                            {loading ? "Incluindo..." : "Incluir"}
-                        </button>
-                    </form>
-                </section>
+                            <div className="crud-input-group">
+                                <label htmlFor="renda_cad_vlr">Valor médio recebido:</label>
+                                <input
+                                    id="renda_cad_vlr"
+                                    type="number"
+                                    step="0.01"
+                                    required
+                                    placeholder="0,00"
+                                    value={vlr_min}
+                                    onChange={(e) => {
+                                        setvlr_min(e.target.value);
+                                        setvlr_max(e.target.value);
+                                    }}
+                                />
+                            </div>
 
-                <aside className="sugestoes">
-                    <table className="suggestion-table">
-                        <thead>
-                            <tr>
-                                <th>Opções comuns</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>
-                                    <div className="scroll">
-                                        <button
-                                            type="button"
-                                            className="fill-button"
-                                            onClick={() => preencherNomeRenda("Salário")}
-                                        >
-                                            Salário
-                                        </button>
+                            {error && <div className="crud-msg-box crud-msg--error">{error}</div>}
+                            {success && <div className="crud-msg-box crud-msg--success"><CheckCircle2 size={16} /> {success}</div>}
 
-                                        <button
-                                            type="button"
-                                            className="fill-button"
-                                            onClick={() => preencherNomeRenda("Pro-labore")}
-                                        >
-                                            Pro-labore
-                                        </button>
+                            <button type="submit" className="crud-submit-btn" disabled={loading}>
+                                <PlusCircle size={18} />
+                                <span>{loading ? "Incluindo..." : "Incluir"}</span>
+                            </button>
+                        </form>
+                    </section>
 
-                                        <button
-                                            type="button"
-                                            className="fill-button"
-                                            onClick={() => preencherNomeRenda("Aluguel")}
-                                        >
-                                            Aluguel
-                                        </button>
+                    {/* OPÇÕES COMUNS */}
+                    <aside className="crud-options-card">
+                        <div className="options-card-header">
+                            <Sparkles size={18} />
+                            <h3 className="options-title">Tipos mais comuns</h3>
+                        </div>
+                        <p className="options-subtitle">Clique para preencher rapidamente o nome da renda:</p>
 
-                                        <button
-                                            type="button"
-                                            className="fill-button"
-                                            onClick={() => preencherNomeRenda("Vendas")}
-                                        >
-                                            Vendas
-                                        </button>
-                                    </div>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </aside>
-            </div>
+                        <div className="common-options-grid">
+                            {opcoesComuns.map((opcao, idx) => (
+                                <button
+                                    key={idx}
+                                    type="button"
+                                    className={`common-option-pill ${descricao === opcao ? 'active' : ''}`}
+                                    onClick={() => preencherNomeRenda(opcao)}
+                                >
+                                    {opcao}
+                                </button>
+                            ))}
+                        </div>
+                    </aside>
+                </div>
+
+                <AdBanner slot="cadastrate-receipt-slot" format="horizontal" />
+            </main>
         </div>
     );
 }
+
+export default CadastrateReceipt;

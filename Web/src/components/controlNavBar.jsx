@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import logo from "../assets/arvum_logo.png";
 import "../styles/navBar.css";
 
@@ -7,7 +7,6 @@ export function Navbar({ children, onBack }) {
   const [darkMode, setDarkMode] = useState(false);
   const navigate = useNavigate();
 
-  // aplica ou remove o tema
   useEffect(() => {
     if (darkMode) {
       document.body.classList.add("dark-mode");
@@ -22,11 +21,10 @@ export function Navbar({ children, onBack }) {
     if (onBack) {
       onBack();
     } else {
-      navigate(-1);
+      navigate("/logged");
     }
   }
 
-  // carrega tema salvo
   useEffect(() => {
     const savedTheme = localStorage.getItem("theme");
     if (savedTheme === "dark") {
@@ -36,12 +34,9 @@ export function Navbar({ children, onBack }) {
 
   return (
     <nav className="navbar">
-      <div className="logo" onClick={handleBack} style={{ cursor: "pointer" }}>
-        {/* Se tiver a logo */}
-        <img src={logo} alt="Arvum" className="logo-img" />
-
-        {/* fallback (caso a imagem não carregue) */}
-        {/* <span className="logo-text">Arvum</span> */}
+      <div className="logo" onClick={handleBack} title="Voltar ao Dashboard">
+        <img src={logo} alt="Arvum Logo" className="logo-img" />
+        <span>Arvum</span>
       </div>
 
       <div className="nav-links">
@@ -52,6 +47,8 @@ export function Navbar({ children, onBack }) {
         <button
           className="tema"
           onClick={() => setDarkMode(!darkMode)}
+          title={darkMode ? "Mudar para modo claro" : "Mudar para modo escuro"}
+          aria-label="Alternar tema"
         >
           {darkMode ? "☀️" : "🌙"}
         </button>
@@ -59,3 +56,5 @@ export function Navbar({ children, onBack }) {
     </nav>
   );
 }
+
+export default Navbar;

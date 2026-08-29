@@ -1,22 +1,35 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import expenses from "../services/extract.js";
 import PieChart from "../components/pieGraph.jsx"; 
 import { getTranslatedQuote } from '../services/phrase.js';
 import accounts from "../services/auth.js";
 import { Navbar } from "../components/navBar.jsx";
-import { Link } from 'react-router-dom';
+import { AdBanner } from "../components/adBanner.jsx";
+import { 
+  PlusCircle, 
+  FileText, 
+  Wallet, 
+  CreditCard, 
+  TrendingUp, 
+  Target, 
+  Sparkles, 
+  LogOut,
+  UserCheck,
+  CircleDollarSign
+} from "lucide-react";
 import "../styles/dashboard.css";
 
 export function Dashboard() {
-    const [dados, setDados] = useState({ content: "Carregando frase...", author: "" });
+    const [dados, setDados] = useState({ content: "Carregando pensamento...", author: "" });
     const [dadosGrafico, setDadosGrafico] = useState([]);
     const [loading, setLoading] = useState(true);
+    const navigate = useNavigate();
 
     const carregarDadosDashboard = async () => {
         try {
             setLoading(true);
 
-            // Disparamos todas as consultas simultaneamente
             const [renda, investimentos, dividas, metas, gastos] = await Promise.all([
                 expenses.getRenda(),
                 expenses.getActiveInvestments(),
@@ -25,13 +38,24 @@ export function Dashboard() {
                 expenses.getExpenses()
             ]);
 
-            // Montamos o array no formato esperado pelo PieChart
+            const listaRenda = Array.isArray(renda) ? renda : [];
+            const listaInvest = Array.isArray(investimentos) ? investimentos : [];
+            const listaDividas = Array.isArray(dividas) ? dividas : [];
+            const listaMetas = Array.isArray(metas) ? metas : [];
+            const listaGastos = Array.isArray(gastos) ? gastos : [];
+
+            const totalRenda = listaRenda.reduce((acc, item) => acc + Number(item.valor || item.minValue || item.vlr_min || 0), 0);
+            const totalInvest = listaInvest.reduce((acc, item) => acc + Number(item.valor || item.value || item.vlr || 0), 0);
+            const totalDividas = listaDividas.reduce((acc, item) => acc + Number(item.valor || item.value || item.vlr || 0), 0);
+            const totalMetas = listaMetas.reduce((acc, item) => acc + Number(item.valor || item.value || item.vlr || 0), 0);
+            const totalGastos = listaGastos.reduce((acc, item) => acc + Number(item.valor || item.minValue || item.vlr_min || 0), 0);
+
             const formatadoParaGrafico = [
-                { label: 'Renda', value: renda.reduce((acc, item) => acc + item.valor, 0), color: 'rgb(11, 61, 46)' },
-                { label: 'Investimento', value: investimentos.reduce((acc, item) => acc + item.valor, 0), color: 'rgb(8, 76, 97)' },
-                { label: 'Dívida', value: dividas.reduce((acc, item) => acc + item.valor, 0), color: 'rgb(145, 40, 36)' },
-                { label: 'Metas', value: metas.reduce((acc, item) => acc + item.valor, 0), color: 'rgb(201, 162, 39)' },
-                { label: 'Gasto', value: gastos.reduce((acc, item) => acc + item.valor, 0), color: 'rgb(180, 100, 30)' },
+                { label: 'Renda', value: totalRenda, color: '#0F3B2E' },
+                { label: 'Investimento', value: totalInvest, color: '#084C61' },
+                { label: 'Dívida', value: totalDividas, color: '#912824' },
+                { label: 'Metas', value: totalMetas, color: '#D4A017' },
+                { label: 'Gasto', value: totalGastos, color: '#B4641E' },
             ];
 
             setDadosGrafico(formatadoParaGrafico);
@@ -44,101 +68,132 @@ export function Dashboard() {
 
     const signOut = () => {
         accounts.logout();
+        navigate("/login");
     };
 
     useEffect(() => {
         carregarDadosDashboard();
         const buscarDados = async () => {
             const resultado = await getTranslatedQuote();
-            setDados(resultado)};
+            setDados(resultado);
+        };
         buscarDados();
     }, []);
 
     return (
-        <div className="main">
+        <div className="dashboard-page">
             <Navbar>
-                
-                <Link to="/extrato">
-                    <button className="head_button"><strong>Extrato</strong></button>
+                <Link to="/extrato" className="head_button">
+                    <FileText size={16} />
+                    <span>Extrato</span>
                 </Link>
-                <Link to="/renda">
-                    <button className="head_button"><strong>Renda</strong></button>
+                <Link to="/renda" className="head_button">
+                    <Wallet size={16} />
+                    <span>Renda</span>
                 </Link>
-                <Link to="/gastos">
-                    <button className="head_button"><strong>Gastos</strong></button>
+                <Link to="/gastos" className="head_button">
+                    <CreditCard size={16} />
+                    <span>Gastos</span>
                 </Link>
-                <Link to="/investimentos">
-                    <button className="head_button"><strong>Investimentos</strong></button>
+                <Link to="/investimentos" className="head_button">
+                    <TrendingUp size={16} />
+                    <span>Investimentos</span>
                 </Link>
-                <Link to="/metas">
-                    <button className="head_button"><strong>Metas</strong></button>
+                <Link to="/metas" className="head_button">
+                    <Target size={16} />
+                    <span>Metas</span>
                 </Link>
-                <Link to="/dividas">
-                    <button className="head_button"><strong>Dividas</strong></button>
+                <Link to="/dividas" className="head_button">
+                    <CircleDollarSign size={16} />
+                    <span>Dívidas</span>
                 </Link>
-                <Link to="/pensando">
-                    <button className="head_button"><strong>Perfil</strong></button>      
+                <Link to="/pensando" className="head_button">
+                    <UserCheck size={16} />
+                    <span>Pensando</span>      
                 </Link>
-                <button className="head_button" onClick={signOut}><strong>Sair</strong></button>
+                <button className="head_button head_button--danger" onClick={signOut}>
+                    <LogOut size={16} />
+                    <span>Sair</span>
+                </button>
             </Navbar>
-            <div className="corpo">
-                <main>
-                    {loading ? (
-                        <p>Carregando gráfico...</p>
-                    ) : (
-                        <PieChart dataItems={dadosGrafico} />
-                    )}
-                </main>
-                <div className="funcoes">
-                    <div className="opcoes">
-                        <div className="option">
-                            <Link to="/cadastrar_renda">
-                                <button><span>Incluir nova renda</span></button>
+
+            <main className="dashboard-content">
+                <div className="dashboard-grid">
+                    {/* COLUNA ESQUERDA: Gráfico Geral */}
+                    <section className="dashboard-chart-section">
+                        <div className="dashboard-section-header">
+                            <h2 className="dashboard-section-title">Um pensamento pro dia</h2>
+                            <p className="dashboard-section-subtitle">Visão consolidada de todas as suas categorias financeiras</p>
+                        </div>
+
+                        {loading ? (
+                            <div className="dashboard-loading-card">
+                                <div className="spinner"></div>
+                                <p>Consolidando suas informações financeiras...</p>
+                            </div>
+                        ) : (
+                            <PieChart dataItems={dadosGrafico} />
+                        )}
+
+                        {/* Anúncio AdSense Integrado */}
+                        <AdBanner slot="dashboard-primary-slot" format="horizontal" />
+                    </section>
+
+                    {/* COLUNA DIREITA: Ações Rápidas + Pensador */}
+                    <aside className="dashboard-actions-panel">
+                        <h3 className="actions-panel-title">Ações Rápidas</h3>
+                        <p className="actions-panel-subtitle">Inclua novos registros no seu plano financeiro</p>
+
+                        <div className="quick-actions-list">
+                            <Link to="/cadastrar_renda" className="quick-action-btn">
+                                <PlusCircle size={20} />
+                                <span>Incluir nova renda</span>
+                            </Link>
+                            
+                            <Link to="/cadastrar_gasto" className="quick-action-btn">
+                                <PlusCircle size={20} />
+                                <span>Incluir novo gasto</span>
+                            </Link>
+                            
+                            <Link to="/cadastrar_investimento" className="quick-action-btn">
+                                <PlusCircle size={20} />
+                                <span>Incluir novo investimento</span>
+                            </Link>
+                            
+                            <Link to="/cadastrar_meta" className="quick-action-btn">
+                                <PlusCircle size={20} />
+                                <span>Incluir nova meta</span>
+                            </Link>
+
+                            <Link to="/cadastrar_divida" className="quick-action-btn">
+                                <PlusCircle size={20} />
+                                <span>Incluir nova dívida</span>
+                            </Link>
+                            
+                            <Link to="/novo_lcto" className="quick-action-btn quick-action-btn--highlight">
+                                <PlusCircle size={20} />
+                                <span>Incluir novo lançamento</span>
                             </Link>
                         </div>
-                        <div className="option">
-                            <Link to="/cadastrar_gasto">
-                                <button><span>Incluir novo gasto</span></button>
-                            </Link>
+
+                        {/* BLOCO DO PENSADOR */}
+                        <div className="thinker-quote-box">
+                            <div className="thinker-quote-header">
+                                <Sparkles size={16} />
+                                <span>Opinião do pensador:</span>
+                            </div>
+                            <blockquote className="thinker-quote-text">
+                                "{dados.content}"
+                            </blockquote>
+                            {dados.author && (
+                                <span className="thinker-quote-author">— {dados.author}</span>
+                            )}
                         </div>
-                        <div className="option">
-                            <Link to="/cadastrar_investimento">
-                                <button><span>Incluir novo investimento</span></button>
-                            </Link>
-                        </div>
-                        <div className="option">
-                            <Link to="/cadastrar_meta">
-                                <button><span>Incluir nova meta</span></button>
-                            </Link>
-                        </div>
-                        <div className="option">
-                            <Link to="/cadastrar_divida">
-                                <button><span>Incluir nova dívida</span></button>
-                            </Link>
-                        </div>
-                        <div className="option">
-                            <Link to="/novo_lcto">
-                                <button><span>Incluir novo lançamento</span></button>
-                            </Link>
-                        </div>
-                        <h2>Frase do pensador:</h2>
-                    </div>
-                    <div className="pensador">
-                        <h3><em>{dados.content}</em> - {dados.author}</h3>
-                    </div>
+                    </aside>
                 </div>
-            </div>        
-            <footer>
-                <div className="sugest">
-                    <h3>Nos dê sugestões</h3>
-                </div>
-                <div className="redes_sociais">
-                    <h3>Siga nossas redes sociais</h3>
-                </div>
-                <div className="sla">
-                    <h3>E eu sei lá</h3>
-                </div>
-            </footer>
+            </main>
         </div>
     );
 }
+
+export default Dashboard;

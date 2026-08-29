@@ -1,0 +1,13 @@
+PENDÊNCIAS E OBSERVAÇÕES TÉCNICAS - ARVUM SITE
+Data: 29/08/2026
+
+1. ADIÇÃO DE SCRIPTS OFICIAIS DO GOOGLE ADSENSE:
+   - O componente placeholder <AdBanner /> foi criado e posicionado em todas as páginas autenticadas.
+   - Quando a conta do AdSense for aprovada, será necessário inserir o script oficial `adsbygoogle.js` no index.html e preencher os IDs reais de cliente/slot nos componentes.
+
+2. ENDPOINTS DO BACKEND NÃO VERIFICADOS:
+   - Conforme mapeado no SPEC.md, endpoints como `/user_plan/ler_investimentos_encerrados`, `/user_plan/ler_dividas_quitadas` e `/user_plan/ler_metas_concluidas` possuem tratamento preventivo no frontend, mas dependem de disponibilização no backend caso venham a ser explorados em relatórios históricos.
+
+3. STATUS GERAL DE AJUSTES VISUAIS:
+   - Todas as 24 telas e componentes foram completamente reformulados, tornando-se 100% responsivos e aderentes à paleta, tipografia e componentes do VisualIdentity.pdf.
+   - Nenhum erro de compilação/build pendente.

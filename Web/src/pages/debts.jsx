@@ -1,9 +1,11 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import expenses from "../services/extract.js";
 import PieChart from "../components/pieGraph.jsx";
 import ColumnChart from "../components/columnGraph.jsx";
 import { Navbar } from "../components/controlNavBar.jsx";
+import { AdBanner } from "../components/adBanner.jsx";
 import { Link } from "react-router-dom";
+import { Pencil, Plus, CircleDollarSign } from "lucide-react";
 import "../styles/debts.css";
 
 export function Debt() {
@@ -13,28 +15,28 @@ export function Debt() {
     const [loading, setLoading] = useState(true);
 
     const CORES = [
-        "rgb(11, 61, 46)",
-        "rgb(8, 76, 97)",
-        "rgb(145, 40, 36)",
-        "rgb(201, 162, 39)",
-        "rgb(180, 100, 30)",
-        "rgb(88, 80, 141)",
-        "rgb(34, 139, 34)",
-        "rgb(210, 105, 30)"
+        "#912824",
+        "#0F3B2E",
+        "#D4A017",
+        "#084C61",
+        "#B4641E",
+        "#58508D",
+        "#228B22",
+        "#D2691E"
     ];
 
     function normalizarListaDividas(response) {
-        return Array.isArray(response.data)
+        return Array.isArray(response?.data)
             ? response.data
-            : response.data?.dividas || [];
+            : Array.isArray(response)
+            ? response
+            : response?.dividas || [];
     }
 
     function ehMesAtual(dataString) {
         if (!dataString) return false;
-
         const dataItem = new Date(dataString);
         const hoje = new Date();
-
         return (
             dataItem.getMonth() === hoje.getMonth() &&
             dataItem.getFullYear() === hoje.getFullYear()
@@ -43,111 +45,72 @@ export function Debt() {
 
     function agruparDividasMesAtualPorTipo(listaDividas) {
         const agrupado = {};
-
         listaDividas
             .filter((item) => ehMesAtual(item.data))
             .forEach((item) => {
-                const idTipo = item.id_divida_item;
-                const valor = Number(item.vlr_pagamento || 0);
+                const idTipo = item.id_divida_item || item.id;
+                const valor = Number(item.vlr_pagamento || item.value || item.valor || 0);
 
                 if (!agrupado[idTipo]) {
                     agrupado[idTipo] = {
                         id: idTipo,
-                        label: item.nome || `Renda ${idTipo}`,
+                        label: item.nome || item.descricao || item.description || `Dívida ${idTipo}`,
                         value: 0
                     };
                 }
-
                 agrupado[idTipo].value += valor;
             });
-
         return Object.values(agrupado);
     }
 
     function agruparDividasPorMes(listaDividas) {
+        const mesesNomes = ["jan", "fev", "mar", "abr", "mai", "jun", "jul", "ago", "set", "out", "nov", "dez"];
         const agrupado = {};
+
+        mesesNomes.forEach((m) => { agrupado[m] = 0; });
 
         listaDividas.forEach((item) => {
             if (!item.data) return;
-
             const dataItem = new Date(item.data);
-            const chaveMes = `${dataItem.getFullYear()}-${String(dataItem.getMonth() + 1).padStart(2, "0")}`;
-            const valor = Number(item.vlr_pagamento || 0);
-
-            if (!agrupado[chaveMes]) {
-                agrupado[chaveMes] = 0;
+            if (!Number.isNaN(dataItem.getTime())) {
+                const mesIdx = dataItem.getMonth();
+                const nomeMes = mesesNomes[mesIdx];
+                const valor = Number(item.vlr_pagamento || item.value || item.valor || 0);
+                agrupado[nomeMes] = (agrupado[nomeMes] || 0) + valor;
             }
-
-            agrupado[chaveMes] += valor;
         });
 
-        return Object.entries(agrupado)
-            .sort(([mesA], [mesB]) => mesA.localeCompare(mesB))
-            .map(([mes, total], index) => ({
-                label: mes,
-                value: total,
-                color: CORES[index % CORES.length]
-            }));
+        return mesesNomes.map((mes, index) => ({
+            label: mes,
+            value: agrupado[mes] || 0,
+            color: CORES[index % CORES.length]
+        }));
     }
-
-    const carregaDividas = async () => {
-        try {
-            setLoading(true);
-
-            const response = await expenses.obtainDebtPayments();
-            const listaDividas = Array.isArray(response) ? response : response?.dividas || [];
-
-            const dividasAgrupadas = agruparDividasMesAtualPorTipo(listaDividas);
-
-            setDividas(dividasAgrupadas);
-        } catch (error) {
-            console.error("Erro ao carregar dividas:", error);
-        } finally {
-            setLoading(false);
-        }
-    };
-
-    const carregarDadosPie = async () => {
-        try {
-            const response = await expenses.obtainDebtPayments();
-            const listaDividas = Array.isArray(response) ? response : response?.dividas || [];
-
-            const dividasAgrupadas = agruparDividasMesAtualPorTipo(listaDividas);
-
-            const formatadoParaGrafico = dividasAgrupadas.map((item, index) => ({
-                label: item.label,
-                value: item.value,
-                color: CORES[index % CORES.length]
-            }));
-
-            setDadosGraficoPie(formatadoParaGrafico);
-        } catch (error) {
-            console.error("Erro ao consolidar dados do gráfico de pizza:", error);
-        }
-    };
-
-    const carregarDadosCol = async () => {
-        try {
-            const response = await expenses.obtainDebtPayments();
-            const listaDividas = Array.isArray(response) ? response : response?.dividas || [];
-
-            const formatadoParaGrafico = agruparDividasPorMes(listaDividas);
-
-            setDadosGraficoCol(formatadoParaGrafico);
-        } catch (error) {
-            console.error("Erro ao consolidar dados do gráfico de colunas:", error);
-        }
-    };
 
     useEffect(() => {
         async function carregarTudo() {
             setLoading(true);
             try {
-                await Promise.all([
-                    carregaDividas(),
-                    carregarDadosPie(),
-                    carregarDadosCol()
-                ]);
+                const response = await expenses.obtainDebtPayments();
+                const listaDividas = normalizarListaDividas(response);
+
+                const dividasAgrupadas = agruparDividasMesAtualPorTipo(listaDividas);
+                setDividas(dividasAgrupadas);
+
+                setDadosGraficoPie(
+                    dividasAgrupadas.map((item, index) => ({
+                        label: item.label,
+                        value: item.value,
+                        color: CORES[index % CORES.length]
+                    }))
+                );
+
+                setDadosGraficoCol(agruparDividasPorMes(listaDividas));
+            } catch (error) {
+                console.error("Erro ao carregar dividas:", error);
+                setDividas([]);
+                setDadosGraficoPie([]);
+                setDadosGraficoCol([]);
             } finally {
                 setLoading(false);
             }
@@ -156,57 +119,87 @@ export function Debt() {
         carregarTudo();
     }, []);
 
+    const totalDividasMes = dividas.reduce((acc, d) => acc + Number(d.value || 0), 0);
+
     return (
-        <div className="main">
+        <div className="entity-page">
             <Navbar>
-                <Link to="/atualizar_divida">
-                    <button className="head_button">
-                        <strong>Edit Divida</strong>
-                    </button>
+                <Link to="/atualizar_divida" className="head_button" title="Gerenciar Dívidas">
+                    <Pencil size={16} />
+                    <span>Gerenciar</span>
                 </Link>
-                <Link to="/cadastrar_divida">
-                    <button className="head_button">
-                        <strong>+</strong>
-                    </button>
+                <Link to="/cadastrar_divida" className="head_button head_button--highlight" title="Nova Dívida">
+                    <Plus size={18} />
+                    <span>Nova Dívida</span>
                 </Link>
             </Navbar>
 
-            <div className="structure">
-                <div className="corpo">
-                    <div className="dividas">
-                        <h1>Totais de dividas no mês atual</h1>
-                        <h2>
-                            <span>Nome</span> Valor
-                        </h2>
+            <main className="entity-main">
+                <div className="entity-header-row">
+                    <div className="entity-title-group">
+                        <div className="entity-icon-badge">
+                            <CircleDollarSign size={22} />
+                        </div>
+                        <div>
+                            <h1 className="entity-main-title">Dívidas & Financiamentos</h1>
+                            <p className="entity-subtitle">Acompanhe seus passivos e planeje a quitação estratégica de débitos</p>
+                        </div>
+                    </div>
+                </div>
 
-                        {loading ? (
-                            <p>Carregando dividas...</p>
-                        ) : dividas.length > 0 ? (
-                            dividas.map((renda, index) => (
-                                <div className="divida-item" key={renda.id || index}>
-                                    <span>{renda.label}</span>
-                                    <strong>
-                                        {Number(renda.value).toLocaleString("pt-BR", {
-                                            style: "currency",
-                                            currency: "BRL"
-                                        })}
-                                    </strong>
+                {/* SEÇÃO SUPERIOR: LISTA + PIE CHART */}
+                <div className="entity-upper-grid">
+                    <section className="entity-card entity-list-card">
+                        <div className="card-header-bar">
+                            <h2 className="card-section-title">Totais de dívidas no mês atual</h2>
+                            <span className="card-badge-total">
+                                {totalDividasMes.toLocaleString("pt-BR", { style: "currency", currency: "BRL" })}
+                            </span>
+                        </div>
+
+                        <div className="entity-items-list">
+                            {loading ? (
+                                <p className="loading-text">Carregando dívidas...</p>
+                            ) : dividas.length > 0 ? (
+                                dividas.map((divida, index) => (
+                                    <div className="entity-data-row" key={divida.id || index}>
+                                        <div className="entity-data-info">
+                                            <span className="entity-row-dot" style={{ backgroundColor: "#912824" }}></span>
+                                            <span className="entity-data-label">{divida.label}</span>
+                                        </div>
+                                        <strong className="entity-data-value">
+                                            {Number(divida.value).toLocaleString("pt-BR", {
+                                                style: "currency",
+                                                currency: "BRL"
+                                            })}
+                                        </strong>
+                                    </div>
+                                ))
+                            ) : (
+                                <div className="empty-state-box">
+                                    <p>Nenhuma dívida registrada no mês atual.</p>
+                                    <Link to="/cadastrar_divida" className="empty-action-link">
+                                        + Cadastrar um financiamento ou dívida
+                                    </Link>
                                 </div>
-                            ))
-                        ) : (
-                            <p>Nenhuma divida encontrada no mês atual.</p>
-                        )}
-                    </div>
+                            )}
+                        </div>
+                    </section>
 
-                    <div className="grafico-container">
+                    <section className="entity-pie-card">
                         <PieChart dataItems={dadosGraficoPie} />
-                    </div>
+                    </section>
                 </div>
 
-                <div className="colum-graphic">
+                {/* SEÇÃO INFERIOR: GRÁFICO DE COLUNAS */}
+                <section className="entity-column-card">
                     <ColumnChart dataItems={dadosGraficoCol} />
-                </div>
-            </div>
+                </section>
+
+                <AdBanner slot="debts-footer-slot" format="horizontal" />
+            </main>
         </div>
     );
 }
+
+export default Debt;

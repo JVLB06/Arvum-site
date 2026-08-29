@@ -458,6 +458,14 @@ const MODEL_MAPPERS = {
 - Interceptor 401 redireciona automaticamente para login
 - Verificar tempo de expiração do token no backend (`AuthHelper.cs`)
 
+## Identidade Visual & Design System
+
+A interface segue os padrões de design de alta sofisticação definidos no arquivo `VisualIdentity.pdf`:
+- **Paleta de Cores**: Verde Profundo Nobre (`#0F3B2E`), Dourado/Mustard (`#D4A017`), Superfícies Claras (`#F4F7F5` / `#FFFFFF`), Dark Mode refinado (`#0B1311` / `#12211D`).
+- **Tipografia**: `Plus Jakarta Sans` para textos, números e botões, combinada com `Merriweather` em citações do pensador.
+- **Gráficos & Indicadores**: Doughnut/Pie charts interativos com totais centralizados e legendas ricas em percentual e valor; Gráficos de barras mensais com cantos arredondados; Barras de progresso com moldura dourada e preenchimento esmeralda (página de Metas).
+- **Publicidade & Monetização (Google AdSense)**: Componente reutilizável `AdBanner` integrado em todas as telas autenticadas da aplicação para exibição de anúncios personalizados.
+
 ## Próximos Passos
 
 1. **Testes:** Implementar testes unitários para services e normalizers
@@ -469,5 +477,6 @@ const MODEL_MAPPERS = {
 
 ---
 
-**Última atualização:** 2026-08-28  
-**Status:** ✅ Alinhado com backend (após refatoração)
+**Última atualização:** 2026-08-29  
+**Status:** ✅ Alinhado com backend e interface renovada conforme Identidade Visual
+
