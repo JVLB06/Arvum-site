@@ -1,11 +1,10 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Link } from "react-router-dom";
-import { Ellipsis, Pencil, Trash2, X } from "lucide-react";
+import { Ellipsis, Pencil, Trash2, X, Filter, Plus, Calendar, RotateCcw } from "lucide-react";
 import expenses from "../services/extract.js";
 import { Navbar } from "../components/controlNavBar.jsx";
+import { AdBanner } from "../components/adBanner.jsx";
 import "../styles/extract.css";
-
-const PAGE_SIZE = 20;
 
 const INITIAL_FILTERS = {
     startDate: "",
@@ -23,7 +22,6 @@ const INITIAL_EDIT_FORM = {
 
 function formatCurrency(value) {
     const numberValue = Number(value || 0);
-
     return numberValue.toLocaleString("pt-BR", {
         style: "currency",
         currency: "BRL",
@@ -32,10 +30,8 @@ function formatCurrency(value) {
 
 function formatDate(value) {
     if (!value) return "";
-
     const date = new Date(value);
     if (Number.isNaN(date.getTime())) return value;
-
     return date.toLocaleDateString("pt-BR");
 }
 
@@ -60,108 +56,14 @@ export function Extract() {
     const [error, setError] = useState("");
 
     const [openMenuId, setOpenMenuId] = useState(null);
-
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
     const [editForm, setEditForm] = useState(INITIAL_EDIT_FORM);
     const [savingEdit, setSavingEdit] = useState(false);
     const [deletingId, setDeletingId] = useState(null);
 
-    const observerRef = useRef(null);
-
     const hasActiveFilters = useMemo(() => {
         return Boolean(filters.startDate || filters.endDate);
     }, [filters]);
-
-    const fetchExtractPage = useCallback(
-        async ({ pageToLoad = 1, reset = false } = {}) => {
-            try {
-                if (reset) {
-                    setLoading(true);
-                } else {
-                    setLoadingMore(true);
-                }
-
-                setError("");
-
-                /**
-                 * PLACEHOLDER DE SERVICE
-                 * Ajuste esse método no seu extract.js para retornar algo assim:
-                 *
-                 * {
-                 *   items: [...],
-                 *   hasMore: true/false
-                 * }
-                 *
-                 * Exemplo esperado por item:
-                 * {
-                 *   id: 1,
-                 *   tipo: "gasto",
-                 *   data: "2025-01-01",
-                 *   historico: "Comprinha na shopee",
-                 *   valor: -50.00,
-                 *   saldo: 1250.30
-                 * }
-                 */
-                const response = await expenses.getExtract(
-                    filters.startDate || null,
-                    filters.endDate || null
-                );
-
-                const newItems = Array.isArray(response?.items) ? response.items : [];
-                const nextHasMore = Boolean(response?.hasMore);
-
-                setItems((prev) => (reset ? newItems : [...prev, ...newItems]));
-                setHasMore(nextHasMore);
-                setPage(pageToLoad);
-            } catch (err) {
-                const mensagem =
-                    err?.response?.data?.message ||
-                    err?.response?.data?.error ||
-                    err?.message ||
-                    "Erro ao carregar extrato.";
-
-                setError(mensagem);
-            } finally {
-                setLoading(false);
-                setLoadingMore(false);
-            }
-        },
-        [filters.startDate, filters.endDate]
-    );
-
-    useEffect(() => {
-        loadExtract({
-            startDate: filters.startDate,
-            endDate: filters.endDate,
-            reset: true,
-        });
-    }, []);
-
-    const lastItemRef = useCallback(
-        (node) => {
-            if (loadingMore || loading) return;
-
-            if (observerRef.current) {
-                observerRef.current.disconnect();
-            }
-
-            observerRef.current = new IntersectionObserver((entries) => {
-                if (
-                    entries[0]?.isIntersecting &&
-                    hasMore &&
-                    !loadingMore &&
-                    !loading
-                ) {
-                    fetchExtractPage({ pageToLoad: page + 1, reset: false });
-                }
-            });
-
-            if (node) {
-                observerRef.current.observe(node);
-            }
-        },
-        [fetchExtractPage, hasMore, loading, loadingMore, page]
-    );
 
     async function loadExtract({ startDate = "", endDate = "", reset = true } = {}) {
         try {
@@ -176,14 +78,6 @@ export function Extract() {
 
             const response = await expenses.getExtract(startDate || null, endDate || null);
 
-            /**
-             * Ajuste aqui conforme o retorno real do backend.
-             * Exemplos comuns:
-             * response.extrato
-             * response.items
-             * response.lancamentos
-             * ou até o próprio response já sendo array
-             */
             const extractItems = Array.isArray(response)
                 ? response
                 : Array.isArray(response?.extrato)
@@ -195,12 +89,6 @@ export function Extract() {
                 : [];
 
             setItems(extractItems.map(normalizeExtractItem));
-
-            /**
-             * Como esse endpoint atual não veio paginado,
-             * por enquanto deixamos sem scroll infinito real.
-             * A tela continua funcionando normalmente.
-             */
             setHasMore(false);
             setPage(1);
         } catch (err) {
@@ -218,9 +106,16 @@ export function Extract() {
         }
     }
 
+    useEffect(() => {
+        loadExtract({
+            startDate: filters.startDate,
+            endDate: filters.endDate,
+            reset: true,
+        });
+    }, []);
+
     function handleFilterInputChange(event) {
         const { name, value } = event.target;
-
         setFilters((prev) => ({
             ...prev,
             [name]: value,
@@ -229,7 +124,6 @@ export function Extract() {
 
     function applyFilters(event) {
         event.preventDefault();
-
         loadExtract({
             startDate: filters.startDate,
             endDate: filters.endDate,
@@ -242,10 +136,8 @@ export function Extract() {
             startDate: "",
             endDate: "",
         };
-
         setFilters(clearedFilters);
         setOpenMenuId(null);
-
         loadExtract({
             startDate: "",
             endDate: "",
@@ -265,7 +157,6 @@ export function Extract() {
             extractDate: item.extractDate ? String(item.extractDate).split("T")[0] : "",
             value: item.value ?? "",
         });
-
         setIsEditModalOpen(true);
         setOpenMenuId(null);
     }
@@ -277,7 +168,6 @@ export function Extract() {
 
     function handleEditInputChange(event) {
         const { name, value } = event.target;
-
         setEditForm((prev) => ({
             ...prev,
             [name]: value,
@@ -330,7 +220,6 @@ export function Extract() {
         const confirmed = window.confirm(
             `Deseja realmente excluir o lançamento "${item.name}"?`
         );
-
         if (!confirmed) return;
 
         setDeletingId(item.id);
@@ -358,28 +247,26 @@ export function Extract() {
     }
 
     return (
-        <div className="extract-page">
+        <div className="extract-page-container">
             <Navbar>
-                <Link to="/novo_lcto">
-                    <button className="extract-nav-button" type="button">
-                        Incluir lançamento
-                    </button>
+                <Link to="/novo_lcto" className="head_button head_button--highlight">
+                    <Plus size={18} />
+                    <span>Novo Lançamento</span>
                 </Link>
             </Navbar>
 
-            <section className="extract-filters-section">
-                <form className="extract-filters-form" onSubmit={applyFilters}>
-                    <div className="extract-filters-header">
-                        <h2 className="extract-filters-title">Filtros</h2>
-                    </div>
+            <main className="extract-main-content">
+                {/* BARRA DE FILTROS (VisualIdentity Page 5) */}
+                <section className="extract-filters-card">
+                    <form onSubmit={applyFilters} className="extract-filter-bar">
+                        <div className="filter-badge">
+                            <Filter size={16} />
+                            <span>Filtros</span>
+                        </div>
 
-                    <div className="extract-filters-fields">
-                        <div className="extract-filter-period">
-                            <label className="extract-filter-label" htmlFor="extract_start_date">
-                                Período
-                            </label>
-
-                            <div className="extract-filter-period-inputs">
+                        <div className="filter-period-container">
+                            <span className="period-label">Período:</span>
+                            <div className="period-inputs-row">
                                 <input
                                     id="extract_start_date"
                                     name="startDate"
@@ -387,9 +274,7 @@ export function Extract() {
                                     value={filters.startDate}
                                     onChange={handleFilterInputChange}
                                 />
-
-                                <span className="extract-filter-separator">a</span>
-
+                                <span className="period-separator">a</span>
                                 <input
                                     id="extract_end_date"
                                     name="endDate"
@@ -400,192 +285,179 @@ export function Extract() {
                             </div>
                         </div>
 
-                        <div className="extract-filter-actions">
-                            <button type="submit" className="extract-filter-button">
+                        <div className="filter-actions-group">
+                            <button type="submit" className="btn-filter-apply">
                                 Filtrar
                             </button>
-
                             {hasActiveFilters && (
-                                <button
-                                    type="button"
-                                    className="extract-filter-button extract-filter-button--ghost"
-                                    onClick={clearFilters}
-                                >
-                                    Limpar
+                                <button type="button" className="btn-filter-clear" onClick={clearFilters}>
+                                    <RotateCcw size={14} />
+                                    <span>Limpar</span>
                                 </button>
                             )}
                         </div>
-                    </div>
-                </form>
-            </section>
+                    </form>
+                </section>
 
-            <section className="extract-list-section">
-                {error && <p className="extract-feedback extract-feedback--error">{error}</p>}
+                {/* LISTAGEM DE LANÇAMENTOS (VisualIdentity Page 5) */}
+                <section className="extract-list-card">
+                    {error && <div className="extract-alert-box extract-alert--error">{error}</div>}
 
-                {loading ? (
-                    <div className="extract-feedback">Carregando extrato...</div>
-                ) : items.length === 0 ? (
-                    <div className="extract-feedback">
-                        Nenhum lançamento encontrado para o período informado.
-                    </div>
-                ) : (
-                    <div className="extract-table">
-                        {items.map((item, index) => {
-                            const isLastItem = index === items.length - 1;
-                            const isNegative = Number(item.value) < 0;
-                            const isMenuOpen = openMenuId === item.id;
-                            const isDeleting = deletingId === item.id;
+                    {loading ? (
+                        <div className="extract-loading-box">
+                            <div className="spinner"></div>
+                            <p>Carregando movimentações do extrato...</p>
+                        </div>
+                    ) : items.length === 0 ? (
+                        <div className="extract-empty-state">
+                            <p>Nenhum lançamento encontrado para o período informado.</p>
+                            <Link to="/novo_lcto" className="extract-empty-action">
+                                + Incluir novo lançamento
+                            </Link>
+                        </div>
+                    ) : (
+                        <div className="extract-items-wrapper">
+                            {items.map((item) => {
+                                const isNegative = Number(item.value) < 0;
+                                const isMenuOpen = openMenuId === item.id;
+                                const isDeleting = deletingId === item.id;
 
-                            return (
-                                <article
-                                    key={item.id}
-                                    className="extract-item"
-                                    ref={isLastItem ? lastItemRef : null}
-                                >
-                                    <div className="extract-item-date">
-                                        {formatDate(item.extractDate)}
-                                    </div>
-
-                                    <div className="extract-item-main">
-                                        <div className="extract-item-texts">
-                                            <strong className="extract-item-title">
-                                                {item.name}
-                                            </strong>
-
-                                            <span className="extract-item-type">
-                                                {item.kind}
-                                            </span>
+                                return (
+                                    <article key={item.id} className="extract-row-item">
+                                        {/* BADGE DE DATA (Verde Escuro) */}
+                                        <div className="extract-row-date">
+                                            <Calendar size={14} />
+                                            <span>{formatDate(item.extractDate)}</span>
                                         </div>
 
-                                        <div className="extract-item-values">
-                                            <strong
-                                                className={`extract-item-value ${
-                                                    isNegative
-                                                        ? "extract-item-value--negative"
-                                                        : "extract-item-value--positive"
-                                                }`}
-                                            >
+                                        {/* DESCRIÇÃO E TIPO */}
+                                        <div className="extract-row-desc">
+                                            <strong className="extract-row-title">{item.name}</strong>
+                                            {item.kind && (
+                                                <span className="extract-row-kind-badge">{item.kind}</span>
+                                            )}
+                                        </div>
+
+                                        {/* VALORES E SALDO */}
+                                        <div className="extract-row-numbers">
+                                            <strong className={`extract-row-val ${isNegative ? 'val--negative' : 'val--positive'}`}>
                                                 {formatCurrency(item.value)}
                                             </strong>
-
-                                            <span className="extract-item-balance">
-                                                Saldo: {formatCurrency(item.balance)}
-                                            </span>
+                                            {item.balance !== undefined && item.balance !== 0 && (
+                                                <span className="extract-row-balance">
+                                                    Saldo: {formatCurrency(item.balance)}
+                                                </span>
+                                            )}
                                         </div>
 
-                                        <div className="extract-item-actions">
+                                        {/* AÇÕES (3 Pontos) */}
+                                        <div className="extract-row-menu-anchor">
                                             <button
                                                 type="button"
-                                                className="extract-menu-trigger"
+                                                className="extract-menu-btn"
                                                 onClick={() => toggleItemMenu(item.id)}
-                                                aria-label="Abrir ações"
+                                                aria-label="Opções"
                                             >
                                                 <Ellipsis size={18} />
                                             </button>
 
                                             {isMenuOpen && (
-                                                <div className="extract-menu">
+                                                <div className="extract-dropdown-menu">
                                                     <button
                                                         type="button"
-                                                        className="extract-menu-option"
+                                                        className="dropdown-item"
                                                         onClick={() => openEditModal(item)}
                                                     >
-                                                        <Pencil size={16} />
-                                                        Editar
+                                                        <Pencil size={15} />
+                                                        <span>Editar</span>
                                                     </button>
-
                                                     <button
                                                         type="button"
-                                                        className="extract-menu-option extract-menu-option--danger"
+                                                        className="dropdown-item dropdown-item--danger"
                                                         disabled={isDeleting}
                                                         onClick={() => handleDelete(item)}
                                                     >
-                                                        <Trash2 size={16} />
-                                                        {isDeleting ? "Excluindo..." : "Excluir"}
+                                                        <Trash2 size={15} />
+                                                        <span>{isDeleting ? "Excluindo..." : "Excluir"}</span>
                                                     </button>
                                                 </div>
                                             )}
                                         </div>
-                                    </div>
-                                </article>
-                            );
-                        })}
+                                    </article>
+                                );
+                            })}
+                        </div>
+                    )}
+                </section>
 
-                        {loadingMore && (
-                            <div className="extract-feedback">Carregando mais lançamentos...</div>
-                        )}
-
-                        {!hasMore && items.length > 0 && (
-                            <div className="extract-feedback">
-                                Você chegou ao fim do extrato.
+                {/* MODAL DE EDIÇÃO */}
+                {isEditModalOpen && (
+                    <div className="extract-modal-backdrop" onClick={closeEditModal}>
+                        <div className="extract-modal-panel" onClick={(e) => e.stopPropagation()}>
+                            <div className="modal-header-bar">
+                                <h3 className="modal-title">Editar Lançamento</h3>
+                                <button type="button" className="modal-close-btn" onClick={closeEditModal}>
+                                    <X size={20} />
+                                </button>
                             </div>
-                        )}
+
+                            <form onSubmit={submitEdit} className="crud-form modal-form">
+                                <div className="crud-input-group">
+                                    <label htmlFor="extract_edit_name">Descrição</label>
+                                    <input
+                                        id="extract_edit_name"
+                                        name="name"
+                                        type="text"
+                                        required
+                                        value={editForm.name}
+                                        onChange={handleEditInputChange}
+                                    />
+                                </div>
+
+                                <div className="crud-grid-2col">
+                                    <div className="crud-input-group">
+                                        <label htmlFor="extract_edit_date">Data</label>
+                                        <input
+                                            id="extract_edit_date"
+                                            name="extractDate"
+                                            type="date"
+                                            required
+                                            value={editForm.extractDate}
+                                            onChange={handleEditInputChange}
+                                        />
+                                    </div>
+
+                                    <div className="crud-input-group">
+                                        <label htmlFor="extract_edit_value">Valor</label>
+                                        <input
+                                            id="extract_edit_value"
+                                            name="value"
+                                            type="number"
+                                            step="0.01"
+                                            required
+                                            value={editForm.value}
+                                            onChange={handleEditInputChange}
+                                        />
+                                    </div>
+                                </div>
+
+                                <div className="modal-actions-row">
+                                    <button type="button" className="btn-modal-cancel" onClick={closeEditModal}>
+                                        Cancelar
+                                    </button>
+                                    <button type="submit" className="crud-submit-btn" disabled={savingEdit}>
+                                        <span>{savingEdit ? "Salvando..." : "Salvar Alterações"}</span>
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
                     </div>
                 )}
-            </section>
 
-            {isEditModalOpen && (
-                <div className="extract-modal-overlay" onClick={closeEditModal}>
-                    <div
-                        className="extract-modal"
-                        onClick={(event) => event.stopPropagation()}
-                    >
-                        <div className="extract-modal-header">
-                            <h3 className="extract-modal-title">Editar lançamento</h3>
-
-                            <button
-                                type="button"
-                                className="extract-modal-close"
-                                onClick={closeEditModal}
-                                aria-label="Fechar"
-                            >
-                                <X size={18} />
-                            </button>
-                        </div>
-
-                        <form className="extract-modal-form" onSubmit={submitEdit}>
-                            <label htmlFor="extract_edit_date">Data</label>
-                            <input
-                                id="extract_edit_date"
-                                name="extractDate"
-                                type="date"
-                                value={editForm.extractDate}
-                                onChange={handleEditInputChange}
-                                required
-                            />
-
-                            <label htmlFor="extract_edit_value">Valor</label>
-                            <input
-                                id="extract_edit_value"
-                                name="value"
-                                type="number"
-                                step="0.01"
-                                value={editForm.value}
-                                onChange={handleEditInputChange}
-                                required
-                            />
-
-                            <div className="extract-modal-actions">
-                                <button
-                                    type="button"
-                                    className="extract-modal-button extract-modal-button--ghost"
-                                    onClick={closeEditModal}
-                                >
-                                    Cancelar
-                                </button>
-
-                                <button
-                                    type="submit"
-                                    className="extract-modal-button"
-                                    disabled={savingEdit}
-                                >
-                                    {savingEdit ? "Salvando..." : "Salvar"}
-                                </button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            )}
+                <AdBanner slot="extract-footer-slot" format="horizontal" />
+            </main>
         </div>
     );
 }
+
+export default Extract;

@@ -1,149 +1,333 @@
-/* Estiliza o layout principal */
-main {
-    background-color: none;
-    text-align: center;
-    padding: 20px;
+.crud-page {
     min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background-color: var(--bg-color);
+    padding-bottom: 40px;
+    box-sizing: border-box;
 }
 
-/* Define a área em grid */
-.grid {
+.crud-container {
+    flex: 1;
+    width: 100%;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 24px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.crud-split-layout {
     display: grid;
-    grid-template-columns: 1fr 1fr; /* O formulário ocupa o dobro do espaço da seção "sugestoes" */
-    max-width: 100%;
+    grid-template-columns: 1.2fr 1fr;
+    gap: 32px;
+    align-items: start;
 }
 
-/* Estiliza o formulário */
-form {
-    background-color: none;
-    padding: 30px;
+/* CARDS */
+.crud-form-card,
+.crud-options-card {
+    background-color: var(--card-bg, #ffffff);
+    border-radius: var(--radius-xl, 28px);
+    padding: 36px 32px;
+    box-shadow: var(--shadow-md);
+    border: 1px solid var(--border-color, #e0eae6);
+    box-sizing: border-box;
+}
+
+.crud-card-title {
+    font-size: 22px;
+    font-weight: 800;
+    color: var(--primary-color, #0F3B2E);
+}
+
+.dark-mode .crud-card-title {
+    color: var(--secondary-color, #D4A017);
+}
+
+.crud-card-subtitle {
+    font-size: 14px;
+    color: var(--text-muted, #627A73);
+    margin-top: 4px;
+    margin-bottom: 24px;
+}
+
+/* FORMULÁRIO */
+.crud-form {
     display: flex;
     flex-direction: column;
-    gap: 12px; /* Espaçamento entre os campos */
+    gap: 18px;
 }
 
-/* Estiliza os labels */
-form label {
-    font-weight: bold;
-    color: var(--text-color);
-    margin-bottom: 5px;
+.crud-input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
 }
 
-/* Estiliza os inputs */
-form input {
-    padding: 8px;
-    border: 1px solid var(--text-color);
-    border-radius: 5px;
-    background-color: var(--bg-color);
+.crud-input-group label {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--primary-color, #0F3B2E);
+}
+
+.dark-mode .crud-input-group label {
+    color: var(--secondary-color, #D4A017);
+}
+
+.crud-input-group input,
+.crud-input-group select {
+    width: 100%;
+    padding: 12px 16px;
+    border-radius: var(--radius-md, 14px);
+    border: 1.5px solid var(--border-color, #e0eae6);
+    background-color: var(--input-bg, #ffffff);
     color: var(--text-color);
+    font-size: 14px;
     outline: none;
+    transition: all 0.2s ease;
+    box-sizing: border-box;
 }
-/* Botão de cadastro */
-form button {
-    background-color: var(--primary-color);
-    color: var(--secondary-color);
-    padding: 10px;
-    border: none;
-    border-radius: 15px;
+
+.crud-input-group input:focus,
+.crud-input-group select:focus {
+    border-color: var(--secondary-color, #D4A017);
+    box-shadow: 0 0 0 3px rgba(212, 160, 23, 0.15);
+}
+
+.crud-input-group input:disabled {
+    background-color: rgba(0, 0, 0, 0.05);
+    cursor: not-allowed;
+}
+
+.crud-submit-btn {
+    background: var(--primary-color, #0F3B2E);
+    color: var(--secondary-color, #D4A017);
+    border: 2px solid var(--primary-color);
+    padding: 14px;
+    border-radius: var(--radius-pill);
+    font-size: 15px;
+    font-weight: 800;
     cursor: pointer;
-    width: 100%;
-    transition: 0.3s;
-}
-
-form button:hover {
-    background-color: var(--bg-color);
-    color: var(--text-color);
-}
-
-
-.header{
     display: flex;
-    align-items: center; /* Alinha os itens verticalmente */
-    justify-content: space-between; /* Distribui espaço entre os elementos */
-    flex-wrap: nowrap; /* Evita quebra de linha */
-    padding: 10px;
-}
-.header h1 {
-    margin: 0;
-    color: var(--primary-color);
-    font-size: 30px;
-    text-align: center;
-    flex-grow: 1; /* Permite que o texto ocupe o espaço restante */
-}
-/* Destaca apenas uma palavra */
-.header span {
-    color: var(--secondary-color); /* Substitua por qualquer cor desejada */
-    font-weight: bold;
-}
-/* Botão de retorno (seta "<") */
-.back-button {
-    font-size: 60px; /* Aumenta o tamanho */
-    font-weight: bold;
-    background: none;
-    border: none;
-    color: var(--primary-color);
-    cursor: pointer;
-    transition: 0.3s;
-}
-
-.back-button:hover {
-    color: var(--secondary-color);
-    transform: scale(1.1); /* Aumenta levemente no hover */
-}
-.radio-group {
-    display: flex;
-    gap: 20px; /* Espaço entre os radios */
-    justify-content: left; /* Centraliza os elementos */
-}
-
-.radio-option {
-    display: flex;
-    flex-direction: column; /* Organiza os itens verticalmente */
-    align-items: center; /* Centraliza os itens */
-}
-
-/* Ajuste da seção "sugestoes" */
-.sugestoes {
-    background-color: var(--primary-color);
-    padding: 30px;
-    display: flex;
-    flex-direction: column;
     align-items: center;
-    gap: 10px;
-}
-.scroll{
-    max-height: 100vh;
-    overflow-y: auto;
-    border: 1px solid;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 10px;
+    transition: all 0.25s ease;
+    box-shadow: 0 4px 14px rgba(15, 59, 46, 0.2);
 }
 
-.suggestion-table {
-    width: 100%;
-    border-collapse: collapse;
+.crud-submit-btn:hover:not(:disabled) {
+    background: var(--secondary-color, #D4A017);
+    color: var(--primary-color, #0F3B2E);
+    border-color: var(--secondary-color);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 22px rgba(212, 160, 23, 0.35);
+}
+
+.crud-submit-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.crud-actions-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
     margin-top: 10px;
 }
 
-.suggestion-table th, .suggestion-table td {
-    border: none;
-    padding: 10px;
-    text-align: center;
-}
-
-.suggestion-table th {
-    color: var(--secondary-color);
-    font-weight: bold;
-}
-
-.fill-button {
-    background-color: var(--bg-color);
-    color: var(--text-color);
-    border: none;
-    border-radius: 10px;
-    padding: 10px;
+.crud-reset-btn {
+    background: transparent;
+    color: var(--text-muted);
+    border: 1px solid var(--border-color);
+    padding: 12px 18px;
+    border-radius: var(--radius-pill);
+    font-size: 14px;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
     cursor: pointer;
-    transition: 0.3s;
-    width: 100%;
+    transition: all 0.2s ease;
 }
-.fill-button:hover {
-    background-color: var(--secondary-color);
+
+.crud-reset-btn:hover {
+    background: rgba(0, 0, 0, 0.05);
+    color: var(--text-color);
+}
+
+/* FEEDBACK MESSAGES */
+.crud-msg-box {
+    padding: 12px 16px;
+    border-radius: var(--radius-md, 14px);
+    font-size: 13px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.crud-msg--error {
+    background-color: rgba(239, 68, 68, 0.1);
+    border: 1px solid rgba(239, 68, 68, 0.3);
+    color: #ef4444;
+}
+
+.crud-msg--success {
+    background-color: rgba(16, 185, 129, 0.1);
+    border: 1px solid rgba(16, 185, 129, 0.3);
+    color: #10b981;
+}
+
+/* OPTIONS CARD */
+.options-card-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--secondary-color, #D4A017);
+}
+
+.options-title {
+    font-size: 18px;
+    font-weight: 800;
+    color: var(--primary-color, #0F3B2E);
+}
+
+.dark-mode .options-title {
+    color: var(--text-color);
+}
+
+.options-subtitle {
+    font-size: 13px;
+    color: var(--text-muted, #627A73);
+    margin-top: 4px;
+    margin-bottom: 20px;
+}
+
+.common-options-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.common-option-pill {
+    background-color: var(--bg-color, #f4f7f5);
+    border: 1.5px solid var(--border-color, #e0eae6);
+    color: var(--primary-color, #0F3B2E);
+    padding: 14px 20px;
+    border-radius: var(--radius-pill);
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    text-align: center;
+    transition: all 0.2s ease;
+}
+
+.dark-mode .common-option-pill {
+    color: var(--text-color);
+}
+
+.common-option-pill:hover,
+.common-option-pill.active {
+    background-color: var(--primary-color, #0F3B2E);
+    color: var(--secondary-color, #D4A017);
+    border-color: var(--secondary-color, #D4A017);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(15, 59, 46, 0.15);
+}
+
+/* MANAGE ITEMS LIST */
+.manage-items-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    max-height: 380px;
+    overflow-y: auto;
+    padding-right: 4px;
+}
+
+.manage-item-row {
+    background-color: var(--bg-color, #f4f7f5);
+    border: 1.5px solid var(--border-color, #e0eae6);
+    border-radius: var(--radius-md, 14px);
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    transition: all 0.2s ease;
+}
+
+.manage-item-row:hover,
+.manage-item-row--active {
+    border-color: var(--secondary-color, #D4A017);
+    background-color: rgba(212, 160, 23, 0.08);
+    transform: translateX(3px);
+}
+
+.manage-item-main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    cursor: pointer;
+}
+
+.manage-item-name {
+    font-size: 14px;
+    color: var(--text-color);
+}
+
+.manage-item-sub {
+    font-size: 12px;
+    color: var(--text-muted);
+    font-weight: 600;
+}
+
+.manage-item-actions {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.action-icon-btn {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: 1px solid var(--border-color);
+    background-color: var(--card-bg);
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.action-icon-btn--edit:hover {
+    background-color: var(--primary-color);
+    color: var(--secondary-color);
+    border-color: var(--primary-color);
+}
+
+.action-icon-btn--delete:hover {
+    background-color: #ef4444;
+    color: #ffffff;
+    border-color: #ef4444;
+}
+
+@media (max-width: 860px) {
+    .crud-split-layout {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+
+    .crud-form-card,
+    .crud-options-card {
+        padding: 24px 20px;
+    }
 }

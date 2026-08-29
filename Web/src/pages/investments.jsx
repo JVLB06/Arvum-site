@@ -1,9 +1,11 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import expenses from "../services/extract.js";
 import PieChart from "../components/pieGraph.jsx";
 import ColumnChart from "../components/columnGraph.jsx";
 import { Navbar } from "../components/controlNavBar.jsx";
+import { AdBanner } from "../components/adBanner.jsx";
 import { Link } from "react-router-dom";
+import { Pencil, Plus, TrendingUp } from "lucide-react";
 import "../styles/investments.css";
 
 export function Investment() {
@@ -13,28 +15,28 @@ export function Investment() {
     const [loading, setLoading] = useState(true);
 
     const CORES = [
-        "rgb(11, 61, 46)",
-        "rgb(8, 76, 97)",
-        "rgb(145, 40, 36)",
-        "rgb(201, 162, 39)",
-        "rgb(180, 100, 30)",
-        "rgb(88, 80, 141)",
-        "rgb(34, 139, 34)",
-        "rgb(210, 105, 30)"
+        "#084C61",
+        "#0F3B2E",
+        "#D4A017",
+        "#912824",
+        "#B4641E",
+        "#58508D",
+        "#228B22",
+        "#D2691E"
     ];
 
     function normalizarListaInvestimentos(response) {
-        return Array.isArray(response.data)
+        return Array.isArray(response?.data)
             ? response.data
-            : response.data?.investimentos || [];
+            : Array.isArray(response)
+            ? response
+            : response?.investimentos || [];
     }
 
     function ehMesAtual(dataString) {
         if (!dataString) return false;
-
         const dataItem = new Date(dataString);
         const hoje = new Date();
-
         return (
             dataItem.getMonth() === hoje.getMonth() &&
             dataItem.getFullYear() === hoje.getFullYear()
@@ -43,111 +45,72 @@ export function Investment() {
 
     function agruparInvestimentosMesAtualPorTipo(listaInvestimentos) {
         const agrupado = {};
-
         listaInvestimentos
             .filter((item) => ehMesAtual(item.data))
             .forEach((item) => {
-                const idTipo = item.id_divida_item;
-                const valor = Number(item.vlr_pagamento || 0);
+                const idTipo = item.id_divida_item || item.id;
+                const valor = Number(item.vlr_pagamento || item.value || item.valor || 0);
 
                 if (!agrupado[idTipo]) {
                     agrupado[idTipo] = {
                         id: idTipo,
-                        label: item.nome || `Renda ${idTipo}`,
+                        label: item.nome || item.descricao || item.description || `Investimento ${idTipo}`,
                         value: 0
                     };
                 }
-
                 agrupado[idTipo].value += valor;
             });
-
         return Object.values(agrupado);
     }
 
     function agruparInvestimentosPorMes(listaInvestimentos) {
+        const mesesNomes = ["jan", "fev", "mar", "abr", "mai", "jun", "jul", "ago", "set", "out", "nov", "dez"];
         const agrupado = {};
+
+        mesesNomes.forEach((m) => { agrupado[m] = 0; });
 
         listaInvestimentos.forEach((item) => {
             if (!item.data) return;
-
             const dataItem = new Date(item.data);
-            const chaveMes = `${dataItem.getFullYear()}-${String(dataItem.getMonth() + 1).padStart(2, "0")}`;
-            const valor = Number(item.vlr_pagamento || 0);
-
-            if (!agrupado[chaveMes]) {
-                agrupado[chaveMes] = 0;
+            if (!Number.isNaN(dataItem.getTime())) {
+                const mesIdx = dataItem.getMonth();
+                const nomeMes = mesesNomes[mesIdx];
+                const valor = Number(item.vlr_pagamento || item.value || item.valor || 0);
+                agrupado[nomeMes] = (agrupado[nomeMes] || 0) + valor;
             }
-
-            agrupado[chaveMes] += valor;
         });
 
-        return Object.entries(agrupado)
-            .sort(([mesA], [mesB]) => mesA.localeCompare(mesB))
-            .map(([mes, total], index) => ({
-                label: mes,
-                value: total,
-                color: CORES[index % CORES.length]
-            }));
+        return mesesNomes.map((mes, index) => ({
+            label: mes,
+            value: agrupado[mes] || 0,
+            color: CORES[index % CORES.length]
+        }));
     }
-
-    const carregaInvestimentos = async () => {
-        try {
-            setLoading(true);
-
-            const response = await expenses.obtainInvestmentPayments();
-            const listaInvestimentos = normalizarListaInvestimentos(response);
-
-            const investimentosAgrupadas = agruparInvestimentosMesAtualPorTipo(listaInvestimentos);
-
-            setInvestimentos(investimentosAgrupadas);
-        } catch (error) {
-            console.error("Erro ao carregar investimentos:", error);
-        } finally {
-            setLoading(false);
-        }
-    };
-
-    const carregarDadosPie = async () => {
-        try {
-            const response = await expenses.obtainInvestmentPayments();
-            const listaInvestimentos = normalizarListaInvestimentos(response);
-
-            const investimentosAgrupadas = agruparInvestimentosMesAtualPorTipo(listaInvestimentos);
-
-            const formatadoParaGrafico = investimentosAgrupadas.map((item, index) => ({
-                label: item.label,
-                value: item.value,
-                color: CORES[index % CORES.length]
-            }));
-
-            setDadosGraficoPie(formatadoParaGrafico);
-        } catch (error) {
-            console.error("Erro ao consolidar dados do gráfico de pizza:", error);
-        }
-    };
-
-    const carregarDadosCol = async () => {
-        try {
-            const response = await expenses.obtainInvestmentPayments();
-            const listaInvestimentos = normalizarListaInvestimentos(response);
-
-            const formatadoParaGrafico = agruparInvestimentosPorMes(listaInvestimentos);
-
-            setDadosGraficoCol(formatadoParaGrafico);
-        } catch (error) {
-            console.error("Erro ao consolidar dados do gráfico de colunas:", error);
-        }
-    };
 
     useEffect(() => {
         async function carregarTudo() {
             setLoading(true);
             try {
-                await Promise.all([
-                    carregaInvestimentos(),
-                    carregarDadosPie(),
-                    carregarDadosCol()
-                ]);
+                const response = await expenses.obtainInvestmentPayments();
+                const listaInvestimentos = normalizarListaInvestimentos(response);
+
+                const investimentosAgrupados = agruparInvestimentosMesAtualPorTipo(listaInvestimentos);
+                setInvestimentos(investimentosAgrupados);
+
+                setDadosGraficoPie(
+                    investimentosAgrupados.map((item, index) => ({
+                        label: item.label,
+                        value: item.value,
+                        color: CORES[index % CORES.length]
+                    }))
+                );
+
+                setDadosGraficoCol(agruparInvestimentosPorMes(listaInvestimentos));
+            } catch (error) {
+                console.error("Erro ao carregar investimentos:", error);
+                setInvestimentos([]);
+                setDadosGraficoPie([]);
+                setDadosGraficoCol([]);
             } finally {
                 setLoading(false);
             }
@@ -156,57 +119,87 @@ export function Investment() {
         carregarTudo();
     }, []);
 
+    const totalInvestMes = investimentos.reduce((acc, i) => acc + Number(i.value || 0), 0);
+
     return (
-        <div className="main">
+        <div className="entity-page">
             <Navbar>
-                <Link to="/atualizar_investimento">
-                    <button className="head_button">
-                        <strong>Edit Investimento</strong>
-                    </button>
+                <Link to="/atualizar_investimento" className="head_button" title="Gerenciar Investimentos">
+                    <Pencil size={16} />
+                    <span>Gerenciar</span>
                 </Link>
-                <Link to="/cadastrar_investimento">
-                    <button className="head_button">
-                        <strong>+</strong>
-                    </button>
+                <Link to="/cadastrar_investimento" className="head_button head_button--highlight" title="Novo Investimento">
+                    <Plus size={18} />
+                    <span>Novo Investimento</span>
                 </Link>
             </Navbar>
 
-            <div className="structure">
-                <div className="corpo">
-                    <div className="investimentos">
-                        <h1>Totais de investimentos no mês atual</h1>
-                        <h2>
-                            <span>Nome</span> Valor
-                        </h2>
+            <main className="entity-main">
+                <div className="entity-header-row">
+                    <div className="entity-title-group">
+                        <div className="entity-icon-badge">
+                            <TrendingUp size={22} />
+                        </div>
+                        <div>
+                            <h1 className="entity-main-title">Investimentos & Aplicações</h1>
+                            <p className="entity-subtitle">Acompanhe seus aportes e o crescimento do seu patrimônio</p>
+                        </div>
+                    </div>
+                </div>
 
-                        {loading ? (
-                            <p>Carregando investimentos...</p>
-                        ) : investimentos.length > 0 ? (
-                            investimentos.map((renda, index) => (
-                                <div className="renda-item" key={renda.id || index}>
-                                    <span>{renda.label}</span>
-                                    <strong>
-                                        {Number(renda.value).toLocaleString("pt-BR", {
-                                            style: "currency",
-                                            currency: "BRL"
-                                        })}
-                                    </strong>
+                {/* SEÇÃO SUPERIOR: LISTA DO MÊS + GRÁFICO DE PIZZA */}
+                <div className="entity-upper-grid">
+                    <section className="entity-card entity-list-card">
+                        <div className="card-header-bar">
+                            <h2 className="card-section-title">Totais de investimentos no mês atual</h2>
+                            <span className="card-badge-total">
+                                {totalInvestMes.toLocaleString("pt-BR", { style: "currency", currency: "BRL" })}
+                            </span>
+                        </div>
+
+                        <div className="entity-items-list">
+                            {loading ? (
+                                <p className="loading-text">Carregando investimentos...</p>
+                            ) : investimentos.length > 0 ? (
+                                investimentos.map((item, index) => (
+                                    <div className="entity-data-row" key={item.id || index}>
+                                        <div className="entity-data-info">
+                                            <span className="entity-row-dot" style={{ backgroundColor: "#084C61" }}></span>
+                                            <span className="entity-data-label">{item.label}</span>
+                                        </div>
+                                        <strong className="entity-data-value">
+                                            {Number(item.value).toLocaleString("pt-BR", {
+                                                style: "currency",
+                                                currency: "BRL"
+                                            })}
+                                        </strong>
+                                    </div>
+                                ))
+                            ) : (
+                                <div className="empty-state-box">
+                                    <p>Nenhum investimento registrado no mês atual.</p>
+                                    <Link to="/cadastrar_investimento" className="empty-action-link">
+                                        + Adicionar seu primeiro investimento
+                                    </Link>
                                 </div>
-                            ))
-                        ) : (
-                            <p>Nenhum investimento encontrada no mês atual.</p>
-                        )}
-                    </div>
+                            )}
+                        </div>
+                    </section>
 
-                    <div className="grafico-container">
+                    <section className="entity-pie-card">
                         <PieChart dataItems={dadosGraficoPie} />
-                    </div>
+                    </section>
                 </div>
 
-                <div className="colum-graphic">
+                {/* SEÇÃO INFERIOR: GRÁFICO DE COLUNAS */}
+                <section className="entity-column-card">
                     <ColumnChart dataItems={dadosGraficoCol} />
-                </div>
-            </div>
+                </section>
+
+                <AdBanner slot="investments-footer-slot" format="horizontal" />
+            </main>
         </div>
     );
 }
+
+export default Investment;

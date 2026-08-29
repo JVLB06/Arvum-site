@@ -1,34 +1,88 @@
-.header{
+.back-header-container {
+    width: 100%;
     display: flex;
-    align-items: center; /* Alinha os itens verticalmente */
-    justify-content: space-between; /* Distribui espaço entre os elementos */
-    flex-wrap: nowrap; /* Evita quebra de linha */
-    padding: 10px;
-}
-.header h1 {
-    margin: 0;
-    color: var(--primary-color);
-    font-size: 30px;
-    text-align: center;
-    flex-grow: 1; /* Permite que o texto ocupe o espaço restante */
-}
-/* Destaca apenas uma palavra */
-.header span {
-    color: var(--secondary-color); /* Substitua por qualquer cor desejada */
-    font-weight: bold;
-}
-/* Botão de retorno (seta "<") */
-.back-button {
-    font-size: 60px; /* Aumenta o tamanho */
-    font-weight: bold;
-    background: none;
-    border: none;
-    color: var(--primary-color);
-    cursor: pointer;
-    transition: 0.3s;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    padding: 18px 24px;
+    margin-bottom: 24px;
+    background: transparent;
+    box-sizing: border-box;
 }
 
-.back-button:hover {
-    color: var(--secondary-color);
-    transform: scale(1.1); /* Aumenta levemente no hover */
+.back-header-btn {
+    position: absolute;
+    left: 16px;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background-color: var(--card-bg, #ffffff);
+    border: 2px solid var(--primary-color, #0f3b2e);
+    color: var(--primary-color, #0f3b2e);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: var(--shadow-sm, 0 2px 8px rgba(15, 59, 46, 0.08));
+    z-index: 10;
+}
+
+.dark-mode .back-header-btn {
+    background-color: var(--card-bg, #14221e);
+    border-color: var(--secondary-color, #d4a017);
+    color: var(--secondary-color, #d4a017);
+}
+
+.back-header-btn:hover {
+    background-color: var(--primary-color, #0f3b2e);
+    color: var(--secondary-color, #d4a017);
+    border-color: var(--secondary-color, #d4a017);
+    transform: translateX(-3px) scale(1.05);
+    box-shadow: 0 4px 12px rgba(15, 59, 46, 0.2);
+}
+
+.back-header-title {
+    font-size: 26px;
+    font-weight: 800;
+    color: var(--primary-color, #0f3b2e);
+    text-align: center;
+    letter-spacing: -0.5px;
+    margin: 0;
+    max-width: 80%;
+}
+
+.dark-mode .back-header-title {
+    color: var(--text-color, #eef5f2);
+}
+
+.back-header-title span {
+    color: var(--secondary-color, #d4a017);
+    text-decoration: underline;
+    text-decoration-color: rgba(212, 160, 23, 0.4);
+    text-underline-offset: 4px;
+}
+
+@media (max-width: 768px) {
+    .back-header-container {
+        padding: 12px 8px;
+        margin-bottom: 16px;
+    }
+
+    .back-header-btn {
+        width: 36px;
+        height: 36px;
+        left: 8px;
+    }
+
+    .back-header-btn svg {
+        width: 18px;
+        height: 18px;
+    }
+
+    .back-header-title {
+        font-size: 20px;
+        padding-left: 36px;
+        max-width: 95%;
+    }
 }

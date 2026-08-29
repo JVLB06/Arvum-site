@@ -1,113 +1,116 @@
-/* Estiliza o layout principal */
-main {
-    background-color: none;
-    text-align: center;
-    padding: 20px;
-    min-height: 100vh;
-}
-
-/* Define a área em grid */
-.grid {
-    display: grid;
-    grid-template-columns: 2.3fr 1fr; /* O formulário ocupa o dobro do espaço da seção "pensar" */
-    max-width: 800px;
-    margin: 20px auto;
-}
-
-/* Estiliza o formulário */
-.form {
-    background-color: var(--primary-color);
-    padding: 30px;
-    display: flex;
-    flex-direction: column;
-    gap: 12px; /* Espaçamento entre os campos */
-}
-
-/* Estiliza os labels */
-.form label {
-    font-weight: bold;
-    color: var(--secondary-color);
-    margin-bottom: 5px;
-}
-
-/* Estiliza os inputs */
-.form input {
-    padding: 8px;
-    border: 1px solid var(--secondary-color);
-    border-radius: 5px;
-    background-color: var(--bg-color);
-    color: var(--text-color);
-    outline: none;
-}
-.pensar p{
-    color: rgb(245, 245, 245);
-    padding: 30px;
-    padding-bottom: 130px;
-    text-align: center;
-}
-/* Botão de cadastro */
-.pensar button {
-    background-color: var(--primary-color);
-    color: var(--secondary-color);
-    padding: 10px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
+.register-card {
     width: 100%;
-    transition: 0.3s;
+    max-width: 960px;
+    display: grid;
+    grid-template-columns: 1.4fr 1fr;
+    border-radius: var(--radius-xl, 28px);
+    overflow: hidden;
+    box-shadow: var(--shadow-lg, 0 16px 36px rgba(15, 59, 46, 0.15));
+    border: 1px solid var(--border-color, #e0eae6);
+    background-color: var(--card-bg, #ffffff);
 }
 
-.pensar button:hover {
-    background-color: var(--bg-color);
-    color: var(--text-color);
-}
-
-/* Ajuste da seção "pensar" */
-.pensar {
-    background-color: var(--secondary-color);
-    padding: 30px;
+/* LADO VERDE PROFUNDO */
+.register-form-side {
+    background-color: var(--primary-color, #0F3B2E);
+    padding: 40px 44px;
     display: flex;
     flex-direction: column;
-    align-items: center;
-    gap: 10px;
+    justify-content: center;
+    color: #ffffff;
 }
 
-/* Container da mensagem com a seta */
-.header {
+.register-form {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+/* LADO DOURADO */
+.register-quote-side {
+    background: linear-gradient(145deg, #D4A017 0%, #B8860E 100%);
+    padding: 40px 36px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    color: #1a221f;
+    position: relative;
+    overflow: hidden;
+}
+
+.register-quote-side::after {
+    content: '"';
+    position: absolute;
+    bottom: -30px;
+    right: 10px;
+    font-size: 160px;
+    font-family: var(--font-serif);
+    color: rgba(255, 255, 255, 0.18);
+    pointer-events: none;
+    line-height: 1;
+}
+
+.register-action-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-top: 24px;
+}
+
+.register-submit-btn {
+    background: var(--primary-color, #0F3B2E);
+    color: var(--secondary-color, #D4A017);
+    border: 2px solid var(--primary-color);
+    padding: 14px;
+    border-radius: var(--radius-pill);
+    font-size: 16px;
+    font-weight: 800;
+    cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 15px; /* Espaço entre a seta e o título */
-    padding: 20px;
-    background-color: none;
-    border-radius: 10px;
-    margin-bottom: 20px;
+    gap: 8px;
+    transition: all 0.25s ease;
+    box-shadow: 0 4px 14px rgba(15, 59, 46, 0.25);
+    width: 100%;
 }
 
-/* Botão de retorno (seta "<") */
-.back-button {
-    -webkit-text-stroke: 1px var(--secondary-color); /* Contorno dourado */
-    position: absolute;
-    left: 20px;
-    font-size: 60px; /* Aumenta o tamanho */
-    font-weight: bold;
-    background: none;
-    border: none;
+.register-submit-btn:hover:not(:disabled) {
+    background: #ffffff;
     color: var(--primary-color);
-    cursor: pointer;
-    transition: 0.3s;
+    border-color: #ffffff;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 22px rgba(15, 59, 46, 0.35);
 }
 
-.back-button:hover {
-    color: var(--secondary-color);
-    transform: scale(1.1); /* Aumenta levemente no hover */
+.register-submit-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
 }
 
-/* Estiliza o título */
-.header h1 {
-    -webkit-text-stroke: 1px var(--secondary-color); /* Contorno dourado */
-    margin: 0;
-    color: var(--primary-color);
-    font-size: 30px;
+.register-login-link {
+    font-size: 13px;
+    font-weight: 600;
     text-align: center;
+    color: #0F3B2E;
+}
+
+.login-link-anchor {
+    margin-left: 4px;
+    text-decoration: underline;
+    font-weight: 800;
+}
+
+@media (max-width: 820px) {
+    .register-card {
+        grid-template-columns: 1fr;
+    }
+
+    .register-form-side {
+        padding: 28px 20px;
+    }
+
+    .register-quote-side {
+        padding: 28px 20px;
+    }
 }

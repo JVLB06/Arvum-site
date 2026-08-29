@@ -1,114 +1,65 @@
-/* Estiliza o layout principal */
-main {
-    background-color: none;
-    text-align: center;
-    padding: 20px;
-    min-height: 100vh;
-}
+@import "./cadastrate_receipt.css";
 
-/* Define a área em grid */
-.grid {
+.crud-grid-2col {
     display: grid;
-    grid-template-columns: 1fr 1fr; /* O formulário ocupa o dobro do espaço da seção "sugestoes" */
-    max-width: 100%;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
 }
 
-/* Estiliza o formulário */
-form {
-    background-color: none;
-    padding: 30px;
+.priority-radio-grid {
     display: flex;
-    flex-direction: column;
-    gap: 12px; /* Espaçamento entre os campos */
+    gap: 8px;
+    flex-wrap: wrap;
 }
 
-/* Estiliza os labels */
-form label {
-    font-weight: bold;
-    color: var(--text-color);
-    margin-bottom: 5px;
-}
-
-/* Estiliza os inputs */
-form input {
-    padding: 8px;
-    border: 1px solid var(--text-color);
-    border-radius: 5px;
-    background-color: var(--bg-color);
-    color: var(--text-color);
-    outline: none;
-}
-/* Botão de cadastro */
-form button {
-    background-color: var(--primary-color);
-    color: var(--secondary-color);
-    padding: 10px;
-    border: none;
-    border-radius: 15px;
-    cursor: pointer;
-    width: 100%;
-    transition: 0.3s;
-}
-
-form button:hover {
-    background-color: var(--bg-color);
-    color: var(--text-color);
-}
-
-.radio-group {
-    display: flex;
-    gap: 20px; /* Espaço entre os radios */
-    justify-content: left; /* Centraliza os elementos */
-}
-
-.radio-option {
-    display: flex;
-    flex-direction: column; /* Organiza os itens verticalmente */
-    align-items: center; /* Centraliza os itens */
-}
-
-/* Ajuste da seção "sugestoes" */
-.sugestoes {
-    background-color: var(--primary-color);
-    padding: 30px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 10px;
-}
-.scroll{
-    max-height: 100vh;
-    overflow-y: auto;
-    border: 1px solid;
-}
-
-.suggestion-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 10px;
-}
-
-.suggestion-table th, .suggestion-table td {
-    border: none;
-    padding: 10px;
+.radio-pill {
+    flex: 1;
+    min-width: 70px;
+    padding: 10px 14px;
+    background-color: var(--bg-color, #f4f7f5);
+    border: 1.5px solid var(--border-color, #e0eae6);
+    color: var(--primary-color, #0F3B2E);
+    border-radius: var(--radius-pill);
+    font-size: 13px;
+    font-weight: 700;
     text-align: center;
-}
-
-.suggestion-table th {
-    color: var(--secondary-color);
-    font-weight: bold;
-}
-
-.fill-button {
-    background-color: var(--bg-color);
-    color: var(--text-color);
-    border: none;
-    border-radius: 10px;
-    padding: 10px;
     cursor: pointer;
-    transition: 0.3s;
-    width: 100%;
+    transition: all 0.2s ease;
+    user-select: none;
 }
-.fill-button:hover {
-    background-color: var(--secondary-color);
+
+.dark-mode .radio-pill {
+    color: var(--text-color);
+}
+
+.radio-pill:hover:not(.disabled),
+.radio-pill.active {
+    background-color: var(--primary-color, #0F3B2E);
+    color: var(--secondary-color, #D4A017);
+    border-color: var(--secondary-color, #D4A017);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 10px rgba(15, 59, 46, 0.15);
+}
+
+.radio-pill.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+@media (max-width: 600px) {
+    .crud-grid-2col {
+        grid-template-columns: 1fr;
+    }
 }

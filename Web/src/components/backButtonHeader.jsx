@@ -1,4 +1,5 @@
 import { useNavigate } from "react-router-dom";
+import { ChevronLeft } from "lucide-react";
 import "../styles/backButtonHeader.css";
 
 export function BackButtonHeader({ title, onBack }) {
@@ -6,25 +7,29 @@ export function BackButtonHeader({ title, onBack }) {
 
     function handleBack() {
         if (onBack) {
-            onBack(); // permite comportamento customizado
+            onBack();
         } else {
-            navigate(-1); // volta uma página no histórico
+            navigate(-1);
         }
     }
 
     return (
-        <div className="header">
+        <header className="back-header-container">
             <button
-                className="back-button"
+                className="back-header-btn"
                 onClick={handleBack}
                 type="button"
+                aria-label="Voltar"
+                title="Voltar à página anterior"
             >
-                &lt;
+                <ChevronLeft size={24} />
             </button>
 
-            <h1>
-                <strong>{title}</strong>
+            <h1 className="back-header-title">
+                {title}
             </h1>
-        </div>
+        </header>
     );
 }
+
+export default BackButtonHeader;

@@ -1,20 +1,22 @@
-import { useEffect, useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import Chart from 'chart.js/auto';
+import '../styles/columnGraph.css';
 
-const BarChart = ({ dataItems }) => {
+export const BarChart = ({ dataItems = [] }) => {
   const canvasRef = useRef(null);
   const chartInstance = useRef(null);
 
-  const labels = dataItems.map(item => item.label);
-  let values = dataItems.map(item => item.value);
-  const colors = dataItems.map(item => item.color);
+  const safeData = Array.isArray(dataItems) && dataItems.length > 0
+    ? dataItems
+    : [{ label: 'jan', value: 0, color: '#0F3B2E' }];
 
-  // Se todos os valores forem 0 ou vazios, evita gráfico "morto"
-  if (values.every(v => v === 0 || !v)) {
-    values = new Array(dataItems.length).fill(100);
-  }
+  const labels = safeData.map(item => item.label);
+  const values = safeData.map(item => Number(item.value || 0));
+  const colors = safeData.map(item => item.color || '#0F3B2E');
 
   useEffect(() => {
+    if (!canvasRef.current) return;
+
     if (chartInstance.current) {
       chartInstance.current.destroy();
     }
@@ -25,39 +27,57 @@ const BarChart = ({ dataItems }) => {
       type: 'bar',
       data: {
         labels: labels,
-        datasets: [
-          {
-            data: values,
-            backgroundColor: colors,
-            borderWidth: 0,
-            borderRadius: 6,
-            barThickness: 40
-          }
-        ]
+        datasets: [{
+          data: values,
+          backgroundColor: '#0F3B2E',
+          hoverBackgroundColor: '#D4A017',
+          borderRadius: 8,
+          borderSkipped: false,
+          maxBarThickness: 38,
+        }]
       },
       options: {
-        plugins: {
-          legend: { display: false }
-        },
         responsive: true,
         maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            backgroundColor: '#0F3B2E',
+            titleColor: '#D4A017',
+            bodyColor: '#FFFFFF',
+            padding: 12,
+            cornerRadius: 10,
+            callbacks: {
+              label: function(context) {
+                const val = Number(context.raw || 0);
+                return ` Total: ${val.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}`;
+              }
+            }
+          }
+        },
         scales: {
           x: {
-            grid: {
-              display: false
-            },
+            grid: { display: false },
             ticks: {
-              color: '#444'
-            }
+              color: '#627A73',
+              font: { weight: '600', size: 12 }
+            },
+            border: { display: false }
           },
           y: {
             beginAtZero: true,
-            ticks: {
-              color: '#444'
-            },
             grid: {
-              color: 'rgba(0, 0, 0, 0.08)'
-            }
+              color: 'rgba(15, 59, 46, 0.06)',
+              drawBorder: false
+            },
+            ticks: {
+              color: '#627A73',
+              font: { size: 11 },
+              callback: function(value) {
+                return value >= 1000 ? `${(value / 1000).toFixed(0)}k` : value;
+              }
+            },
+            border: { display: false }
           }
         }
       }
@@ -68,25 +88,21 @@ const BarChart = ({ dataItems }) => {
         chartInstance.current.destroy();
       }
     };
-  }, [dataItems, labels, values, colors]);
+  }, [dataItems]);
 
   return (
-    <section className="dados">
-      <div className="grafico-container">
-        <div className="legenda">
-          {dataItems.map((item, index) => (
-            <div className="legenda-item" key={index}>
-              <span style={{ backgroundColor: item.color }}></span>
-              {item.label}
-            </div>
-          ))}
-        </div>
-
-        <div style={{ position: 'relative', height: '300px', width: '300px' }}>
-          <canvas ref={canvasRef}></canvas>
+    <div className="column-chart-card">
+      <div className="column-chart-header">
+        <h3 className="column-chart-title">Evolução Mensal</h3>
+        <div className="column-chart-legend">
+          <span className="legend-dot"></span>
+          <span>Valores mensais</span>
         </div>
       </div>
-    </section>
+      <div className="column-chart-body">
+        <canvas ref={canvasRef}></canvas>
+      </div>
+    </div>
   );
 };
 
