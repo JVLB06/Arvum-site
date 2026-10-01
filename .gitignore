@@ -22,3 +22,7 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+AGENTS.md
+test_api.html
+test_endpoints.sh

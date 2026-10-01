@@ -146,27 +146,32 @@ const expenses = {
 
   obtainGoalPayments: async () => {
     const response = await api.get('/extrato/obter_meta_pgto');
-    return unwrapPayload(response.data, 'meta');
+    // API retorna diretamente um array, não em um objeto wrapper
+    return Array.isArray(response.data) ? response.data : [];
   },
 
   obtainExpensePayments: async () => {
     const response = await api.get('/extrato/obter_gastos_pgto');
-    return unwrapPayload(response.data, 'gastos');
+    // API retorna diretamente um array, não em um objeto wrapper
+    return Array.isArray(response.data) ? response.data : [];
   },
 
   obtainDebtPayments: async () => {
     const response = await api.get('/extrato/obter_divida_pgto');
-    return unwrapPayload(response.data, 'dividas');
+    // API retorna diretamente um array, não em um objeto wrapper
+    return Array.isArray(response.data) ? response.data : [];
   },
 
   obtainReceiptPayments: async () => {
     const response = await api.get('/extrato/obter_renda_pgto');
-    return unwrapPayload(response.data, 'rendas');
+    // API retorna diretamente um array, não em um objeto wrapper
+    return Array.isArray(response.data) ? response.data : [];
   },
 
   obtainInvestmentPayments: async () => {
     const response = await api.get('/extrato/obter_investimento_pgto');
-    return unwrapPayload(response.data, 'investimentos');
+    // API retorna diretamente um array, não em um objeto wrapper
+    return Array.isArray(response.data) ? response.data : [];
   },
 };
 

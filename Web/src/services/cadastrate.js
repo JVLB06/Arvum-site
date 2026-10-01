@@ -7,7 +7,8 @@ function unwrapPayload(data, key) {
 const cadastrate = {
   getRenda: async () => {
     const response = await api.get('/user_plan/ler_renda');
-    return unwrapPayload(response.data, 'rendas');
+    // API retorna diretamente um array, não em um objeto wrapper
+    return Array.isArray(response.data) ? response.data : [];
   },
 
   // Esperado: { receiptId?, name, minValue, maxValue, paymentDate }
@@ -29,12 +30,14 @@ const cadastrate = {
 
   getActiveInvestments: async () => {
     const response = await api.get('/user_plan/ler_investimentos_ativos');
-    return unwrapPayload(response.data, 'invest');
+    // API retorna diretamente um array, não em um objeto wrapper
+    return Array.isArray(response.data) ? response.data : [];
   },
 
   getInactiveInvestments: async () => {
     const response = await api.get('/user_plan/ler_investimentos_encerrados');
-    return unwrapPayload(response.data, 'invest');
+    // API retorna diretamente um array, não em um objeto wrapper
+    return Array.isArray(response.data) ? response.data : [];
   },
 
   // Esperado: { id, description, value, interest, initialDate }
@@ -62,7 +65,8 @@ const cadastrate = {
 
   getDebts: async () => {
     const response = await api.get('/user_plan/ler_dividas');
-    return unwrapPayload(response.data, 'divida');
+    // API retorna diretamente um array, não em um objeto wrapper
+    return Array.isArray(response.data) ? response.data : [];
   },
 
   // Esperado: { id?, name, value, receiveDate, initialDate, paid? }
@@ -94,7 +98,8 @@ const cadastrate = {
 
   getGoals: async () => {
     const response = await api.get('/user_plan/ler_metas');
-    return unwrapPayload(response.data, 'meta');
+    // API retorna diretamente um array, não em um objeto wrapper
+    return Array.isArray(response.data) ? response.data : [];
   },
 
   // Esperado: { userId?, id?, description, value, goalDate, progress }
@@ -126,7 +131,8 @@ const cadastrate = {
 
   getExpenses: async () => {
     const response = await api.get('/user_plan/ler_gastos');
-    return unwrapPayload(response.data, 'gasto');
+    // API retorna diretamente um array, não em um objeto wrapper
+    return Array.isArray(response.data) ? response.data : [];
   },
 
   // Esperado: { userId?, id?, description, minValue, maxValue, priority, dueDate, isFixed }
