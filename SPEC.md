@@ -30,6 +30,11 @@ Web/
 - Intercepta resposta 401 e redireciona para login
 - Suporta credenciais entre domínios (CORS)
 
+**IMPORTANTE:** Todos os endpoints GET da API retornam arrays diretamente, não em objetos wrapper. Por exemplo:
+- `/user_plan/ler_renda` retorna `[{...}]` e não `{rendas: [{...}]}`
+- `/user_plan/ler_gastos` retorna `[{...}]` e não `{gasto: [{...}]}`
+- Etc.
+
 #### **auth.js** - Autenticação
 ```javascript
 // Endpoints
