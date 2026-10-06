@@ -7,7 +7,11 @@ function unwrapPayload(data, key) {
 const cadastrate = {
   getRenda: async () => {
     const response = await api.get('/user_plan/ler_renda');
-    // API retorna diretamente um array, não em um objeto wrapper
+    return Array.isArray(response.data) ? response.data : [];
+  },
+
+  getRendaView: async () => {
+    const response = await api.get('/user_plan/ler_renda_view');
     return Array.isArray(response.data) ? response.data : [];
   },
 
@@ -30,7 +34,11 @@ const cadastrate = {
 
   getActiveInvestments: async () => {
     const response = await api.get('/user_plan/ler_investimentos_ativos');
-    // API retorna diretamente um array, não em um objeto wrapper
+    return Array.isArray(response.data) ? response.data : [];
+  },
+
+  getActiveInvestmentsView: async () => {
+    const response = await api.get('/user_plan/ler_investimentos_ativos_view');
     return Array.isArray(response.data) ? response.data : [];
   },
 
@@ -65,7 +73,11 @@ const cadastrate = {
 
   getDebts: async () => {
     const response = await api.get('/user_plan/ler_dividas');
-    // API retorna diretamente um array, não em um objeto wrapper
+    return Array.isArray(response.data) ? response.data : [];
+  },
+
+  getDebtsView: async () => {
+    const response = await api.get('/user_plan/ler_dividas_view');
     return Array.isArray(response.data) ? response.data : [];
   },
 
@@ -98,7 +110,11 @@ const cadastrate = {
 
   getGoals: async () => {
     const response = await api.get('/user_plan/ler_metas');
-    // API retorna diretamente um array, não em um objeto wrapper
+    return Array.isArray(response.data) ? response.data : [];
+  },
+
+  getGoalsView: async () => {
+    const response = await api.get('/user_plan/ler_metas_view');
     return Array.isArray(response.data) ? response.data : [];
   },
 
@@ -131,7 +147,11 @@ const cadastrate = {
 
   getExpenses: async () => {
     const response = await api.get('/user_plan/ler_gastos');
-    // API retorna diretamente um array, não em um objeto wrapper
+    return Array.isArray(response.data) ? response.data : [];
+  },
+
+  getExpensesView: async () => {
+    const response = await api.get('/user_plan/ler_gastos_view');
     return Array.isArray(response.data) ? response.data : [];
   },
 
