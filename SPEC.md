@@ -485,3 +485,39 @@ A interface segue os padrões de design de alta sofisticação definidos no arqu
 **Última atualização:** 2026-08-29  
 **Status:** ✅ Alinhado com backend e interface renovada conforme Identidade Visual
 
+
+
+## Integração dos painéis com os registros gerais (atualização)
+
+Os painéis de rendas, gastos, investimentos, dívidas e metas usam os endpoints de registros gerais da API por meio de `services/cadastrate.js`, em vez de inferir saldos dos endpoints de pagamentos do extrato.
+
+### Endpoints de leitura usados pelos painéis
+
+| Painel | Lista ativa | Dados complementares / view |
+|---|---|---|
+| Rendas | `GET /user_plan/ler_renda` | `GET /user_plan/ler_renda_view` |
+| Gastos | `GET /user_plan/ler_gastos` | `GET /user_plan/ler_gastos_view` |
+| Investimentos | `GET /user_plan/ler_investimentos_ativos` | `GET /user_plan/ler_investimentos_ativos_view` |
+| Dívidas | `GET /user_plan/ler_dividas` | `GET /user_plan/ler_dividas_view` |
+| Metas | `GET /user_plan/ler_metas` | `GET /user_plan/ler_metas_view` |
+
+Todos os métodos de view retornam arrays. Os painéis mantêm a biblioteca Chart.js já instalada, usam os componentes `pieGraph.jsx` e `columnGraph.jsx`, e preenchem os últimos 12 meses (mês atual e 11 anteriores), incluindo meses sem valores.
+
+- **Rendas:** distribuição calculada a partir dos registros ativos; série mensal baseada nos valores agregados retornados por `ler_renda_view`.
+- **Gastos:** série mensal com despesas, rendas e `ExpensesLimit` exatamente como retornados pelo backend. O frontend não recalcula o limite.
+- **Investimentos:** `ReceivedValue` é a estimativa calculada pelo backend para cada investimento ativo. O gráfico agrupa esse valor pelo `InitialDate` (mês de início); não é um histórico de saldo mensal nem uma projeção recalculada no frontend.
+- **Dívidas:** lista e valores originais vêm de `ler_dividas`; `DebtPaid` vem de `ler_dividas_view` e é combinado por ID. O gráfico agrupa valor original e valor pago pelo mês de início da dívida. Dívidas sem linha no endpoint de progresso são tratadas como total pago igual a zero.
+- **Metas:** somente metas ativas são exibidas. O progresso usa `Progress` e os valores pagos usam `GoalPaid` quando fornecidos pela API; não há percentuais ou valores fictícios de fallback. O gráfico mensal agrupa os valores das metas pelo mês de `GoalDate`.
+
+### Lançamentos vinculados a metas
+
+Na página `create_entry.jsx`, lançamentos do tipo dívida ou investimento podem receber `goalId` opcional. A lista de metas ativas é carregada por `getGoals()` e o campo é enviado somente quando o usuário escolhe uma meta. O backend não foi alterado.
+
+### Contratos de dados relevantes
+
+- View de renda: `Id`, `Name`, `MinValue`, `MaxValue`, `PaymentDate` (valores agregados por mês).
+- View de gastos: `Month`, `TotalExpenses`, `TotalIncomes`, `ExpensesLimit`.
+- Investimento ativo/view: `Id`, `Name`/`Description`, `Value`, `Interest`, `InitialDate`, `ReceiveDate`, `ReceivedValue`.
+- Dívida ativa: `Id`, `Name`, `Value`, `InitialDate`, `ReceiveDate`, `Paid`; progresso: `Id`, `Name`, `Value`, `InitialDate`, `ReceiveDate`, `DebtPaid`.
+- Meta ativa: `Id`, `Description`, `Value`, `GoalDate`, `Progress`, `GoalPaid`.
+
