@@ -7,14 +7,12 @@ function unwrapPayload(data, key) {
 const cadastrate = {
   getRenda: async () => {
     const response = await api.get('/user_plan/ler_renda');
-    const data = Array.isArray(response.data) ? response.data : response.data?.rendas || [];
-    return data.map(normalizeReceipt);
+    return Array.isArray(response.data) ? response.data : response.data?.rendas || [];
   },
 
   getRendaView: async () => {
     const response = await api.get('/user_plan/ler_renda_view');
-    const data = Array.isArray(response.data) ? response.data : response.data?.rendas || [];
-    return data.map(normalizeReceipt);
+    return Array.isArray(response.data) ? response.data : response.data?.rendas || [];
   },
 
   // Esperado: { receiptId?, name, minValue, maxValue, paymentDate }
