@@ -35,7 +35,7 @@ export function CadastrateDebt() {
 
         try {
             await cadastrate.createDebt({
-                name: descricao,
+                description: descricao,
                 value: parseFloat(vlr),
                 receiveDate: data_venc,
                 initialDate: data_init
