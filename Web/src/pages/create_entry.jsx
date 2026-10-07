@@ -55,7 +55,6 @@ const TIPOS = [
   { value: 'gasto', label: 'Gasto', icon: CreditCard },
   { value: 'investimento', label: 'Investimento', icon: TrendingUp },
   { value: 'divida', label: 'Dívida', icon: CircleDollarSign },
-  { value: 'meta', label: 'Meta', icon: Target },
 ];
 
 const INITIAL_FORM = {
