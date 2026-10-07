@@ -7,14 +7,12 @@ function unwrapPayload(data, key) {
 const cadastrate = {
   getRenda: async () => {
     const response = await api.get('/user_plan/ler_renda');
-    const data = Array.isArray(response.data) ? response.data : response.data?.rendas || [];
-    return data.map(normalizeReceipt);
+    return Array.isArray(response.data) ? response.data : response.data?.rendas || [];
   },
 
   getRendaView: async () => {
     const response = await api.get('/user_plan/ler_renda_view');
-    const data = Array.isArray(response.data) ? response.data : response.data?.rendas || [];
-    return data.map(normalizeReceipt);
+    return Array.isArray(response.data) ? response.data : response.data?.rendas || [];
   },
 
   // Esperado: { receiptId?, name, minValue, maxValue, paymentDate }
@@ -83,15 +81,31 @@ const cadastrate = {
     return Array.isArray(response.data) ? response.data : [];
   },
 
-  // Esperado: { id?, name, value, receiveDate, initialDate, paid? }
+  // Esperado: { id?, description, value, endDate, initDate }
   createDebt: async (debtData) => {
-    const response = await api.post('/user_plan/criar_divida', debtData);
+    // Mapear campos do frontend para o backend
+    const backendData = {
+      id: debtData.id,
+      description: debtData.name || debtData.description,
+      value: debtData.value,
+      endDate: debtData.receiveDate || debtData.endDate,
+      initDate: debtData.initialDate || debtData.initDate
+    };
+    const response = await api.post('/user_plan/criar_divida', backendData);
     return response.data;
   },
 
-  // Esperado: { id?, name, value, receiveDate, initialDate, paid? }
+  // Esperado: { id?, description, value, endDate, initDate }
   updateDebt: async (debtData) => {
-    const response = await api.put('/user_plan/atualizar_divida', debtData);
+    // Mapear campos do frontend para o backend
+    const backendData = {
+      id: debtData.id,
+      description: debtData.name || debtData.description,
+      value: debtData.value,
+      endDate: debtData.receiveDate || debtData.endDate,
+      initDate: debtData.initialDate || debtData.initDate
+    };
+    const response = await api.put('/user_plan/atualizar_divida', backendData);
     return response.data;
   },
 
