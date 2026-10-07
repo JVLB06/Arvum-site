@@ -79,8 +79,7 @@ export function CreateEntry() {
   const [saving, setSaving] = useState(false);
   const [erro, setErro] = useState('');
   const [sucesso, setSucesso] = useState('');
-  const [metasDisponiveis, setMetasDisponiveis] = useState([]);
-  const [goalId, setGoalId] = useState('');
+
 
   const tipoAtivoConfig = useMemo(
     () => TIPOS.find((tipo) => tipo.value === tipoSelecionado) || null,
@@ -89,24 +88,16 @@ export function CreateEntry() {
 
   const resetSelectionAndForm = () => {
     setItemVinculo(null);
-    setGoalId('');
     setFormData(INITIAL_FORM);
     setErro('');
   };
 
   const handleTipoChange = (novoTipo) => {
     setTipoSelecionado(novoTipo);
-    setGoalId('');
     resetSelectionAndForm();
   };
 
-  useEffect(() => {
-    if (!['divida', 'investimento'].includes(tipoSelecionado)) return;
-    let active = true;
-    cadastrate.getGoals().then((goals) => { if (active) setMetasDisponiveis(Array.isArray(goals) ? goals : []); })
-      .catch((error) => console.error('Erro ao carregar metas para vínculo:', error));
-    return () => { active = false; };
-  }, [tipoSelecionado]);
+
 
   useEffect(() => {
     if (!tipoSelecionado) {
@@ -197,7 +188,6 @@ export function CreateEntry() {
         extractDate: formData.data,
         balance: 0,
         externalId: formData.id ? parseInt(formData.id) : undefined,
-        ...(goalId && ['divida', 'investimento'].includes(tipoSelecionado) ? { goalId: parseInt(goalId) } : {}),
       };
 
       await expenses.createExpense(payload);
@@ -346,15 +336,7 @@ export function CreateEntry() {
                 </div>
               </div>
 
-              {['divida', 'investimento'].includes(tipoSelecionado) && (
-                <div className="crud-input-group">
-                  <label htmlFor="entry_goal">Vincular a uma meta (opcional):</label>
-                  <select id="entry_goal" value={goalId} onChange={(event) => setGoalId(event.target.value)} disabled={!itemVinculo}>
-                    <option value="">Sem vínculo com meta</option>
-                    {metasDisponiveis.map((meta) => <option key={meta.id} value={meta.id}>{meta.description} — {Number(meta.value || 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</option>)}
-                  </select>
-                </div>
-              )}
+
 
               <div className="crud-grid-2col">
                 <div className="crud-input-group">

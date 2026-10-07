@@ -521,3 +521,18 @@ Na página `create_entry.jsx`, lançamentos do tipo dívida ou investimento pode
 - Dívida ativa: `Id`, `Name`, `Value`, `InitialDate`, `ReceiveDate`, `Paid`; progresso: `Id`, `Name`, `Value`, `InitialDate`, `ReceiveDate`, `DebtPaid`.
 - Meta ativa: `Id`, `Description`, `Value`, `GoalDate`, `Progress`, `GoalPaid`.
 
+
+
+## Problemas Conhecidos Corrigidos
+
+### Mapeamento de Campos
+- **Rendas:** Backend retorna `description` mas frontend espera `name`. Solução: mapear ambos os campos no entityDashboard.jsx
+- **Dívidas:** Backend espera `Description`, `InitDate` e `EndDate`. Solução: mapeamento adicionado em cadastrate.js
+
+### Funcionalidades Alteradas
+- **Vínculo de Meta em Lançamentos:** Removida opção de vincular meta ao criar lançamento, conforme solicitado
+- **Ordenação de Extrato:** Itens agora ordenados por data DESC (mais recentes primeiro) com saldo acumulado progressivo
+
+### Melhorias de Exibição
+- **Saldo no Extrato:** Agora sempre visível ao lado de cada lançamento, calculado progressivamente
+

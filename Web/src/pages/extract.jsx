@@ -88,7 +88,27 @@ export function Extract() {
                 ? response.lancamentos
                 : [];
 
-            setItems(extractItems.map(normalizeExtractItem));
+            // Ordenar por data DESC (mais recentes primeiro)
+            const sortedItems = extractItems
+                .map(normalizeExtractItem)
+                .sort((a, b) => {
+                    const dateA = new Date(a.extractDate || a.date || 0);
+                    const dateB = new Date(b.extractDate || b.date || 0);
+                    return dateB - dateA; // DESC order
+                });
+
+            // Calcular saldo acumulado (começando do mais antigo)
+            let accumulatedBalance = 0;
+            const itemsWithBalance = sortedItems
+                .slice()
+                .reverse() // Temporariamente inverter para calcular do mais antigo
+                .map(item => {
+                    accumulatedBalance += Number(item.value || 0);
+                    return { ...item, balance: accumulatedBalance };
+                })
+                .reverse(); // Voltar para ordem DESC
+
+            setItems(itemsWithBalance);
             setHasMore(false);
             setPage(1);
         } catch (err) {
@@ -343,7 +363,7 @@ export function Extract() {
                                             <strong className={`extract-row-val ${isNegative ? 'val--negative' : 'val--positive'}`}>
                                                 {formatCurrency(item.value)}
                                             </strong>
-                                            {item.balance !== undefined && item.balance !== 0 && (
+                                            {item.balance !== undefined && (
                                                 <span className="extract-row-balance">
                                                     Saldo: {formatCurrency(item.balance)}
                                                 </span>
