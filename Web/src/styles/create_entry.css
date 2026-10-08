@@ -240,6 +240,87 @@
     font-weight: 600;
 }
 
+/* VÍNCULO COM META (aparece apenas para divida/investimento) */
+.meta-vinculo-group {
+    margin-bottom: 20px;
+}
+
+.meta-vinculo-group label {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text-color);
+    margin-bottom: 8px;
+    display: block;
+}
+
+.meta-selected-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background-color: rgba(212, 160, 23, 0.12);
+    color: var(--primary-color);
+    padding: 6px 12px;
+    border-radius: var(--radius-pill);
+    font-size: 13px;
+    font-weight: 700;
+    margin-bottom: 8px;
+}
+
+.dark-mode .meta-selected-badge {
+    background-color: rgba(226, 173, 36, 0.2);
+    color: var(--secondary-color);
+}
+
+.meta-remove-btn {
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    color: inherit;
+    opacity: 0.75;
+    transition: opacity 0.2s ease;
+}
+
+.meta-remove-btn:hover {
+    opacity: 1;
+}
+
+.meta-select-input {
+    width: 100%;
+    padding: 10px 40px 10px 14px;
+    border: 1.5px solid var(--border-color);
+    border-radius: var(--radius-md, 14px);
+    background-color: var(--input-bg, #ffffff);
+    color: var(--text-color);
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+}
+
+.meta-select-input:hover {
+    border-color: var(--secondary-color);
+}
+
+.meta-select-input:focus {
+    outline: none;
+    border-color: var(--secondary-color);
+    box-shadow: 0 0 0 3px rgba(212, 160, 23, 0.15);
+}
+
+.meta-select-input option {
+    background-color: var(--card-bg, #ffffff);
+    color: var(--text-color);
+}
+
+.meta-select-input:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
 .input-with-icon-right {
     position: relative;
     display: flex;

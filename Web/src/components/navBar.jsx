@@ -2,10 +2,21 @@ import { useEffect, useState } from "react";
 import logo from "../assets/arvum_logo.png";
 import "../styles/navBar.css";
 
-export function Navbar({ children }) {
-  const [darkMode, setDarkMode] = useState(false);
+function getInitialTheme() {
+  if (typeof localStorage === "undefined") return false;
+  const stored = localStorage.getItem("theme");
+  if (stored === "dark") return true;
+  if (stored === "light") return false;
+  // Nenhum padrão salvo: usa a preferência do sistema
+  if (typeof window !== "undefined" && window.matchMedia) {
+    return window.matchMedia("(prefers-color-scheme: dark)").matches;
+  }
+  return false;
+}
 
-  // aplica ou remove a classe no body
+export function Navbar({ children }) {
+  const [darkMode, setDarkMode] = useState(getInitialTheme);
+
   useEffect(() => {
     if (darkMode) {
       document.body.classList.add("dark-mode");
@@ -15,14 +26,6 @@ export function Navbar({ children }) {
       localStorage.setItem("theme", "light");
     }
   }, [darkMode]);
-
-  // carrega tema salvo ao iniciar
-  useEffect(() => {
-    const savedTheme = localStorage.getItem("theme");
-    if (savedTheme === "dark") {
-      setDarkMode(true);
-    }
-  }, []);
 
   return (
     <nav className="navbar">
@@ -38,7 +41,7 @@ export function Navbar({ children }) {
       <div className="nav-right">
         <button
           className="tema"
-          onClick={() => setDarkMode(!darkMode)}
+          onClick={() => setDarkMode((prev) => !prev)}
         >
           {darkMode ? "☀️" : "🌙"}
         </button>

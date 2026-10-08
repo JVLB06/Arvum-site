@@ -11,7 +11,9 @@ import {
   TrendingUp,
   Target,
   CircleDollarSign,
-  CheckCircle2
+  CheckCircle2,
+  Link2,
+  X
 } from 'lucide-react';
 import expenses from "../services/extract.js";
 import cadastrate from "../services/cadastrate.js";
@@ -71,22 +73,28 @@ function formatCurrencyInput(value) {
 
 export function CreateEntry() {
   const [tipoSelecionado, setTipoSelecionado] = useState('gasto');
-  const [itemVinculo, setItemVinculo] = useState(null);
+  const [itemVinculo, setItemVinculo] = useState(null);     // modelo da mesma categoria (pré-preenche os dados)
+  const [metaSelecionada, setMetaSelecionada] = useState(null); // meta vinculada ao lançamento (opcional)
   const [formData, setFormData] = useState(INITIAL_FORM);
   const [modelos, setModelos] = useState([]);
+  const [metas, setMetas] = useState([]);
   const [loadingModelos, setLoadingModelos] = useState(false);
   const [saving, setSaving] = useState(false);
   const [erro, setErro] = useState('');
   const [sucesso, setSucesso] = useState('');
-
 
   const tipoAtivoConfig = useMemo(
     () => TIPOS.find((tipo) => tipo.value === tipoSelecionado) || null,
     [tipoSelecionado]
   );
 
+  const podeVincularMeta = tipoSelecionado === 'investimento' || tipoSelecionado === 'divida';
+  const semVinculoModelo = !itemVinculo;
+  const habilitarCampos = semVinculoModelo ? podeVincularMeta : true;
+
   const resetSelectionAndForm = () => {
     setItemVinculo(null);
+    setMetaSelecionada(null);
     setFormData(INITIAL_FORM);
     setErro('');
   };
@@ -95,8 +103,6 @@ export function CreateEntry() {
     setTipoSelecionado(novoTipo);
     resetSelectionAndForm();
   };
-
-
 
   useEffect(() => {
     if (!tipoSelecionado) {
@@ -149,8 +155,40 @@ export function CreateEntry() {
     };
   }, [tipoSelecionado]);
 
+  useEffect(() => {
+    if (!podeVincularMeta) {
+      setMetas([]);
+      return;
+    }
+
+    let isMounted = true;
+
+    async function loadMetas() {
+      try {
+        const data = await cadastrate.getGoals();
+        if (isMounted) {
+          const list = Array.isArray(data) ? data : data?.items || [];
+          const normalized = list.map(item => MODEL_MAPPERS.meta(item));
+          setMetas(normalized.filter(m => m.id));
+        }
+      } catch {
+        console.error("Erro ao carregar metas:");
+        if (isMounted) {
+          setMetas([]);
+        }
+      }
+    }
+
+    loadMetas();
+
+    return () => {
+      isMounted = false;
+    };
+  }, [podeVincularMeta]);
+
   const handleSelectModelo = (modelo) => {
     setItemVinculo(modelo);
+    setMetaSelecionada(null);
     setFormData({
       id: modelo.id || '',
       valor: formatCurrencyInput(modelo.valor),
@@ -159,6 +197,18 @@ export function CreateEntry() {
     });
     setErro('');
     setSucesso('');
+  };
+
+  const handleMetaChange = (e) => {
+    const selectedId = e.target.value;
+    setMetaSelecionada(selectedId ? metas.find(m => m.id === Number(selectedId)) || null : null);
+    setErro('');
+  };
+
+  const clearMetaVinculo = (e) => {
+    e.stopPropagation();
+    setMetaSelecionada(null);
+    setErro('');
   };
 
   const handleInputChange = (event) => {
@@ -172,27 +222,37 @@ export function CreateEntry() {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    if (!itemVinculo || !tipoSelecionado) return;
+    if (!tipoSelecionado) return;
+
+    // Validação: lançamento do tipo divida/investimento pode vir com meta, mas nunca apenas com meta
+    if (podeVincularMeta && metaSelecionada && !itemVinculo && !formData.valor && !formData.descricao) {
+      setErro('Para lançar como dívida ou investimento, selecione um modelo da categoria ou preencha os dados manualmente. Um lançamento não pode ser criado somente vinculado a uma meta.');
+      return;
+    }
+
+    const payload = {
+      id: formData.id ? parseInt(formData.id) : undefined,
+      name: formData.descricao,
+      value: parseFloat(formData.valor),
+      kind: tipoSelecionado,
+      extractDate: formData.data,
+      balance: 0,
+      externalId: itemVinculo && formData.id ? parseInt(formData.id) : undefined,
+    };
+
+    if (metaSelecionada) {
+      payload.goalId = metaSelecionada.id;
+    }
 
     try {
       setSaving(true);
       setErro('');
       setSucesso('');
 
-      const payload = {
-        id: formData.id ? parseInt(formData.id) : undefined,
-        name: formData.descricao,
-        value: parseFloat(formData.valor),
-        kind: tipoSelecionado,
-        extractDate: formData.data,
-        balance: 0,
-        externalId: formData.id ? parseInt(formData.id) : undefined,
-      };
-
       await expenses.createExpense(payload);
       setSucesso('Lançamento registrado com sucesso no extrato!');
       resetSelectionAndForm();
-    } catch (error) {
+    } catch {
       setErro('Não foi possível salvar o lançamento.');
     } finally {
       setSaving(false);
@@ -235,7 +295,11 @@ export function CreateEntry() {
             <div className="models-header">
               <div>
                 <h3 className="models-title">Modelos Cadastrados</h3>
-                <p className="models-sub">Clique em um item para propagar ao formulário</p>
+                <p className="models-sub">
+                  {podeVincularMeta
+                    ? 'Clique em um item para propagar ao formulário (opcional)'
+                    : 'Clique em um item para propagar ao formulário'}
+                </p>
               </div>
               {tipoAtivoConfig && (
                 <span className="models-category-tag">{tipoAtivoConfig.label}</span>
@@ -302,6 +366,45 @@ export function CreateEntry() {
               )}
             </div>
 
+            {podeVincularMeta && (
+              <div className="crud-input-group meta-vinculo-group">
+                <label htmlFor="entry_meta">Vincular a uma meta (opcional)</label>
+                {metaSelecionada && (
+                  <div className="meta-selected-badge">
+                    <Target size={14} />
+                    <span>{metaSelecionada.nome}</span>
+                    <button
+                      type="button"
+                      onClick={clearMetaVinculo}
+                      className="meta-remove-btn"
+                      title="Remover vínculo"
+                      aria-label="Remover vínculo com meta"
+                    >
+                      <X size={14} />
+                    </button>
+                  </div>
+                )}
+                <div className="input-with-icon-right">
+                  <select
+                    id="entry_meta"
+                    name="meta"
+                    value={metaSelecionada?.id || ''}
+                    onChange={handleMetaChange}
+                    disabled={saving}
+                    className="meta-select-input"
+                  >
+                    <option value="">Selecione uma meta...</option>
+                    {metas.map((m) => (
+                      <option key={m.id} value={m.id}>
+                        {m.nome}
+                      </option>
+                    ))}
+                  </select>
+                  <Target size={18} className="icon-right" />
+                </div>
+              </div>
+            )}
+
             <form onSubmit={handleSubmit} className="crud-form">
               <div className="crud-grid-2col">
                 <div className="crud-input-group">
@@ -312,7 +415,7 @@ export function CreateEntry() {
                     value={formData.id}
                     readOnly
                     placeholder="Selecione um modelo"
-                    disabled
+                    disabled={!itemVinculo}
                   />
                 </div>
 
@@ -328,14 +431,12 @@ export function CreateEntry() {
                       value={formData.valor}
                       onChange={handleInputChange}
                       placeholder="0,00"
-                      disabled={!itemVinculo}
+                      disabled={!habilitarCampos}
                     />
                     <PiggyBank size={18} className="icon-right" />
                   </div>
                 </div>
               </div>
-
-
 
               <div className="crud-grid-2col">
                 <div className="crud-input-group">
@@ -348,7 +449,7 @@ export function CreateEntry() {
                       required
                       value={formData.data}
                       onChange={handleInputChange}
-                      disabled={!itemVinculo}
+                      disabled={!habilitarCampos}
                     />
                     <CalendarDays size={18} className="icon-right" />
                   </div>
@@ -364,7 +465,7 @@ export function CreateEntry() {
                     value={formData.descricao}
                     onChange={handleInputChange}
                     placeholder="Detalhes do lançamento"
-                    disabled={!itemVinculo}
+                    disabled={!habilitarCampos}
                   />
                 </div>
               </div>
@@ -374,7 +475,7 @@ export function CreateEntry() {
 
               <button
                 type="submit"
-                disabled={!itemVinculo || saving}
+                disabled={(semVinculoModelo && !podeVincularMeta) || !habilitarCampos || saving}
                 className="crud-submit-btn"
               >
                 <Save size={18} />

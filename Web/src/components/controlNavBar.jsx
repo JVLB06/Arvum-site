@@ -3,8 +3,20 @@ import { useNavigate, Link } from "react-router-dom";
 import logo from "../assets/arvum_logo.png";
 import "../styles/navBar.css";
 
+function getInitialTheme() {
+  if (typeof localStorage === "undefined") return false;
+  const stored = localStorage.getItem("theme");
+  if (stored === "dark") return true;
+  if (stored === "light") return false;
+  // Nenhum padrão salvo: usa a preferência do sistema
+  if (typeof window !== "undefined" && window.matchMedia) {
+    return window.matchMedia("(prefers-color-scheme: dark)").matches;
+  }
+  return false;
+}
+
 export function Navbar({ children, onBack }) {
-  const [darkMode, setDarkMode] = useState(false);
+  const [darkMode, setDarkMode] = useState(getInitialTheme);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -25,13 +37,6 @@ export function Navbar({ children, onBack }) {
     }
   }
 
-  useEffect(() => {
-    const savedTheme = localStorage.getItem("theme");
-    if (savedTheme === "dark") {
-      setDarkMode(true);
-    }
-  }, []);
-
   return (
     <nav className="navbar">
       <div className="logo" onClick={handleBack} title="Voltar ao Dashboard">
@@ -46,7 +51,7 @@ export function Navbar({ children, onBack }) {
       <div className="nav-right">
         <button
           className="tema"
-          onClick={() => setDarkMode(!darkMode)}
+          onClick={() => setDarkMode((prev) => !prev)}
           title={darkMode ? "Mudar para modo claro" : "Mudar para modo escuro"}
           aria-label="Alternar tema"
         >
