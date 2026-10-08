@@ -149,11 +149,13 @@ Gerencia CRUD de: Rendas, Investimentos, Dívidas, Metas, Gastos
 {
   id: number,
   description: string,
-  value: decimal,
-  interest: decimal,
+  value: decimal,          // valor aplicado (base)
+  interest: decimal,       // taxa de juros estimada (% ao ano) — enviada no cadastrar e atualizar
   initialDate: DateTime
 }
 ```
+
+**No front:** o gráfico de rosca mostra o valor aplicado (`value`); a listagem mostra o valor já recebido (`receivedValue`, quando disponível); a taxa de juros é exibida ao lado do nome de cada investimento e é salva tanto no cadastro quanto na edição.
 
 #### Investimento Concluído (FinishInvestment)
 ```javascript

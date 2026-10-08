@@ -94,7 +94,7 @@ export function CadastrateExpenses() {
                             </div>
 
                             <div className="crud-input-group">
-                                <label htmlFor="gasto_cad_data">Data de pagamento prevista:</label>
+                                <label htmlFor="gasto_cad_data">Quando vai pagar?</label>
                                 <input 
                                     id="gasto_cad_data" 
                                     type="date" 
@@ -136,7 +136,7 @@ export function CadastrateExpenses() {
                             </div>
 
                             <div className="crud-input-group">
-                                <label>Nível de prioridade:</label>
+                                <label>Prioridade:</label>
                                 <div className="priority-radio-grid">
                                     {[
                                         { val: 0, label: "Baixa" },

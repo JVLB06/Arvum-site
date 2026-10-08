@@ -103,7 +103,7 @@ export function Thinking() {
                         </div>
                         <div>
                             <h1 className="entity-main-title">Pensando & Sugestões</h1>
-                            <p className="entity-subtitle">Insights inteligentes e otimizações personalizadas para suas finanças</p>
+                            <p className="entity-subtitle">Dicas personalizadas para organizar suas finanças</p>
                         </div>
                     </div>
                 </div>
@@ -115,7 +115,7 @@ export function Thinking() {
                             <Sparkles size={20} className="thinker-sparkle" />
                             <h2 className="thinker-title">Pensador</h2>
                         </div>
-                        <p className="thinker-subtitle">Reflexões e orientações para sua disciplina financeira:</p>
+                        <p className="thinker-subtitle">Reflexões para te ajudar a organizar o dinheiro:</p>
 
                         <div className="thinker-quotes-list">
                             {loading ? (
@@ -147,7 +147,7 @@ export function Thinking() {
                             <div className="category-box-header">
                                 <div className="category-title-row">
                                     <TrendingDown size={20} className="icon-reduce" />
-                                    <h3 className="category-box-title">Oportunidades de Redução</h3>
+                                    <h3 className="category-box-title">Onde você pode economizar</h3>
                                 </div>
                                 <span className="category-count-badge">{reducoes.length} sugestões</span>
                             </div>
@@ -189,7 +189,7 @@ export function Thinking() {
                                                             onClick={() => bloquearItem(item.gastoId, false)}
                                                         >
                                                             <ShieldAlert size={15} />
-                                                            <span>Bloquear Sugestão</span>
+                                                            <span>Ignorar sugestão</span>
                                                         </button>
                                                     </div>
                                                 )}
@@ -205,7 +205,7 @@ export function Thinking() {
                             <div className="category-box-header">
                                 <div className="category-title-row">
                                     <XCircle size={20} className="icon-exclude" />
-                                    <h3 className="category-box-title">Sugestões de Extinção / Corte</h3>
+                                    <h3 className="category-box-title">O que pode ser cortado</h3>
                                 </div>
                                 <span className="category-count-badge">{exclusoes.length} sugestões</span>
                             </div>
@@ -247,7 +247,7 @@ export function Thinking() {
                                                             onClick={() => bloquearItem(item.gastoId, true)}
                                                         >
                                                             <ShieldAlert size={15} />
-                                                            <span>Bloquear Sugestão</span>
+                                                            <span>Ignorar sugestão</span>
                                                         </button>
                                                     </div>
                                                 )}

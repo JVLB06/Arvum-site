@@ -22,6 +22,7 @@ import {
 import "../styles/dashboard.css";
 
 export function Dashboard() {
+    const [dadosGrafico, setDadosGrafico] = useState(null); // totais dos gráficos
     const [dados, setDados] = useState({ content: "Carregando pensamento...", author: "" });
     const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
@@ -50,19 +51,15 @@ export function Dashboard() {
             const totalMetas = listaMetas.reduce((acc, item) => acc + Number(item.valor || item.value || item.vlr || 0), 0);
             const totalGastos = listaGastos.reduce((acc, item) => acc + Number(item.valor || item.minValue || item.vlr_min || 0), 0);
 
-            const totalRendaGasto = totalRenda + totalGastos;
-            const totalDividaInvest = totalDividas + totalInvest;
-
-            setDados((prev) => ({
-                ...prev,
+            setDadosGrafico({
                 totalRenda,
                 totalGastos,
                 totalDividas,
                 totalInvest,
                 totalMetas,
-                totalRendaGasto,
-                totalDividaInvest,
-            }));
+                totalRendaGasto: totalRenda + totalGastos,
+                totalDividaInvest: totalDividas + totalInvest,
+            });
         } catch (error) {
             console.error("Erro ao consolidar dados do dashboard:", error);
         } finally {
@@ -77,9 +74,16 @@ export function Dashboard() {
 
     useEffect(() => {
         carregarDadosDashboard();
+    }, []);
+
+    useEffect(() => {
         const buscarDados = async () => {
-            const resultado = await getTranslatedQuote();
-            setDados(resultado);
+            try {
+                const resultado = await getTranslatedQuote();
+                setDados(resultado);
+            } catch (err) {
+                console.error("Erro ao carregar frase do dia:", err);
+            }
         };
         buscarDados();
     }, []);
@@ -128,9 +132,9 @@ export function Dashboard() {
                         {loading ? (
                             <div className="dashboard-loading-card">
                                 <div className="spinner"></div>
-                                <p>Consolidando suas informações financeiras...</p>
+                                <p>Organizando seus dados...</p>
                             </div>
-                        ) : (
+                        ) : dadosGrafico ? (
                             <>
                                 {/* GRÁFICO 1: GASTOS vs RENDAS */}
                                 <section className="dashboard-chart-card">
@@ -148,8 +152,8 @@ export function Dashboard() {
                                     <div className="dashboard-chart-wrapper">
                                         <PieChart
                                             dataItems={[
-                                                { label: 'Renda', value: dados.totalRenda, color: '#0F3B2E' },
-                                                { label: 'Gasto', value: dados.totalGastos, color: '#B4641E' },
+                                                { label: 'Renda', value: dadosGrafico.totalRenda, color: '#0F3B2E' },
+                                                { label: 'Gasto', value: dadosGrafico.totalGastos, color: '#B4641E' },
                                             ]}
                                         />
                                     </div>
@@ -171,13 +175,17 @@ export function Dashboard() {
                                     <div className="dashboard-chart-wrapper">
                                         <PieChart
                                             dataItems={[
-                                                { label: 'Dívida', value: dados.totalDividas, color: '#912824' },
-                                                { label: 'Investimento', value: dados.totalInvest, color: '#084C61' },
+                                                { label: 'Dívida', value: dadosGrafico.totalDividas, color: '#912824' },
+                                                { label: 'Investimento', value: dadosGrafico.totalInvest, color: '#084C61' },
                                             ]}
                                         />
                                     </div>
                                 </section>
                             </>
+                        ) : (
+                            <div className="dashboard-loading-card">
+                                <p>Nenhum dado disponível no momento.</p>
+                            </div>
                         )}
 
                         {/* Anúncio AdSense Integrado */}

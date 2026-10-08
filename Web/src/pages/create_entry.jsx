@@ -226,7 +226,7 @@ export function CreateEntry() {
 
     // Validação: lançamento do tipo divida/investimento pode vir com meta, mas nunca apenas com meta
     if (podeVincularMeta && metaSelecionada && !itemVinculo && !formData.valor && !formData.descricao) {
-      setErro('Para lançar como dívida ou investimento, selecione um modelo da categoria ou preencha os dados manualmente. Um lançamento não pode ser criado somente vinculado a uma meta.');
+      setErro('Escolha uma categoria e um modelo (ou preencha os dados abaixo). Dívida ou investimento podem vir com uma meta, mas não só com uma meta.');
       return;
     }
 
@@ -310,11 +310,11 @@ export function CreateEntry() {
               {loadingModelos ? (
                 <div className="models-loading-state">
                   <div className="spinner"></div>
-                  <p>Buscando modelos de {tipoAtivoConfig?.label}...</p>
+                  <p>Buscando opções de {tipoAtivoConfig?.label}...</p>
                 </div>
               ) : modelos.length === 0 ? (
                 <div className="models-empty-state">
-                  <p>Nenhum registro encontrado nesta categoria.</p>
+                  <p>Nenhuma opção encontrada nesta categoria.</p>
                 </div>
               ) : (
                 modelos.map((modelo) => {
@@ -332,8 +332,8 @@ export function CreateEntry() {
                       </div>
                       <div className="model-item-meta">
                         <span className="model-item-meta-label">
-                          <BadgeDollarSign size={15} />
-                          Valor base
+                        <BadgeDollarSign size={15} />
+                        Valor do registro
                         </span>
                         <strong className="model-item-val">
                           {Number(modelo.valor || 0).toLocaleString('pt-BR', {
@@ -354,7 +354,7 @@ export function CreateEntry() {
             <div className="entry-form-header">
               <div>
                 <h3 className="entry-form-title">O que aconteceu nesse dia?</h3>
-                <p className="entry-form-sub">Confirme ou altere os valores para incluir na movimentação</p>
+                <p className="entry-form-sub">Confirme ou mude os dados para incluir o lançamento</p>
               </div>
 
               {itemVinculo ? (
@@ -408,7 +408,7 @@ export function CreateEntry() {
             <form onSubmit={handleSubmit} className="crud-form">
               <div className="crud-grid-2col">
                 <div className="crud-input-group">
-                  <label htmlFor="entry_id">ID do vínculo</label>
+                  <label htmlFor="entry_id">Código do registro</label>
                   <input
                     id="entry_id"
                     name="id"
@@ -440,7 +440,7 @@ export function CreateEntry() {
 
               <div className="crud-grid-2col">
                 <div className="crud-input-group">
-                  <label htmlFor="entry_data">Data da ocorrência:</label>
+                  <label htmlFor="entry_data">Data do lançamento:</label>
                   <div className="input-with-icon-right">
                     <input
                       id="entry_data"
@@ -456,7 +456,7 @@ export function CreateEntry() {
                 </div>
 
                 <div className="crud-input-group">
-                  <label htmlFor="entry_descricao">Descrição / Histórico:</label>
+                  <label htmlFor="entry_descricao">Descrição:</label>
                   <input
                     id="entry_descricao"
                     name="descricao"

@@ -330,7 +330,7 @@ export function Extract() {
                         </div>
                     ) : items.length === 0 ? (
                         <div className="extract-empty-state">
-                            <p>Nenhum lançamento encontrado para o período informado.</p>
+                            <p>Nenhum lançamento encontrado aqui.</p>
                             <Link to="/novo_lcto" className="extract-empty-action">
                                 + Incluir novo lançamento
                             </Link>

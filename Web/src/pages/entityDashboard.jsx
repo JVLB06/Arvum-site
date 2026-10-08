@@ -29,11 +29,11 @@ const monthSeries = (records, dateField, valueField) => {
   return rows;
 };
 const configs = {
-  renda: { title: 'Rendas & Entradas', subtitle: 'Acompanhe e gerencie suas fontes de receita', noun: 'renda', plural: 'rendas', singular: 'Renda', icon: Wallet, listTitle: 'Rendas ativas', getList: () => cadastrate.getRenda(), getView: () => cadastrate.getRendaView(), name: x => x.description || x.name || 'Renda sem nome', value: x => x.maxValue ?? x.minValue ?? 0, date: 'paymentDate', chartDate: 'paymentDate', chartValue: 'maxValue', monthlyTitle: 'Entradas registradas por mês', empty: 'Nenhuma renda cadastrada.' },
-  gasto: { title: 'Gastos & Despesas', subtitle: 'Acompanhe seus compromissos financeiros', noun: 'gasto', plural: 'gastos', singular: 'Gasto', icon: CreditCard, listTitle: 'Gastos ativos', getList: () => cadastrate.getExpenses(), getView: () => cadastrate.getExpensesView(), name: x => x.description || 'Gasto sem descrição', value: x => x.maxValue ?? x.minValue ?? 0, date: 'dueDate', chartDate: 'month', chartValue: 'totalExpenses', monthlyTitle: 'Despesas e limite mensal', empty: 'Nenhum gasto cadastrado.' },
-  investimento: { title: 'Investimentos', subtitle: 'Visualize seus investimentos ativos e valores estimados', noun: 'investimento', plural: 'investimentos', singular: 'Investimento', icon: TrendingUp, listTitle: 'Investimentos ativos', getList: () => cadastrate.getActiveInvestments(), getView: () => cadastrate.getActiveInvestmentsView(), name: x => x.name || x.description || 'Investimento sem nome', value: x => x.receivedValue ?? x.value ?? 0, date: 'initialDate', chartDate: 'initialDate', chartValue: 'receivedValue', monthlyTitle: 'Valor estimado por mês de início', empty: 'Nenhum investimento ativo.' },
-  divida: { title: 'Dívidas', subtitle: 'Acompanhe valores em aberto e pagamentos', noun: 'divida', plural: 'dívidas', singular: 'Dívida', icon: CircleDollarSign, listTitle: 'Dívidas ativas', getList: () => cadastrate.getDebts(), getView: () => cadastrate.getDebtsView(), name: x => x.name || x.description || 'Dívida sem nome', value: x => x.value ?? 0, date: 'initialDate', chartDate: 'initialDate', chartValue: 'value', monthlyTitle: 'Valor das dívidas e total pago por mês de início', empty: 'Nenhuma dívida ativa.' },
-  meta: { title: 'Metas & Conquistas', subtitle: 'Acompanhe o progresso dos seus objetivos financeiros', noun: 'meta', plural: 'metas', singular: 'Meta', icon: Target, listTitle: 'Metas ativas', getList: () => cadastrate.getGoals(), getView: () => cadastrate.getGoalsView(), name: x => x.description || 'Meta sem descrição', value: x => x.value ?? 0, date: 'goalDate', chartDate: 'goalDate', chartValue: 'value', monthlyTitle: 'Valor das metas por mês de vencimento', empty: 'Nenhuma meta ativa.' },
+  renda: { title: 'Rendas & Entradas', subtitle: 'Acompanhe e gerencie seu dinheiro que entra', noun: 'renda', plural: 'rendas', singular: 'Renda', icon: Wallet, listTitle: 'Rendas ativas', getList: () => cadastrate.getRenda(), getView: () => cadastrate.getRendaView(), name: x => x.description || x.name || 'Renda sem nome', value: x => x.maxValue ?? x.minValue ?? 0, date: 'paymentDate', chartDate: 'paymentDate', chartValue: 'maxValue', monthlyTitle: 'Entradas por mês', empty: 'Nenhuma renda cadastrada.' },
+  gasto: { title: 'Gastos & Despesas', subtitle: 'Organize e controle seus gastos do dia a dia', noun: 'gasto', plural: 'gastos', singular: 'Gasto', icon: CreditCard, listTitle: 'Gastos ativos', getList: () => cadastrate.getExpenses(), getView: () => cadastrate.getExpensesView(), name: x => x.description || 'Gasto sem descrição', value: x => x.maxValue ?? x.minValue ?? 0, date: 'dueDate', chartDate: 'month', chartValue: 'totalExpenses', monthlyTitle: 'Despesas por mês', empty: 'Nenhum gasto cadastrado.' },
+  investimento: { title: 'Investimentos', subtitle: 'Veja o valor aplicado e o que já recebeu dos seus investimentos', noun: 'investimento', plural: 'investimentos', singular: 'Investimento', icon: TrendingUp, listTitle: 'Investimentos ativos', getList: () => cadastrate.getActiveInvestments(), getView: () => cadastrate.getActiveInvestmentsView(), name: x => x.name || x.description || 'Investimento sem nome', value: x => x.value ?? 0, listValue: x => x.receivedValue ?? x.value ?? 0, date: 'initialDate', chartDate: 'initialDate', chartValue: 'value', monthlyTitle: 'Valor aplicado por mês de início', empty: 'Nenhum investimento ativo.' },
+  divida: { title: 'Dívidas', subtitle: 'Acompanhe suas dívidas e o que já pagou', noun: 'divida', plural: 'dívidas', singular: 'Dívida', icon: CircleDollarSign, listTitle: 'Dívidas ativas', getList: () => cadastrate.getDebts(), getView: () => cadastrate.getDebtsView(), name: x => x.name || x.description || 'Dívida sem nome', value: x => x.value ?? 0, date: 'initialDate', chartDate: 'initialDate', chartValue: 'value', monthlyTitle: 'Dívidas e pagamentos por mês', empty: 'Nenhuma dívida ativa.' },
+  meta: { title: 'Metas & Conquistas', subtitle: 'Acompanhe o progresso dos seus objetivos', noun: 'meta', plural: 'metas', singular: 'Meta', icon: Target, listTitle: 'Metas ativas', getList: () => cadastrate.getGoals(), getView: () => cadastrate.getGoalsView(), name: x => x.description || 'Meta sem descrição', value: x => x.value ?? 0, date: 'goalDate', chartDate: 'goalDate', chartValue: 'value', monthlyTitle: 'Valor das metas por mês', empty: 'Nenhuma meta ativa.' },
 };
 
 export default function EntityDashboard({ type }) {
@@ -55,10 +55,10 @@ export default function EntityDashboard({ type }) {
     return () => { alive = false; };
   }, [type]);
 
-  const list = records.map((item, index) => ({ ...item, _name: config.name(item), _value: Number(config.value(item) || 0), _id: item.id ?? item.receiptId ?? index }));
+  const list = records.map((item, index) => ({ ...item, _name: config.name(item), _value: Number(config.value(item) || 0), _listValue: Number(config.listValue ? config.listValue(item) : config.value(item) || 0), _id: item.id ?? item.receiptId ?? index }));
   const pieData = list.map((item, index) => ({ label: item._name, value: item._value, color: COLORS[index % COLORS.length] }));
   const visibleList = list;
-  const total = visibleList.reduce((sum, item) => sum + (type === 'meta' ? Number(item.goalPaid ?? item._value) : item._value), 0);
+  const total = visibleList.reduce((sum, item) => sum + (type === 'meta' ? Number(item.goalPaid ?? item._value) : item._listValue), 0);
 
   let monthly;
   let chartSeries = [];
@@ -66,7 +66,7 @@ export default function EntityDashboard({ type }) {
     const rows = monthSeries(view, 'month', 'totalExpenses');
     const byKey = new Map(view.map(item => [dateKey(item.month), item]));
     monthly = rows.map(row => ({ ...row, value: Number(byKey.get(row.key)?.totalExpenses || 0), limit: Number(byKey.get(row.key)?.expensesLimit || 0), income: Number(byKey.get(row.key)?.totalIncomes || 0) }));
-    chartSeries = [{ key: 'value', label: 'Despesas', type: 'bar', color: '#0F3B2E' }, { key: 'limit', label: 'Limite informado pela API', type: 'line', color: '#D4A017' }, { key: 'income', label: 'Rendas', type: 'line', color: '#084C61' }];
+    chartSeries = [{ key: 'value', label: 'Despesas', type: 'bar', color: '#0F3B2E' }, { key: 'limit', label: 'Limite mensal', type: 'line', color: '#D4A017' }, { key: 'income', label: 'Rendas', type: 'line', color: '#084C61' }];
   } else if (type === 'renda') {
     monthly = monthSeries(view, 'paymentDate', 'maxValue');
   } else if (type === 'investimento') {
@@ -77,7 +77,7 @@ export default function EntityDashboard({ type }) {
     monthly = monthSeries(rows, 'initialDate', 'value');
     const paidRows = monthSeries(rows, 'initialDate', 'debtPaid');
     monthly = monthly.map((row, i) => ({ ...row, paid: paidRows[i].value }));
-    chartSeries = [{ key: 'value', label: 'Valor original das dívidas', type: 'bar', color: '#0F3B2E' }, { key: 'paid', label: 'Total pago (agrupado pelo início)', type: 'line', color: '#D4A017' }];
+    chartSeries = [{ key: 'value', label: 'Valor das dívidas', type: 'bar', color: '#0F3B2E' }, { key: 'paid', label: 'Total pago por mês', type: 'line', color: '#D4A017' }];
   } else {
     monthly = monthSeries(records, 'goalDate', 'value');
   }
@@ -94,8 +94,8 @@ export default function EntityDashboard({ type }) {
           <div className="card-header-bar"><h2 className="card-section-title">{config.listTitle}</h2><span className="card-badge-total">{currency(total)}</span></div>
           <div className="entity-items-list">
             {loading ? <p className="loading-text">Carregando {config.plural}...</p> : visibleList.length ? visibleList.map(item => <div className="entity-data-row" key={item._id}>
-              <div className="entity-data-info"><span className="entity-row-dot"></span><span className="entity-data-label">{item._name}{type === 'meta' ? ` · ${Math.max(0, Math.min(100, Number(item.progress || 0)))}%` : ''}</span></div>
-              <strong className="entity-data-value">{currency(type === 'meta' ? item.goalPaid ?? item._value : item._value)}</strong>
+              <div className="entity-data-info"><span className="entity-row-dot"></span><span className="entity-data-label">{item._name}{type === 'meta' ? ` · ${Math.max(0, Math.min(100, Number(item.progress || 0)))}%` : ''}{type === 'investimento' && Number(item.interest || 0) ? ` · Juros: ${Number(item.interest)}%` : ''}</span></div>
+              <strong className="entity-data-value">{currency(type === 'meta' ? item.goalPaid ?? item._value : item._listValue)}</strong>
             </div>) : <div className="empty-state-box"><p>{config.empty}</p><Link to={`/cadastrar_${config.noun}`} className="empty-action-link">+ Cadastrar {config.singular.toLowerCase()}</Link></div>}
           </div>
         </section>
@@ -103,8 +103,8 @@ export default function EntityDashboard({ type }) {
       </div>
       {type === 'meta' && list.length > 0 && <section className="entity-card goals-progress-section"><div className="card-header-bar"><h2 className="card-section-title">Progresso das metas ativas</h2></div><div className="goals-progress-list">{list.map(item => { const progress = Math.max(0, Math.min(100, Number(item.progress || 0))); return <div className="goal-progress-row" key={item._id}><span className="goal-progress-name">{item._name}</span><div className="goal-progress-bar-container"><div className="goal-progress-bar-fill" style={{ width: `${progress}%` }} /></div><span className="goal-progress-percent">{progress}%</span></div>; })}</div></section>}
       <section className="entity-column-card">
-        {type === 'investimento' && <p className="entity-subtitle">Estimativa calculada pelo backend (ReceivedValue), agrupada pelo mês de início do investimento. Não representa um histórico mensal de saldo.</p>}
-        {type === 'divida' && <p className="entity-subtitle">Valores agrupados pelo mês de início da dívida; o total pago vem do endpoint de progresso.</p>}
+        {type === 'investimento' && <p className="entity-subtitle">Valores agrupados por mês de início do investimento. Não é um histórico de saldo.</p>}
+        {type === 'divida' && <p className="entity-subtitle">Valores agrupados por mês de início; o total pago vem dos seus pagamentos.</p>}
         <ColumnChart dataItems={monthly} title={config.monthlyTitle} legendLabel="Valor mensal" series={chartSeries} />
       </section>
       <AdBanner slot={`${type}-footer-slot`} format="horizontal" />

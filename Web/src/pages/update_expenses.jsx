@@ -317,7 +317,7 @@ export function UpdateExpenses() {
                             </div>
 
                             <div className="crud-input-group">
-                                <label>Nível de prioridade:</label>
+                                <label>Prioridade:</label>
                                 <div className="priority-radio-grid">
                                     {[
                                         { val: 0, label: "Baixa" },
