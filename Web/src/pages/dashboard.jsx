@@ -1,28 +1,28 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import expenses from "../services/extract.js";
-import PieChart from "../components/pieGraph.jsx"; 
+import PieChart from "../components/pieGraph.jsx";
 import { getTranslatedQuote } from '../services/phrase.js';
 import accounts from "../services/auth.js";
 import { Navbar } from "../components/navBar.jsx";
 import { AdBanner } from "../components/adBanner.jsx";
-import { 
-  PlusCircle, 
-  FileText, 
-  Wallet, 
-  CreditCard, 
-  TrendingUp, 
-  Target, 
-  Sparkles, 
+import {
+  PlusCircle,
+  FileText,
+  Wallet,
+  CreditCard,
+  TrendingUp,
+  Target,
+  Sparkles,
   LogOut,
   UserCheck,
-  CircleDollarSign
+  CircleDollarSign,
+  PiggyBank
 } from "lucide-react";
 import "../styles/dashboard.css";
 
 export function Dashboard() {
     const [dados, setDados] = useState({ content: "Carregando pensamento...", author: "" });
-    const [dadosGrafico, setDadosGrafico] = useState([]);
     const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
 
@@ -50,15 +50,19 @@ export function Dashboard() {
             const totalMetas = listaMetas.reduce((acc, item) => acc + Number(item.valor || item.value || item.vlr || 0), 0);
             const totalGastos = listaGastos.reduce((acc, item) => acc + Number(item.valor || item.minValue || item.vlr_min || 0), 0);
 
-            const formatadoParaGrafico = [
-                { label: 'Renda', value: totalRenda, color: '#0F3B2E' },
-                { label: 'Investimento', value: totalInvest, color: '#084C61' },
-                { label: 'Dívida', value: totalDividas, color: '#912824' },
-                { label: 'Metas', value: totalMetas, color: '#D4A017' },
-                { label: 'Gasto', value: totalGastos, color: '#B4641E' },
-            ];
+            const totalRendaGasto = totalRenda + totalGastos;
+            const totalDividaInvest = totalDividas + totalInvest;
 
-            setDadosGrafico(formatadoParaGrafico);
+            setDados((prev) => ({
+                ...prev,
+                totalRenda,
+                totalGastos,
+                totalDividas,
+                totalInvest,
+                totalMetas,
+                totalRendaGasto,
+                totalDividaInvest,
+            }));
         } catch (error) {
             console.error("Erro ao consolidar dados do dashboard:", error);
         } finally {
@@ -109,7 +113,7 @@ export function Dashboard() {
                 </Link>
                 <Link to="/pensando" className="head_button">
                     <UserCheck size={16} />
-                    <span>Pensando</span>      
+                    <span>Pensando</span>
                 </Link>
                 <button className="head_button head_button--danger" onClick={signOut}>
                     <LogOut size={16} />
@@ -119,20 +123,61 @@ export function Dashboard() {
 
             <main className="dashboard-content">
                 <div className="dashboard-grid">
-                    {/* COLUNA ESQUERDA: Gráfico Geral */}
-                    <section className="dashboard-chart-section">
-                        <div className="dashboard-section-header">
-                            <h2 className="dashboard-section-title">Um pensamento pro dia</h2>
-                            <p className="dashboard-section-subtitle">Visão consolidada de todas as suas categorias financeiras</p>
-                        </div>
-
+                    {/* COLUNA ESQUERDA: Gráficos */}
+                    <section className="dashboard-charts-section">
                         {loading ? (
                             <div className="dashboard-loading-card">
                                 <div className="spinner"></div>
                                 <p>Consolidando suas informações financeiras...</p>
                             </div>
                         ) : (
-                            <PieChart dataItems={dadosGrafico} />
+                            <>
+                                {/* GRÁFICO 1: GASTOS vs RENDAS */}
+                                <section className="dashboard-chart-card">
+                                    <div className="dashboard-section-header">
+                                        <h2 className="dashboard-section-title">
+                                            <span className="chart-icon-gasto">
+                                                <CreditCard size={18} />
+                                            </span>
+                                            Gastos e Rendas
+                                        </h2>
+                                        <p className="dashboard-section-subtitle">
+                                            Comparação entre o que entra e o que sai
+                                        </p>
+                                    </div>
+                                    <div className="dashboard-chart-wrapper">
+                                        <PieChart
+                                            dataItems={[
+                                                { label: 'Renda', value: dados.totalRenda, color: '#0F3B2E' },
+                                                { label: 'Gasto', value: dados.totalGastos, color: '#B4641E' },
+                                            ]}
+                                        />
+                                    </div>
+                                </section>
+
+                                {/* GRÁFICO 2: DÍVIDAS vs INVESTIMENTOS */}
+                                <section className="dashboard-chart-card">
+                                    <div className="dashboard-section-header">
+                                        <h2 className="dashboard-section-title">
+                                            <span className="chart-icon-invest">
+                                                <PiggyBank size={18} />
+                                            </span>
+                                            Dívidas e Investimentos
+                                        </h2>
+                                        <p className="dashboard-section-subtitle">
+                                            Visão comparativa do seu passivo e do seu patrimônio
+                                        </p>
+                                    </div>
+                                    <div className="dashboard-chart-wrapper">
+                                        <PieChart
+                                            dataItems={[
+                                                { label: 'Dívida', value: dados.totalDividas, color: '#912824' },
+                                                { label: 'Investimento', value: dados.totalInvest, color: '#084C61' },
+                                            ]}
+                                        />
+                                    </div>
+                                </section>
+                            </>
                         )}
 
                         {/* Anúncio AdSense Integrado */}
@@ -149,17 +194,17 @@ export function Dashboard() {
                                 <PlusCircle size={20} />
                                 <span>Incluir nova renda</span>
                             </Link>
-                            
+
                             <Link to="/cadastrar_gasto" className="quick-action-btn">
                                 <PlusCircle size={20} />
                                 <span>Incluir novo gasto</span>
                             </Link>
-                            
+
                             <Link to="/cadastrar_investimento" className="quick-action-btn">
                                 <PlusCircle size={20} />
                                 <span>Incluir novo investimento</span>
                             </Link>
-                            
+
                             <Link to="/cadastrar_meta" className="quick-action-btn">
                                 <PlusCircle size={20} />
                                 <span>Incluir nova meta</span>
@@ -169,7 +214,7 @@ export function Dashboard() {
                                 <PlusCircle size={20} />
                                 <span>Incluir nova dívida</span>
                             </Link>
-                            
+
                             <Link to="/novo_lcto" className="quick-action-btn quick-action-btn--highlight">
                                 <PlusCircle size={20} />
                                 <span>Incluir novo lançamento</span>

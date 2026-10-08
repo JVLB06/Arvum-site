@@ -4,6 +4,8 @@
 
 Frontend desenvolvido em React (Vite) que consome a API REST do backend ERP Pessoal hospedado em um servidor Linux. A aplicação gerencia finanças pessoais com funcionalidades de CRUD para rendas, gastos, investimentos, dívidas, metas e lançamentos de extrato.
 
+A tela inicial do usuário logado (**/logged**, `Dashboard`) apresenta dois gráficos de rosca: um comparando **Gastos vs Rendas** e outro comparando **Dívidas vs Investimentos**, substituindo o anterior gráfico único consolidado.
+
 ## Arquitetura
 
 ### Estrutura de Diretórios
@@ -45,6 +47,9 @@ Web/
 ```
 
 **Mudanças recentes:** Confirmadas funcionalidades, endpoint de login está alinhado com backend.
+
+#### **Tema Escuro**
+O tema é persistido no `localStorage` com a chave `theme` (valores `"dark"` / `"light"`). Ao montar a navegação, o tema inicial é lido do armazenamento; caso não exista padrão salvo, é usada a preferência do sistema (`prefers-color-scheme`). A classe `dark-mode` é aplicada ao `<body>` imediatamente, evitando ressecamento (flash) ao trocar de tela — a configuração é mantida entre navegações e recargas da página.
 
 #### **cadastrate.js** - Operações de Cadastro
 Gerencia CRUD de: Rendas, Investimentos, Dívidas, Metas, Gastos
@@ -113,6 +118,7 @@ Gerencia CRUD de: Rendas, Investimentos, Dívidas, Metas, Gastos
 **Mudanças principais:**
 - `deleteExpense()`: Campo `tipo` renomeado para `kind` para corresponder a `ExtractDeleteModel`
 - `createExpense()` e `updateExpense()`: Agora enviam campo `balance` (requerido pela API)
+- `createExpense()`: Lançamentos do tipo `divida` ou `investimento` aceitam um campo opcional `goalId` para vincular a uma meta existente. Um lançamento não pode ser criado com apenas a meta vinculada (a meta é um vínculo, nunca o tipo do lançamento).
 
 #### **thinking.js** - Preferências e Indicadores
 ```javascript
