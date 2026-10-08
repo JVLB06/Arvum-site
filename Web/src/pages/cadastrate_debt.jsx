@@ -98,7 +98,7 @@ export function CadastrateDebt() {
                                 </div>
 
                                 <div className="crud-input-group">
-                                    <label htmlFor="divida_cad_data_fim">Data fim prevista:</label>
+                                    <label htmlFor="divida_cad_data_fim">Quando prevê pagar?</label>
                                     <input 
                                         id="divida_cad_data_fim" 
                                         type="date" 

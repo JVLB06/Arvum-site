@@ -259,7 +259,7 @@ export function UpdateGoal() {
                             </div>
 
                             <div className="crud-input-group">
-                                <label htmlFor="meta_edit_data">Data prevista:</label>
+                                <label htmlFor="meta_edit_data">Quando quer alcançar?</label>
                                 <input
                                     id="meta_edit_data"
                                     name="goalDate"
@@ -272,7 +272,7 @@ export function UpdateGoal() {
                             </div>
 
                             <div className="crud-input-group">
-                                <label htmlFor="meta_edit_vlr">Valor desejado:</label>
+                                <label htmlFor="meta_edit_vlr">Quanto você quer juntar?</label>
                                 <input
                                     id="meta_edit_vlr"
                                     name="value"

@@ -272,7 +272,7 @@ export function UpdateDebt() {
                                 </div>
 
                                 <div className="crud-input-group">
-                                    <label htmlFor="divida_edit_data_fim">Data fim prevista:</label>
+                                    <label htmlFor="divida_edit_data_fim">Quando prevê pagar?</label>
                                     <input
                                         id="divida_edit_data_fim"
                                         name="receiveDate"
@@ -286,7 +286,7 @@ export function UpdateDebt() {
                             </div>
 
                             <div className="crud-input-group">
-                                <label htmlFor="divida_edit_vlr">Valor total dívida:</label>
+                            <label htmlFor="divida_edit_vlr">Valor total:</label>
                                 <input
                                     id="divida_edit_vlr"
                                     name="value"
