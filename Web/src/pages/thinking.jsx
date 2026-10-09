@@ -20,6 +20,7 @@ export function Thinking() {
     const [pensamentos, setPensamentos] = useState([]);
     const [reducoes, setReducoes] = useState([]);
     const [exclusoes, setExclusoes] = useState([]);
+    const [comparativo, setComparativo] = useState(null);
     const [menuAberto, setMenuAberto] = useState(null);
 
     const getPensamentos = (data) => {
@@ -49,7 +50,13 @@ export function Thinking() {
             setExclusoes([]);
         }
     };
-
+    const getComparativo = (data) => {
+        if (data?.comparativo) {
+            setComparativo(data.comparativo);
+        } else {
+            setComparativo(null);
+        }
+    };
     const bloquearItem = async (gastoId, excluir) => {
         try {
             await think.createPreferences({
@@ -74,6 +81,7 @@ export function Thinking() {
             getPensamentos(data);
             getReducoes(data);
             getExclusoes(data);
+            getComparativo(data);
         } catch (error) {
             console.error("Erro ao obter indicadores:", error);
             getPensamentos({});
@@ -108,7 +116,35 @@ export function Thinking() {
                     </div>
                 </div>
 
-                <div className="thinking-split-grid">
+                <div className="thinking-split-grid">                    {/* COLUNA SUPERIOR: COMPARATIVO GASTOS x RENDA (novo) */}
+                    <section className="thinking-comparative-card">
+                        <div className="comparative-card-header">
+                            <div className="comparative-card-icon"><TrendingDown size={20} className="icon-reduce" /></div>
+                            <div className="comparative-card-title-group">
+                                <h2 className="comparative-title">Gastos x Renda</h2>
+                                <p className="comparative-subtitle">Saiba se você realmente precisa reduzir antes de cortar qualquer coisa</p>
+                            </div>
+                        </div>
+                        {loading || !comparativo ? (
+                            <div className="comparative-loading"><div className="spinner"></div><p>Calculando comparativo...</p></div>
+                        ) : (
+                            <div className="comparative-content">
+                                <div className="comparative-row">
+                                    <div className="comparative-stat-card"><span className="stat-label">Renda total</span><span className="stat-value stat-green">{comparativo.renda.toLocaleString('pt-BR',{style:'currency',currency:'BRL'})}</span></div>
+                                    <div className="comparative-stat-card"><span className="stat-label">Gastos totais</span><span className={'stat-value ' + (comparativo.saldoPositivo < 0 ? 'stat-red' : 'stat-orange')}>{comparativo.gastos.toLocaleString('pt-BR',{style:'currency',currency:'BRL'})}</span></div>
+                                    <div className="comparative-stat-card"><span className="stat-label">Saldo</span><span className={'stat-value ' + (comparativo.saldoPositivo >= 0 ? 'stat-green' : 'stat-red')}>{comparativo.saldoPositivo.toLocaleString('pt-BR',{style:'currency',currency:'BRL'})}</span></div>
+                                </div>
+                                <div className="comparative-row">
+                                    <div className="comparative-stat-card"><span className="stat-label">Gastos fixos</span><span className="stat-value">{comparativo.gastosFixos.toLocaleString('pt-BR',{style:'currency',currency:'BRL'})}</span></div>
+                                    <div className="comparative-stat-card"><span className="stat-label">Gastos variáveis</span><span className="stat-value">{comparativo.gastosVariaveis.toLocaleString('pt-BR',{style:'currency',currency:'BRL'})}</span></div>
+                                    <div className="comparative-stat-card"><span className="stat-label">Gastos / renda</span><span className={'stat-value ' + (comparativo.razaoGastosRenda >= 70 ? 'stat-orange' : 'stat-green')}>{comparativo.razaoGastosRenda}%</span></div>
+                                </div>
+                                <p className={'comparative-message comparative-message--' + (comparativo.mensagem.includes('Atenção') ? 'warning' : comparativo.mensagem.includes('Excelente') ? 'success' : 'info')}>
+                                    {comparativo.mensagem}
+                                </p>
+                            </div>
+                        )}
+                    </section>
                     {/* COLUNA ESQUERDA: PENSADOR (VisualIdentity Page 14) */}
                     <aside className="thinking-thinker-card">
                         <div className="thinker-header">
