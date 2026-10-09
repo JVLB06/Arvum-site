@@ -131,6 +131,7 @@ Gerencia CRUD de: Rendas, Investimentos, Dívidas, Metas, Gastos
 
 **Mudanças:** Sem alterações necessárias, endpoints estão alinhados.
 
+**Nova estrutura de retorno (`/thinking/indicadores`):** A API agora retorna um objeto contendo `pensamentos` (array de strings), `reducoes` e `exclusoes` (cada item com `gastoId`, `nome`, `valorAtual`, `valorSugerido`) e `comparativo` (com `renda`, `gastos`, `gastosFixos`, `gastosVariaveis`, `saldoPositivo`, `razaoGastosRenda` e uma `mensagem` contextualizada). O frontend consome esses campos diretamente para exibir o card comparativo de gastos x renda e as sugestões personalizadas.
 ### Estrutura de Dados (DTOs)
 
 #### Renda (Receipt)
@@ -543,4 +544,15 @@ Na página `create_entry.jsx`, lançamentos do tipo dívida ou investimento pode
 
 ### Melhorias de Exibição
 - **Saldo no Extrato:** Agora sempre visível ao lado de cada lançamento, calculado progressivamente
+
+### Correções Recentes (Thinking e Investimentos)
+
+#### Thinking - Dados não exibidos
+- **Problema:** O endpoint `/thinking/indicadores` retornava campos em inglês (`ExclusionSugestions`, `ReductionSugestions`) que o frontend não consumia, fazendo a tela mostrar sempre os textos de fallback. Falta também comparação de gastos x renda e os pensamentos eram estáticos.
+- **Solução:** Backend reestruturado para retornar `pensamentos` (gerados dinamicamente com base no indicador de saúde financeira), `reducoes`, `exclusoes` e `comparativo` no formato esperado pelo frontend (`thinking.jsx`), com sugestões e dados comparativos de gastos x renda.
+
+#### Investimentos - Juros não aparecem no front
+- **Problema:** O mapper `InvestmentMapper.ToDTO` omitia o campo `Interest`, então a taxa de juros salva no banco não era enviada ao frontend, e a previsão de valor futuro (calculada com base nessa taxa) ficava igual ao valor aplicado.
+- **Solução:** `Interest` incluído no mapeamento de retorno, corrigindo a exibição da taxa na listagem e o cálculo da projeção de rendimentos nos investimentos ativos.
+
 

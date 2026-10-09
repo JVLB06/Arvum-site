@@ -17,6 +17,129 @@
     gap: 28px;
 }
 
+/* COMPARATIVO GASTOS x RENDA (novo) */
+.thinking-comparative-card {
+    background: linear-gradient(135deg, var(--card-bg, #ffffff) 0%, #eef5f2 100%);
+    border-radius: var(--radius-xl, 28px);
+    padding: 28px;
+    box-shadow: var(--shadow-md);
+    border: 1.5px solid var(--border-color, #d3e2da);
+}
+
+.comparative-card-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 20px;
+    padding-bottom: 16px;
+    border-bottom: 2px solid var(--border-color, #d3e2da);
+}
+
+.comparative-card-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 46px;
+    height: 46px;
+    background: linear-gradient(135deg, #0F3B2E 0%, #1a5c4a 100%);
+    border-radius: 14px;
+    color: #ffffff;
+}
+
+.comparative-title-group h2.comparative-title {
+    margin: 0;
+    font-size: 22px;
+    font-weight: 800;
+    color: var(--primary-color);
+}
+
+.dark-mode .comparative-title-group h2.comparative-title {
+    color: var(--secondary-color);
+}
+
+.comparative-subtitle {
+    margin: 0;
+    font-size: 13px;
+    color: var(--text-muted);
+}
+
+.comparative-content {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.comparative-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+}
+
+.comparative-stat-card {
+    background-color: var(--bg-color, #f4f7f5);
+    border: 1px solid var(--border-color, #d3e2da);
+    border-radius: var(--radius-md, 14px);
+    padding: 18px 14px;
+    text-align: center;
+}
+
+.stat-label {
+    display: block;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-muted);
+    margin-bottom: 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+}
+
+.stat-value {
+    display: block;
+    font-size: 19px;
+    font-weight: 800;
+}
+
+.stat-green { color: #10B981; }
+.stat-orange { color: #F59E0B; }
+.stat-red { color: #EF4444; }
+
+.comparative-message {
+    font-size: 14px;
+    font-weight: 600;
+    padding: 14px 16px;
+    border-radius: var(--radius-md, 14px);
+    margin: 0;
+    line-height: 1.5;
+}
+
+.comparative-message--warning {
+    background-color: rgba(245, 158, 11, 0.12);
+    color: #D97706;
+    border: 1px solid rgba(245, 158, 11, 0.35);
+}
+
+.comparative-message--success {
+    background-color: rgba(16, 185, 129, 0.12);
+    color: #047857;
+    border: 1px solid rgba(16, 185, 129, 0.35);
+}
+
+.comparative-message--info {
+    background-color: rgba(15, 59, 46, 0.10);
+    color: #0F3B2E;
+    border: 1px solid rgba(15, 59, 46, 0.25);
+}
+
+.comparative-loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 24px;
+    color: var(--text-muted);
+    font-size: 13px;
+}
+
 .thinking-split-grid {
     display: grid;
     grid-template-columns: 1fr 1.35fr;
@@ -309,5 +432,22 @@
 
     .thinking-thinker-card {
         position: static;
+    }
+
+    .comparative-row {
+        grid-template-columns: 1fr;
+    }
+
+    .comparative-stat-card {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .comparative-card-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
     }
 }
