@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Navbar } from "../components/navBar.jsx";
+import { Navbar } from "../components/controlNavBar.jsx";
 import { Link } from "react-router-dom";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import "../styles/faq.css";
