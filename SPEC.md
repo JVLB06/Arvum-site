@@ -250,6 +250,13 @@ Gerencia CRUD de: Rendas, Investimentos, Dívidas, Metas, Gastos
 - **delete_preferences.jsx** - Deletar preferências
 - **create_entry.jsx** - Criar lançamento manual
 
+#### Páginas Institucionais
+- **home.jsx** - Página inicial com apresentação e links para outras seções
+- **about.jsx** - Página "Sobre Nós" com informações sobre a Arvum
+- **terms.jsx** - Termos de Uso e Condições de Serviço
+- **privacy.jsx** - Política de Privacidade e LGPD
+- **faq.jsx** - Perguntas Frequentes (estrutura pronta, conteúdo vazio)
+
 ## Mudanças Implementadas (Sprint de Refatoração)
 
 ### 1. **cadastrate.js** - Correção de Rotas com Parâmetros
@@ -554,5 +561,63 @@ Na página `create_entry.jsx`, lançamentos do tipo dívida ou investimento pode
 #### Investimentos - Juros não aparecem no front
 - **Problema:** O mapper `InvestmentMapper.ToDTO` omitia o campo `Interest`, então a taxa de juros salva no banco não era enviada ao frontend, e a previsão de valor futuro (calculada com base nessa taxa) ficava igual ao valor aplicado.
 - **Solução:** `Interest` incluído no mapeamento de retorno, corrigindo a exibição da taxa na listagem e o cálculo da projeção de rendimentos nos investimentos ativos.
+
+## Implementação Google AdSense e Páginas Institucionais
+
+### Estrutura de Páginas Legais
+Para suporte ao Google AdSense e conformidade com LGPD, foram implementadas:
+
+#### Páginas Criadas:
+- **terms.jsx** - Termos e Condições de Uso
+  - Licença de uso e propriedade intelectual
+  - Isenção de responsabilidade
+  - Limitações e links de terceiros
+  - Regras de modificações dos termos
+
+- **privacy.jsx** - Política de Privacidade
+  - Coleta e uso de dados pessoais
+  - Política de cookies e Google AdSense
+  - Direitos do titular (LGPD)
+  - Compromisso do usuário
+
+- **about.jsx** - Sobre Nós
+  - Missão e propósito da Arvum
+  - Descrição dos serviços
+  - Propostas de valor
+
+- **faq.jsx** - Perguntas Frequentes
+  - Estrutura preparada com accordion
+  - Aguardando conteúdo (array vazio)
+  - Fallback com informações de contato
+
+### Alterações na Navegação
+- **Home.jsx:**
+  - Removida seção "Sobre Nós" inline
+  - Adicionado link para página dedicada `/about`
+  - Rodapé expandido com:
+    - Links para todas páginas institucionais
+    - Informações de contato (email e telefone)
+    - Organização em seções `.footer-section`
+
+### Rotas Adicionadas (App.jsx):
+```javascript
+<Route path="/about" element={<About />} />
+<Route path="/terms" element={<Terms />} />
+<Route path="/privacy" element={<Privacy />} />
+<Route path="/faq" element={<FAQ />} />
+```
+
+### Estilos Criados:
+- **legal.css** - Estilos unificados para Terms e Privacy
+- **about.css** - Estilo específico para página Sobre
+- **faq.css** - Estilos para accordion de perguntas
+- **home.css** - Atualizado com estilos do rodapé expandido
+
+### Conformidade LGPD e AdSense:
+A política de privacidade inclui:
+- Explicação sobre cookies do Google AdSense
+- Links para configurações de anúncios personalizados
+- Direitos do titular dos dados conforme LGPD
+- Contato do encarregado de dados (DPO)
 
 

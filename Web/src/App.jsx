@@ -23,6 +23,10 @@ import { UpdateExpenses } from "./pages/update_expenses.jsx";
 import { Extract } from "./pages/extract.jsx";
 import { Thinking } from "./pages/thinking.jsx";
 import { Preferences } from "./pages/preferences_management.jsx"
+import { About } from "./pages/about.jsx";
+import { Terms } from "./pages/terms.jsx";
+import { Privacy } from "./pages/privacy.jsx";
+import { FAQ } from "./pages/faq.jsx";
 import accounts from "./services/auth.js";
 
 // O "Segurança" da rota
@@ -61,6 +65,10 @@ export default function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Home />} />
+        <Route path="/about" element={<About />} />
+        <Route path="/terms" element={<Terms />} />
+        <Route path="/privacy" element={<Privacy />} />
+        <Route path="/faq" element={<FAQ />} />
         <Route path="login" element={<Login />} />
         <Route path="cadastrate" element={<Cadastrate />} />
         <Route path="logged" element={<ProtectedRoute>

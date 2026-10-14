@@ -1,0 +1,135 @@
+/* Estilos para páginas de Termos e Política de Privacidade */
+
+.legal-container {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  display: flex;
+  flex-direction: column;
+}
+
+.legal-main {
+  flex: 1;
+  padding: 2rem;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  margin-top: 4rem;
+}
+
+.legal-content {
+  background: white;
+  border-radius: 1rem;
+  padding: 3rem;
+  max-width: 900px;
+  width: 100%;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+}
+
+.legal-content h1 {
+  color: #1a1a2e;
+  font-size: 2rem;
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid #667eea;
+}
+
+.legal-content h2 {
+  color: #2c2c54;
+  font-size: 1.5rem;
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+}
+
+.legal-content p {
+  color: #4a4a4a;
+  line-height: 1.7;
+  margin-bottom: 1rem;
+}
+
+.legal-content ul {
+  margin: 1rem 0;
+  padding-left: 2rem;
+  color: #4a4a4a;
+}
+
+.legal-content ul li {
+  margin-bottom: 0.5rem;
+  line-height: 1.6;
+}
+
+.legal-content a {
+  color: #667eea;
+  text-decoration: none;
+  font-weight: 600;
+  transition: color 0.3s ease;
+}
+
+.legal-content a:hover {
+  color: #764ba2;
+  text-decoration: underline;
+}
+
+.legal-footer {
+  margin-top: 3rem;
+  padding-top: 2rem;
+  border-top: 1px solid #e0e0e0;
+  font-style: italic;
+  color: #666;
+}
+
+.legal-list-alpha {
+  list-style-type: upper-alpha;
+}
+
+/* Dark mode support */
+body.dark-mode .legal-content {
+  background: #2c2c54;
+  color: #e0e0e0;
+}
+
+body.dark-mode .legal-content h1 {
+  color: #f5f5f5;
+  border-bottom-color: #9c88ff;
+}
+
+body.dark-mode .legal-content h2 {
+  color: #f0f0f0;
+}
+
+body.dark-mode .legal-content p,
+body.dark-mode .legal-content ul {
+  color: #d0d0d0;
+}
+
+body.dark-mode .legal-content a {
+  color: #9c88ff;
+}
+
+body.dark-mode .legal-content a:hover {
+  color: #a29bfe;
+}
+
+body.dark-mode .legal-footer {
+  border-top-color: #40407a;
+  color: #a0a0a0;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .legal-main {
+    padding: 1rem;
+    margin-top: 3rem;
+  }
+  
+  .legal-content {
+    padding: 2rem 1.5rem;
+  }
+  
+  .legal-content h1 {
+    font-size: 1.5rem;
+  }
+  
+  .legal-content h2 {
+    font-size: 1.25rem;
+  }
+}
