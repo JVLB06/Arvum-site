@@ -266,6 +266,13 @@
     color: var(--secondary-color);
 }
 
+.footer-section {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    align-items: center;
+}
+
 .footer-links {
     display: flex;
     align-items: center;
@@ -276,9 +283,27 @@
     color: rgba(255, 255, 255, 0.85);
     transition: color 0.2s ease;
     cursor: pointer;
+    text-decoration: none;
 }
 
 .footer-link:hover {
+    color: var(--secondary-color);
+}
+
+.footer-contact {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 12px;
+}
+
+.footer-contact-item a {
+    color: rgba(255, 255, 255, 0.85);
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.footer-contact-item a:hover {
     color: var(--secondary-color);
 }
 

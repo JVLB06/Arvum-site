@@ -17,14 +17,11 @@ export function Home() {
         >
           <strong>Home</strong>
         </button>
-        <button
-          className="head_button"
-          onClick={() =>
-            document.getElementById("sobre")?.scrollIntoView({ behavior: "smooth" })
-          }
-        >
-          <strong>Sobre</strong>
-        </button>
+        <Link to="/about">
+          <button className="head_button">
+            <strong>Sobre</strong>
+          </button>
+        </Link>
         <Link to="/login">
           <button className="head_button">
             <strong>Login</strong>
@@ -82,30 +79,7 @@ export function Home() {
           </div>
         </section>
 
-        {/* QUEM SOMOS SECTION */}
-        <section className="about-section" id="sobre">
-          <div className="about-card">
-            <div className="about-header">
-              <span className="about-tag">Nossa Missão</span>
-              <h2 className="about-title">Quem somos?</h2>
-            </div>
 
-            <div className="about-text-grid">
-              <p>
-                A <strong>Arvum</strong> nasceu com o propósito de ajudar os brasileiros a conquistarem uma vida financeira mais organizada e equilibrada. Em um cenário marcado por constantes variações econômicas, identificamos a dificuldade de muitas pessoas em gerenciar seus recursos e evoluir financeiramente de forma consistente.
-              </p>
-              <p>
-                Diante desse contexto, desenvolvemos uma plataforma pensada para simplificar a gestão financeira no dia a dia. A Arvum atende diferentes perfis, oferecendo ferramentas intuitivas que auxiliam no controle de gastos, planejamento e tomada de decisões mais conscientes.
-              </p>
-              <p>
-                Mais do que organizar finanças, nossa proposta é apoiar o desenvolvimento financeiro dos nossos usuários. Por meio de sugestões e insights personalizados, buscamos contribuir para escolhas mais estratégicas e sustentáveis ao longo do tempo.
-              </p>
-              <p>
-                Acreditamos que uma boa gestão financeira é um passo essencial para alcançar objetivos e ter mais tranquilidade. Convidamos você a conhecer a Arvum e dar início a uma nova forma de cuidar do seu futuro financeiro.
-              </p>
-            </div>
-          </div>
-        </section>
       </main>
 
       <footer className="home-footer">
@@ -113,13 +87,29 @@ export function Home() {
           <div className="footer-brand">
             <strong>Arvum</strong> • Gestão Financeira Pessoal
           </div>
-          <div className="footer-links">
-            <a href="#sobre" className="footer-link">Sobre nós</a>
-            <span className="footer-sep">•</span>
-            <span className="footer-link">Siga nossas redes</span>
-            <span className="footer-sep">•</span>
-            <span className="footer-link">FAQ & Suporte</span>
+          
+          <div className="footer-section">
+            <div className="footer-links">
+              <Link to="/about" className="footer-link">Sobre nós</Link>
+              <span className="footer-sep">•</span>
+              <Link to="/faq" className="footer-link">FAQ</Link>
+              <span className="footer-sep">•</span>
+              <Link to="/terms" className="footer-link">Termos de Uso</Link>
+              <span className="footer-sep">•</span>
+              <Link to="/privacy" className="footer-link">Política de Privacidade</Link>
+            </div>
+            
+            <div className="footer-contact">
+              <span className="footer-contact-item">
+                <strong>Email:</strong> <a href="mailto:butzenjvlb@gmail.com">butzenjvlb@gmail.com</a>
+              </span>
+              <span className="footer-sep">•</span>
+              <span className="footer-contact-item">
+                <strong>Telefone:</strong> <a href="tel:+5541987992869">+55 41 98799-2869</a>
+              </span>
+            </div>
           </div>
+          
           <div className="footer-copy">
             © {new Date().getFullYear()} Arvum. Todos os direitos reservados.
           </div>
