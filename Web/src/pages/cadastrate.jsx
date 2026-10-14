@@ -15,6 +15,7 @@ export function Cadastrate() {
   const [error, setError] = useState("");
   const [dados, setDados] = useState({ content: "Carregando pensamento...", author: "" });
   const [loading, setLoading] = useState(false);
+  const [termsAccepted, setTermsAccepted] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -29,6 +30,12 @@ export function Cadastrate() {
     event.preventDefault();
     setError("");
     setLoading(true);
+
+    if (!termsAccepted) {
+      setError("Você precisa aceitar os termos de uso e políticas de privacidade para continuar.");
+      setLoading(false);
+      return;
+    }
 
     if (password !== confirmPassword) {
       setError("As senhas informadas não coincidem.");
@@ -148,6 +155,27 @@ export function Cadastrate() {
                     required
                   />
                 </div>
+              </div>
+
+              <div className="form-field-group terms-checkbox-group">
+                <label className="checkbox-container">
+                  <input
+                    type="checkbox"
+                    checked={termsAccepted}
+                    onChange={(event) => setTermsAccepted(event.target.checked)}
+                    required
+                  />
+                  <span className="checkbox-text">
+                    Eu concordo com os{" "}
+                    <Link to="/terms" target="_blank" className="terms-link">
+                      Termos de Uso
+                    </Link>{" "}
+                    e as{" "}
+                    <Link to="/privacy" target="_blank" className="terms-link">
+                      Políticas de Privacidade
+                    </Link>
+                  </span>
+                </label>
               </div>
 
               {error && (

@@ -101,6 +101,44 @@
     font-weight: 800;
 }
 
+/* Checkbox de termos */
+.terms-checkbox-group {
+    margin-top: 8px;
+}
+
+.checkbox-container {
+    display: flex;
+    align-items: flex-start;
+    cursor: pointer;
+    color: #ffffff;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.checkbox-container input[type="checkbox"] {
+    margin-right: 10px;
+    margin-top: 3px;
+    cursor: pointer;
+    width: 16px;
+    height: 16px;
+    accent-color: var(--secondary-color, #D4A017);
+}
+
+.checkbox-text {
+    flex: 1;
+}
+
+.terms-link {
+    color: var(--secondary-color, #D4A017);
+    text-decoration: underline;
+    font-weight: 600;
+    transition: opacity 0.2s ease;
+}
+
+.terms-link:hover {
+    opacity: 0.8;
+}
+
 @media (max-width: 820px) {
     .register-card {
         grid-template-columns: 1fr;
